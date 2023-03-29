@@ -4,11 +4,11 @@ Partecipanti:\
 Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it\
 Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it
 
-#Climate Monitoring\
+# Climate Monitoring\
 Un sistema di monitoraggio di parametri climatici\
 fornito da centri di monitoraggio sul territorio italiano, in grado\
 di rendere disponibili, a operatori ambientali e comuni cittadini\
-i dati relativi alla propria zona d'interesse.\
+i dati relativi alla propria zona d'interesse.
 
 + parametri rilevati per una zona geografica -> indicano l'intensità\
 del fenomeno su una scala che va da 1(critico) a 5(ottimale)
@@ -48,8 +48,6 @@ del fenomeno su una scala che va da 1(critico) a 5(ottimale)
 	* password per accedere al sistema
 	* centro di monitoraggio di afferenza (Se presente, altrimenti si veda
 		la creazione di altri centri monitoraggio)
-I dati della registrazione devono essere salvati in un file denominato:
-OperatoriRegistrati.dati
 ---
 *Per creare i centri e le aree d'interesse, il primo operatore:*
 
@@ -60,11 +58,6 @@ OperatoriRegistrati.dati
 		* Indirizzo fisico(via/piazza, numero civico, cap, comune, provincia)
 		* Elenco aree di interesse di cui l'operatore intende inserire i
 			parametri climatici.
-I dati di ogni centro monitoraggio sono memorizzati in un file dedicato nominato
-CentroMonitoraggio.dati
-Il file OperatoriRegistrati deve essere aggiornato con un riferimento al centro
-di monitoraggio appena creato, che risulterà essere il centro di riferimento dell'
-operatore.
 ---
 *Per inserire eventuali parametri climatici, l'operatore registrato:*
 
@@ -73,9 +66,6 @@ operatore.
 	2. può ricercare e selezionare l'area di interesse all'intero delle
 		aree registrate per il suo centro di monitoraggio.
 	3. può ora usare la funzione *inserisciParametriClimatici()*
-Centro di monitoraggio, area d'interesse, data di rilevazione e parametri
-climatici associati dall'operatore sono memorizzati nel file:
-ParametriCLimatici.dati
 ---
 *All'avvio l'applicazione mostra un menù iniziale dove:*
 
@@ -102,3 +92,15 @@ ParametriCLimatici.dati
 	   parametri climatici (solo operatori registrati e solo dopo login)
 	   per ciascuna area d'interesse per quel centro di monitoraggio,
 	   per una specifica data di rivelazione.
+	5. I dati della registrazione devono essere salvati in un file denominato:
+		OperatoriRegistrati.dati
+	6. I dati di ogni centro monitoraggio sono memorizzati in un file dedicato nominato
+		CentroMonitoraggio.dati
+		Il file OperatoriRegistrati deve essere aggiornato con un riferimento al centro
+		di monitoraggio appena creato, che risulterà essere il centro di riferimento dell'
+		operatore.
+	7.	Centro di monitoraggio, area d'interesse, data di rilevazione e parametri
+		climatici associati dall'operatore sono memorizzati nel file:
+		ParametriCLimatici.dati
+
+
