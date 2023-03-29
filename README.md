@@ -5,10 +5,9 @@ Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it\
 Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it
 
 # Climate Monitoring
-Un sistema di monitoraggio di parametri climatici\
-fornito da centri di monitoraggio sul territorio italiano, in grado\
-di rendere disponibili, a operatori ambientali e comuni cittadini\
-i dati relativi alla propria zona d'interesse.
+Un sistema di monitoraggio di parametri climatici fornito da centri di monitoraggio\
+sul territorio italiano, in grado di rendere disponibili\
+a operatori ambientali e comuni cittadini i dati relativi alla propria zona d'interesse.\
 
 + parametri rilevati per una zona geografica -> indicano l'intensità\
 del fenomeno su una scala che va da 1(critico) a 5(ottimale)
