@@ -4,7 +4,7 @@ Partecipanti:\
 Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it\
 Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it
 
-# Climate Monitoring\
+# Climate Monitoring
 Un sistema di monitoraggio di parametri climatici\
 fornito da centri di monitoraggio sul territorio italiano, in grado\
 di rendere disponibili, a operatori ambientali e comuni cittadini\
