@@ -1,11 +1,15 @@
 package com.climatemonitoring.climatemonitoring;
 
+import com.climatemonitoring.climatemonitoring.city.City;
+import com.climatemonitoring.climatemonitoring.dbref.DBInterface;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class climateMonitoringApp extends Application {
     @Override
@@ -18,6 +22,13 @@ public class climateMonitoringApp extends Application {
     }
 
     public static void main(String[] args) {
+        DBInterface dbRef = new DBInterface();
+        HashMap<String, City> geonamesCache = dbRef.readGeonamesFile();
 
+        for(String tmp : geonamesCache.keySet())
+            System.out.println(geonamesCache.get(tmp).toString());
+
+        System.out.println("Done");
+        
     }
 }
