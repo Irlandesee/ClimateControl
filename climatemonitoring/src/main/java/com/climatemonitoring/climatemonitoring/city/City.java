@@ -9,7 +9,7 @@ public class City {
     private float latitude;
     private float longitude;
 
-    public City(String geonameID, String asciiName, String country, String countryCode, float latitude, float longitude){
+    public City(String geonameID, String asciiName, String countryCode, String country, float latitude, float longitude){
         this.geonameID = geonameID;
         this.asciiName = asciiName;
         this.country = country;
@@ -71,8 +71,8 @@ public class City {
         StringBuilder builder = new StringBuilder();
         builder.append(this.geonameID).append(";")
                 .append(this.asciiName).append(";")
-                .append(this.country).append(";")
                 .append(this.countryCode).append(";")
+                .append(this.country).append(";")
                 .append(this.latitude).append(",")
                 .append(this.longitude);
         return builder.toString();
