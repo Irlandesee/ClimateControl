@@ -51,6 +51,20 @@ public class ClimateMonitor extends Application {
         debug("Copia sul file CoordinateMonitoraggio.dati completata.");
     }
 
+    /**
+     *
+     * @param stage
+     * @throws IOException file main-view.fxml non trovato
+     */
+    @Override
+    public void start(Stage stage) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(ClimateMonitor.class.getResource("main-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+        stage.setTitle("Hello World!");
+        stage.setScene(scene);
+        stage.show();
+    }
+
     private static void signUp(DBInterface dbRef, HashMap<String, Operatore> operatoriAutorizzatiCache,
                                HashMap<String, Operatore> operatoriRegistratiCache,
                                String email) throws IOException {
@@ -73,20 +87,6 @@ public class ClimateMonitor extends Application {
         operatore.setPassword("Password");
         operatore.setCentroAfferenza("CentroAfferenza");
         dbRef.registraOperatore(operatore);
-    }
-
-    /**
-     *
-     * @param stage
-     * @throws IOException file main-view.fxml non trovato
-     */
-    @Override
-    public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(ClimateMonitor.class.getResource("main-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Hello World!");
-        stage.setScene(scene);
-        stage.show();
     }
 
     private static void printCache(HashMap<String, ?> cache) {
