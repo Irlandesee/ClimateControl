@@ -53,10 +53,10 @@ public class DBInterface {
             if (!coordinateMonitoraggioFile.exists()) {
                 boolean res = coordinateMonitoraggioFile.createNewFile();
                 try {
-                    PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(coordinateMonitoraggioFile)));
-                    out.println("geonameID;AsciiName;CountryCode;CountryName;latitude,longitude");
-                    out.flush();
-                    out.close();
+                    BufferedWriter bWriter = new BufferedWriter(new FileWriter(coordinateMonitoraggioFile));
+                    String line = "geonameID;AsciiName;CountryCode;CountryName;latitude,longitude\n";
+                    bWriter.write(line);
+                    bWriter.close();
                 } catch (IOException ioe) {
                     ioe.printStackTrace();
                 }
@@ -82,5 +82,9 @@ public class DBInterface {
 
     public void writeCoordinateMonitoraggioFile(HashMap<String, City> cache) {
         writerREF.writeCoordinateMonitoraggioFile(cache);
+    }
+
+    public void writeGeonamesAndCoordinates(HashMap<String, City> cache){
+        writerREF.writeGeonamesAndCoordinates(cache);
     }
 }

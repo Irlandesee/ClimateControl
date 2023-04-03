@@ -23,10 +23,11 @@ public class WriterDB {
         StringBuilder builder = new StringBuilder();
         if(dbRef.isDEBUG()) System.out.println("Writing geoname cache to file");
         try{
-            BufferedWriter bWriter = new BufferedWriter(new FileWriter(dbRef.getGeonamesCoordinatesFile()));
+            BufferedWriter bWriter = new BufferedWriter(new FileWriter(dbRef.getCoordinateMonitoraggioFile()));
             cache.forEach(
                     (key, value) -> {
-                        builder.append(key).append(value.toString());
+                        builder.append(value.toString()).append("\n");
+                        if(dbRef.isDEBUG()) System.out.println(builder.toString());
                         try{
                             bWriter.write(builder.toString());
                         }catch(IOException ioe2){ioe2.printStackTrace();}
@@ -47,16 +48,13 @@ public class WriterDB {
         StringBuilder builder = new StringBuilder();
         if(dbRef.isDEBUG()) System.out.println("Writing coordinate monitoraggio cache to coordinateMonitoraggio.dati...");
         try{
-            PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(dbRef.getCoordinateMonitoraggioFile(), true)));
+            BufferedWriter bWriter = new BufferedWriter(new FileWriter(dbRef.getCoordinateMonitoraggioFile()));
             cache.forEach(
                     (key, value) -> {
-                        builder.append(value.toString());
-                        out.println(builder);
-                        out.flush();
-                        builder.setLength(0); //clear the string builder
+                        builder.append(value);
                     }
             );
-            out.close();
+            bWriter.close();
         }catch(IOException ioe){ioe.printStackTrace();}
     }
 }

@@ -28,12 +28,12 @@ public class climateMonitoringApp extends Application {
         for(String tmp : geonamesCache.keySet())
             System.out.println(geonamesCache.get(tmp).toString());
 
+        dbRef.writeGeonamesAndCoordinates(geonamesCache);
         System.out.println("Done");
-
 //File contenente l'elenco delle aree geografiche da cui scegliere per associarle ad un centro di monitoraggio.
 //Una volta scelta, l'area può venir rimossa da questo elenco per non essere associata a nessun altro centro.
 //Nell'eventualità che l'area venga disassociata dal suo centro, può venire reinserita in questo elenco.
-        dbRef.writeCoordinateMonitoraggioFile(geonamesCache);
-        System.out.println("Writing of coordinateMonitoraggio.dati complete.");
+        //dbRef.writeCoordinateMonitoraggioFile(geonamesCache);
+        //System.out.println("Writing of coordinateMonitoraggio.dati complete.");
     }
 }
