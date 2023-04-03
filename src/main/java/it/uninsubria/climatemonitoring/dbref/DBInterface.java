@@ -14,30 +14,22 @@ import java.util.HashMap;
  **/
 @SuppressWarnings("FieldCanBeLocal")
 public class DBInterface {
-    private static final File geonamesCoordinatesFile = new File("data/geonames-and-coordinates.csv");
-    private static final File centroMonitoraggioFile = new File("data/CentroMonitoraggio.dati");
-    private static final File coordinateMonitoraggioFile = new File("data/CoordinateMonitoraggio.dati");
-    private static final File operatoriAutorizzatiFile = new File("data/OperatoriAutorizzati.dati");
-    private static final File operatoriRegistratiFile = new File("data/OperatoriRegistrati.dati");
-    private static final File parametriClimaticiFile = new File("data/ParametriClimatici.dati");
+    private final File geonamesCoordinatesFile = new File("data/geonames-and-coordinates.csv");
+    private final File centroMonitoraggioFile = new File("data/CentroMonitoraggio.dati");
+    private final File coordinateMonitoraggioFile = new File("data/CoordinateMonitoraggio.dati");
+    private final File operatoriAutorizzatiFile = new File("data/OperatoriAutorizzati.dati");
+    private final File operatoriRegistratiFile = new File("data/OperatoriRegistrati.dati");
+    private final File parametriClimaticiFile = new File("data/ParametriClimatici.dati");
 
-    private static final boolean DEBUG = true;
+    private final boolean DEBUG = true;
 
     private HashMap<String, City> geonamesDBCache;
 
-    private static ReaderDB readerREF;
-    private static WriterDB writerREF;
+    private ReaderDB readerREF;
+    private WriterDB writerREF;
 
-    private static DBInterface uniqueInstance;
-
-    private DBInterface() {}
-
-    public static DBInterface getInstance() throws IOException {
-        if (uniqueInstance == null) {
-            uniqueInstance = new DBInterface();
-            initialize();
-        }
-        return uniqueInstance;
+    public DBInterface() throws IOException {
+        initialize();
     }
 
     public boolean isDEBUG(){ return DEBUG;}
@@ -79,15 +71,15 @@ public class DBInterface {
         return parametriClimaticiFile;
     }
 
-    private static void initialize() throws IOException {
-        readerREF = new ReaderDB(uniqueInstance);
-        writerREF = new WriterDB(uniqueInstance);
+    private void initialize() throws IOException {
+        readerREF = new ReaderDB(this);
+        writerREF = new WriterDB(this);
 
         checkFilesExistence();
         writeHeaders();
     }
 
-    private static void writeHeaders() throws IOException {
+    private void writeHeaders() throws IOException {
         PrintWriter fout;
 
         final int coordinateMonitoraggioFileHeaderLength = 64;
@@ -125,7 +117,7 @@ public class DBInterface {
         }
     }
 
-    private static void checkFilesExistence() throws IOException {
+    private void checkFilesExistence() throws IOException {
         checkFileExistence(geonamesCoordinatesFile);
         checkFileExistence(centroMonitoraggioFile);
         checkFileExistence(coordinateMonitoraggioFile);
@@ -134,7 +126,7 @@ public class DBInterface {
         checkFileExistence(parametriClimaticiFile);
     }
 
-    private static void checkFileExistence(File file) throws IOException {
+    private void checkFileExistence(File file) throws IOException {
         if(!file.exists()) {
             boolean res = file.createNewFile();
             if (res && DEBUG) System.out.println("Created new file at: " +

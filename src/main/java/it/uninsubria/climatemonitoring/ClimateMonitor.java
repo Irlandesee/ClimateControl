@@ -22,8 +22,7 @@ public class ClimateMonitor extends Application {
      * @throws IOException non è stato possibile creare uno dei file richiesti
      */
     public static void main(String[] args) throws IOException {
-        //Singleton Pattern?
-        DBInterface dbRef = DBInterface.getInstance();
+        DBInterface dbRef = new DBInterface();
         HashMap<String, City> geonamesCache = dbRef.readGeonamesFile();
         HashMap<String, Operatore> operatoriAutorizzatiCache = dbRef.readOperatoriAutorizzatiFile();
         HashMap<String, Operatore> operatoriRegistratiCache = dbRef.readOperatoriRegistratiFile();
