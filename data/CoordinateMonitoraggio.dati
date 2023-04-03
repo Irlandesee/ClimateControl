@@ -1,200 +1,50 @@
 geonameID;AsciiName;CountryCode;CountryName;latitude,longitude
-5007548;Roosevelt Park;US;United States;43.1964,-86.27228
-5272775;Seymour;US;United States;44.82663,-91.43127
-5015844;Ada;US;United States;47.29969,-96.51535
-5205497;Pennside;US;United States;40.33732,-75.87854
-5110449;Brownville;US;United States;44.007,-75.98409
-5016496;Appleton;US;United States;45.19691,-96.01977
-5105095;Strathmore;US;United States;40.39594,-74.21348
-5071665;La Vista;US;United States;41.18389,-96.03113
-5134419;Roslyn Harbor;US;United States;40.81649,-73.63707
-5198089;Lincoln Park;US;United States;40.31481,-75.98549
-5182842;Cambridge Springs;US;United States;41.80367,-80.05644
-5321473;Winslow;US;United States;35.02419,-110.69736
-5178351;Annville;US;United States;40.32954,-76.51524
-5190360;Franklin Park;US;United States;40.5834,-80.08784
-5112181;Chadwicks;US;United States;43.02785,-75.27155
-5114252;Crown Heights;US;United States;41.63732,-73.93792
-4955884;Winchester;US;United States;42.45232,-71.137
-5187297;Dresher;US;United States;40.14094,-75.16684
-5226523;Britton;US;United States;45.79162,-97.75094
-5145894;Apple Creek;US;United States;40.75172,-81.8393
-5207307;Punxsutawney;US;United States;40.94368,-78.97087
-5278083;Waupaca;US;United States;44.35803,-89.08595
-5106877;Alden;US;United States;42.90006,-78.49197
-5155125;Frazeysburg;US;United States;40.11729,-82.11931
-5211033;Saylorsburg;US;United States;40.89565,-75.32352
-5151688;Danville;US;United States;40.44756,-82.26016
-4948087;Provincetown;US;United States;42.05295,-70.1864
-5097152;Dayton;US;United States;40.37261,-74.51015
-5026042;Excelsior;US;United States;44.9033,-93.56635
-5139568;Staten Island;US;United States;40.56233,-74.13986
-5015701;Zeeland;US;United States;42.81252,-86.01865
-5056172;Maryville;US;United States;40.3461,-94.87247
-5334320;Carmel-by-the-Sea;US;United States;36.55524,-121.92329
-5151406;Crestline;US;United States;40.78756,-82.73657
-5101073;Mendham;US;United States;40.77593,-74.60071
-5018651;Blaine;US;United States;45.1608,-93.23495
-5262634;Menomonie;US;United States;44.87552,-91.91934
-5336185;Cherry Valley;US;United States;33.97252,-116.97725
-5260694;Lodi;US;United States;43.31388,-89.52651
-5194067;Homestead;US;United States;40.4059,-79.91199
-5048796;Stewartville;US;United States;43.85552,-92.48851
-5199876;Marienville;US;United States;41.46895,-79.1231
-4957956;Belfast;US;United States;44.42591,-69.00642
-5162672;Mentor-on-the-Lake;US;United States;41.70504,-81.36039
-4957962;Belgrade;US;United States;44.44729,-69.83255
-5102729;Plainsboro Center;US;United States;40.33177,-74.5946
-5230309;Parker;US;United States;43.39748,-97.13645
-5098343;Garfield;US;United States;40.88149,-74.1132
-5078878;Shelton;US;United States;40.77918,-98.73091
-5151415;Creston;US;United States;40.987,-81.89375
-5110358;Brookville;US;United States;40.81316,-73.56735
-4979050;South Berwick;US;United States;43.23453,-70.8095
-5144580;Williamsburg;US;United States;40.71427,-73.95347
-5147057;Bellville;US;United States;40.62006,-82.51072
-5097801;Fairview;US;United States;40.8126,-73.99903
-4971699;Mechanic Falls;US;United States;44.11174,-70.39172
-5097017;Cranford;US;United States;40.65844,-74.29959
-5197463;Lawson Heights;US;United States;40.29174,-79.3892
-5176942;Willoughby Hills;US;United States;41.59838,-81.41845
-5132002;Port Chester;US;United States;41.00176,-73.66568
-5275601;Thiensville;US;United States;43.23751,-87.9787
-5194915;Inkerman;US;United States;41.29897,-75.81269
-5143285;Warwick;US;United States;41.25648,-74.35988
-5037793;Minnetrista;US;United States;44.9383,-93.71774
-5111576;Carmel;US;United States;41.43009,-73.68013
-5200208;Maytown;US;United States;40.07537,-76.58219
-5019335;Brooklyn Park;US;United States;45.09413,-93.35634
-5127364;Montour Falls;US;United States;42.3473,-76.84524
-5095960;Brielle;US;United States;40.10789,-74.05653
-5255320;Hales Corners;US;United States;42.93751,-88.0487
-4947641;Plympton;US;United States;41.95288,-70.81448
-5166958;Pleasant Hill;US;United States;40.05172,-84.34439
-5096370;Cedar Glen West;US;United States;40.04206,-74.29265
-4975603;Poland;US;United States;44.06063,-70.39367
-5202734;Munhall;US;United States;40.39229,-79.90005
-5143834;West Henrietta;US;United States;43.04006,-77.66167
-5323060;Alhambra;US;United States;34.09529,-118.12701
-5129093;North Hills;US;United States;40.78093,-73.67652
-5110133;Bridgeport;US;United States;42.9159,-76.75245
-4950790;Sherborn;US;United States;42.23899,-71.36978
-5085374;Derry;US;United States;42.88064,-71.32729
-5132143;Poughkeepsie;US;United States;41.70037,-73.92097
-5327422;Bellflower;US;United States;33.88168,-118.11701
-5132023;Port Morris;US;United States;40.80149,-73.90958
-5010856;Spring Lake;US;United States;43.07696,-86.197
-5079250;South Sioux City;US;United States;42.47388,-96.41364
-5203859;Northumberland;US;United States;40.89175,-76.79747
-5011020;Standish;US;United States;43.98308,-83.95888
-5097438;East Newark;US;United States;40.74843,-74.16181
-5126055;Marlboro;US;United States;41.60565,-73.97153
-5090496;Nottingham;US;United States;43.11453,-71.09978
-4974775;Patten;US;United States;45.99644,-68.44614
-5204143;Oakdale;US;United States;40.39812,-80.18561
-5045360;Saint Paul;US;United States;44.94441,-93.09327
-5161262;Lorain;US;United States;41.45282,-82.18237
-5085900;Enfield;US;United States;43.64063,-72.14398
-5119405;Greenville;US;United States;40.99315,-73.81986
-5161382;Lowellville;US;United States;41.03534,-80.53646
-5295585;Ganado;US;United States;35.7114,-109.54205
-4992609;Fennville;US;United States;42.59392,-86.1017
-5004062;Novi;US;United States;42.48059,-83.47549
-5033962;Lakefield;US;United States;43.67746,-95.17166
-5316209;Sun Lakes;US;United States;33.21116,-111.87542
-5045258;Saint Michael;US;United States;45.20996,-93.66496
-5129313;Northville;US;United States;43.22563,-74.17208
-5178489;Arlington Heights;US;United States;40.99009,-75.21629
-5109603;Blue Point;US;United States;40.74399,-73.03455
-5104835;South Old Bridge;US;United States;40.40816,-74.35432
-5294167;Eloy;US;United States;32.7559,-111.55484
-5163137;Mineral Ridge;US;United States;41.14006,-80.76897
-4962442;Denmark;US;United States;43.97035,-70.8034
-5245314;Belgium;US;United States;43.49972,-87.85037
-5178632;Aspinwall;US;United States;40.49146,-79.90477
-5179845;Bellwood;US;United States;40.6034,-78.32474
-5024846;Eagle Lake;US;United States;44.16497,-93.88134
-5324903;Arvin;US;United States;35.20913,-118.82843
-5303643;Many Farms;US;United States;36.35278,-109.61789
-4981750;Veazie;US;United States;44.83868,-68.70531
-5110292;Brookhaven;US;United States;40.77927,-72.91538
-5090918;Pembroke;US;United States;43.14675,-71.45757
-5123907;Lakeview;US;United States;42.43202,-75.86547
-5150868;Columbus Grove;US;United States;40.9195,-84.05689
-5057655;Unionville;US;United States;40.47696,-93.00326
-5121182;Honeoye Falls;US;United States;42.95229,-77.59028
-5019124;Branch;US;United States;45.48524,-92.96188
-5178743;Avon;US;United States;40.34565,-76.38996
-5128368;Nedrow;US;United States;42.97507,-76.14131
-5318320;Tucson Estates;US;United States;32.18758,-111.09093
-5197842;Lewisburg;US;United States;40.96453,-76.88441
-5301692;LeChee;US;United States;35.03224,-110.75291
-4956338;Yarmouth Port;US;United States;41.70205,-70.24947
-5143789;West End;US;United States;42.46869,-75.09378
-5166865;Plain City;US;United States;40.10756,-83.26742
-5197725;Lemoyne;US;United States;40.2412,-76.89414
-5225245;Tiverton;US;United States;41.62594,-71.21338
-5328163;Big Bear Lake;US;United States;34.2439,-116.91142
-4967237;Hiram;US;United States;43.87868,-70.8034
-5016990;Bagley;US;United States;47.52162,-95.39835
-5107337;Arlington;US;United States;41.69593,-73.8968
-5260732;Lomira;US;United States;43.59138,-88.44371
-5281551;Ansonia;US;United States;41.34621,-73.079
-5262475;Medford;US;United States;45.13858,-90.34014
-4969532;Limestone;US;United States;46.90866,-67.82585
-5136454;Schenectady;US;United States;42.81424,-73.93957
-5102208;Oradell;US;United States;40.95871,-74.03681
-5112493;Chestnut Ridge;US;United States;41.08426,-74.0557
-5271991;Salem;US;United States;42.55474,-88.11092
-5033762;Lake Elmo;US;United States;44.9958,-92.87938
-5163008;Millbury;US;United States;41.56616,-83.42465
-5178839;Bainbridge;US;United States;40.09093,-76.66747
-5279356;Winneconne;US;United States;44.11082,-88.71261
-5124463;Lincoln Park;US;United States;41.95065,-73.99403
-5107346;Armonk;US;United States;41.12648,-73.71402
-4955149;Westborough;US;United States;42.26954,-71.61618
-5153680;Fairview Park;US;United States;41.44144,-81.8643
-5138892;South Huntington;US;United States;40.82371,-73.39873
-5143208;Wanakah;US;United States;42.74617,-78.90309
 4987304;Buena Vista;US;United States;43.4203,-83.89858
-5120442;Hell's Kitchen;US;United States;40.76496,-73.9909
-5279483;Wittenberg;US;United States;44.8272,-89.16956
-5235952;Essex Junction;US;United States;44.49061,-73.11096
-5214696;Sugarcreek;US;United States;41.42145,-79.88117
-5139058;Southport;US;United States;42.0548,-76.81912
-5187134;Donora;US;United States;40.1734,-79.85755
-5220221;Wyndmoor;US;United States;40.08122,-75.18934
-5118939;Gouverneur;US;United States;44.33673,-75.46299
-5188105;East Washington;US;United States;40.17368,-80.23756
-5218827;West Norriton;US;United States;40.12955,-75.37852
-5128723;Niagara Falls;US;United States;43.0945,-79.05671
+5007548;Roosevelt Park;US;United States;43.1964,-86.27228
+5015844;Ada;US;United States;47.29969,-96.51535
+4962442;Denmark;US;United States;43.97035,-70.8034
+5037793;Minnetrista;US;United States;44.9383,-93.71774
+5016496;Appleton;US;United States;45.19691,-96.01977
+5019335;Brooklyn Park;US;United States;45.09413,-93.35634
+4947641;Plympton;US;United States;41.95288,-70.81448
+5024846;Eagle Lake;US;United States;44.16497,-93.88134
+4975603;Poland;US;United States;44.06063,-70.39367
+4981750;Veazie;US;United States;44.83868,-68.70531
+4955884;Winchester;US;United States;42.45232,-71.137
+4950790;Sherborn;US;United States;42.23899,-71.36978
+5019124;Branch;US;United States;45.48524,-92.96188
 4996718;Hudson;US;United States;41.85505,-84.35384
+4948087;Provincetown;US;United States;42.05295,-70.1864
 5010917;Springfield;US;United States;42.32643,-85.23916
-5157742;Holgate;US;United States;41.24894,-84.133
-5211637;Shamokin Dam;US;United States;40.8487,-76.81969
-5164488;Newburgh Heights;US;United States;41.45005,-81.66346
+4956338;Yarmouth Port;US;United States;41.70205,-70.24947
+5010856;Spring Lake;US;United States;43.07696,-86.197
+5026042;Excelsior;US;United States;44.9033,-93.56635
 5042924;Renville;US;United States;44.78913,-95.21167
 5014811;White Cloud;US;United States;43.5503,-85.772
-5141962;University Gardens;US;United States;40.77732,-73.72263
-5201031;Middletown;US;United States;40.64399,-75.3324
-5228958;Kennebec;US;United States;43.9036,-99.86178
+5015701;Zeeland;US;United States;42.81252,-86.01865
+4967237;Hiram;US;United States;43.87868,-70.8034
+5016990;Bagley;US;United States;47.52162,-95.39835
+5011020;Standish;US;United States;43.98308,-83.95888
+5018651;Blaine;US;United States;45.1608,-93.23495
 5039675;Northfield;US;United States;44.4583,-93.1616
-5130831;Peekskill;US;United States;41.29009,-73.92042
-5095786;Bloomingdale;US;United States;41.00204,-74.32654
-5258575;Kimberly;US;United States;44.27221,-88.339
 4946136;Oakham;US;United States;42.35287,-72.04535
-5093242;Stratford;US;United States;44.65505,-71.55564
+4974775;Patten;US;United States;45.99644,-68.44614
+4969532;Limestone;US;United States;46.90866,-67.82585
 5023890;Dassel;US;United States;45.08163,-94.30693
 4946372;Onset;US;United States;41.74177,-70.65781
 5030856;Hoyt Lakes;US;United States;47.51965,-92.13851
-5136494;Schoharie;US;United States;42.66591,-74.30958
-5279715;Woodville;US;United States;44.95302,-92.2913
+5045360;Saint Paul;US;United States;44.94441,-93.09327
+5048796;Stewartville;US;United States;43.85552,-92.48851
+4957956;Belfast;US;United States;44.42591,-69.00642
+5033762;Lake Elmo;US;United States;44.9958,-92.87938
+4957962;Belgrade;US;United States;44.44729,-69.83255
+4992609;Fennville;US;United States;42.59392,-86.1017
+5004062;Novi;US;United States;42.48059,-83.47549
+5033962;Lakefield;US;United States;43.67746,-95.17166
 5012521;Trenton;US;United States;42.13949,-83.17826
-5083221;Bedford;US;United States;42.94647,-71.5159
-5164812;North Kingsville;US;United States;41.90589,-80.69036
-5304060;Mayer;US;United States;34.39781,-112.23627
-5142362;Viola;US;United States;41.13648,-74.08236
 4968937;Kittery;US;United States;43.08814,-70.73616
+4979050;South Berwick;US;United States;43.23453,-70.8095
+4971699;Mechanic Falls;US;United States;44.11174,-70.39172
 4994871;Grosse Pointe Woods;US;United States;42.44365,-82.90686
-5104795;South Belmar;US;United States;40.17095,-74.02736
-5060591;Minnewaukan;US;United States;48.07139,-99.25236
+5045258;Saint Michael;US;United States;45.20996,-93.66496
+4955149;Westborough;US;United States;42.26954,-71.61618
