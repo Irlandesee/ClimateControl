@@ -2,6 +2,7 @@ package it.uninsubria.climatemonitoring;
 
 import it.uninsubria.climatemonitoring.city.City;
 import it.uninsubria.climatemonitoring.dbref.DBInterface;
+import it.uninsubria.climatemonitoring.operatore.Operatore;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -24,12 +25,15 @@ public class ClimateMonitor extends Application {
         //Singleton Pattern?
         DBInterface dbRef = DBInterface.getInstance();
         HashMap<String, City> geonamesCache = dbRef.readGeonamesFile();
+        HashMap<String, Operatore> operatoriAutorizzatiCache = dbRef.readOperatoriAutorizzatiFile();
 
         printCache(geonamesCache);
         debug("Done");
 
+        printCache(operatoriAutorizzatiCache);
+
         dbRef.writeCoordinateMonitoraggioFile(geonamesCache);
-        debug("Copia sul file coordinateMonitoraggio.dati completata.");
+        debug("Copia sul file CoordinateMonitoraggio.dati completata.");
     }
 
     /**
@@ -46,8 +50,8 @@ public class ClimateMonitor extends Application {
         stage.show();
     }
 
-    private static void printCache(HashMap<String, City> geonamesCache) {
-        geonamesCache.forEach((key, value) -> System.out.println(value));
+    private static void printCache(HashMap<String, ?> cache) {
+        cache.forEach((key, value) -> System.out.println(value));
     }
 
     private static void debug(String s) {

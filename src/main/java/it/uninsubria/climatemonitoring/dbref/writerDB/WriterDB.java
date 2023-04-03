@@ -32,7 +32,7 @@ public class WriterDB {
     public void writeCoordinateMonitoraggioFile(HashMap<String, City> cache) throws IOException {
         if(!isFileEmpty()) return;
         writeFile(cache);
-        debug("Copia della cache coordinate monitoraggio nel file coordinateMonitoraggio.dati...");
+        debug("Copia della cache coordinate monitoraggio nel file CoordinateMonitoraggio.dati...");
     }
 
     private void writeFile(HashMap<String, City> cache) throws IOException {

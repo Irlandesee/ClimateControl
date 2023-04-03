@@ -3,6 +3,7 @@ package it.uninsubria.climatemonitoring.dbref;
 import it.uninsubria.climatemonitoring.city.City;
 import it.uninsubria.climatemonitoring.dbref.readerDB.ReaderDB;
 import it.uninsubria.climatemonitoring.dbref.writerDB.WriterDB;
+import it.uninsubria.climatemonitoring.operatore.Operatore;
 
 import java.io.*;
 import java.util.HashMap;
@@ -13,13 +14,12 @@ import java.util.HashMap;
  **/
 @SuppressWarnings("FieldCanBeLocal")
 public class DBInterface {
-    private static final String geonamesAndCoordinatesDati = "data/geonames-and-coordinates.csv";
-    private static final String centroMonitoraggioDati = "data/centroMonitoraggio.dati";
-    private static final String coordinateMonitoraggioDati = "data/coordinateMonitoraggio.dati";
-
-    private static File geonamesCoordinatesFile;
-    private static File centroMonitoraggioFile;
-    private static File coordinateMonitoraggioFile;
+    private static final File geonamesCoordinatesFile = new File("data/geonames-and-coordinates.csv");
+    private static final File centroMonitoraggioFile = new File("data/CentroMonitoraggio.dati");
+    private static final File coordinateMonitoraggioFile = new File("data/CoordinateMonitoraggio.dati");
+    private static final File operatoriAutorizzatiFile = new File("data/OperatoriAutorizzati.dati");
+    private static final File operatoriRegistratiFile = new File("data/OperatoriRegistrati.dati");
+    private static final File parametriClimaticiFile = new File("data/ParametriClimatici.dati");
 
     private static final boolean DEBUG = true;
 
@@ -32,13 +32,6 @@ public class DBInterface {
 
     private DBInterface() {}
 
-    public File getGeonamesCoordinatesFile() {
-        return geonamesCoordinatesFile;
-    }
-    public File getCoordinateMonitoraggioFile() {
-        return  coordinateMonitoraggioFile;
-    }
-
     public static DBInterface getInstance() throws IOException {
         if (uniqueInstance == null) {
             uniqueInstance = new DBInterface();
@@ -47,26 +40,90 @@ public class DBInterface {
         return uniqueInstance;
     }
 
-    public boolean isDEBUG(){ return this.DEBUG;}
+    public boolean isDEBUG(){ return DEBUG;}
 
-    public HashMap<String, City> readGeonamesFile() throws IOException { return readerREF.readGeonamesAndCoordinatesFile();}
+    public HashMap<String, City> readGeonamesFile() throws IOException {
+        return readerREF.readGeonamesAndCoordinatesFile();
+    }
+
+    public HashMap<String, Operatore> readOperatoriAutorizzatiFile() throws IOException {
+        return readerREF.readOperatoriAutorizzatiFile();
+    }
 
     public void writeCoordinateMonitoraggioFile(HashMap<String, City> cache) throws IOException {
         writerREF.writeCoordinateMonitoraggioFile(cache);
     }
 
-    private static void initialize() throws IOException {
-        geonamesCoordinatesFile = new File(geonamesAndCoordinatesDati);
-        centroMonitoraggioFile = new File(centroMonitoraggioDati);
-        coordinateMonitoraggioFile = new File(coordinateMonitoraggioDati);
+    public File getGeonamesCoordinatesFile() {
+        return geonamesCoordinatesFile;
+    }
+    public File getCentroMonitoraggioFile() { return centroMonitoraggioFile; }
+    public File getCoordinateMonitoraggioFile() {
+        return  coordinateMonitoraggioFile;
+    }
+    public File getOperatoriAutorizzatiFile() {
+        return operatoriAutorizzatiFile;
+    }
+    public File getOperatoriAutorizzati() {
+        return  operatoriRegistratiFile;
+    }
+    public File getParametriClimaticiFile() {
+        return parametriClimaticiFile;
+    }
 
+    private static void initialize() throws IOException {
         readerREF = new ReaderDB(uniqueInstance);
         writerREF = new WriterDB(uniqueInstance);
 
+        checkFilesExistence();
+        writeHeaders();
+    }
+
+    private static void writeHeaders() throws IOException {
+        PrintWriter fout;
+
+        final int coordinateMonitoraggioFileHeaderLength = 64;
+        final int operatoriAutorizzatiFileHeaderLength = 7;
+        final int operatoriRegistratiFileHeaderLength = 66;
+        final int parametriClimaticiFileHeaderLength = 123;
+
+        if(coordinateMonitoraggioFile.length() <= coordinateMonitoraggioFileHeaderLength) {
+            fout = new PrintWriter(new BufferedWriter(new FileWriter(coordinateMonitoraggioFile)));
+            fout.println("geonameID;AsciiName;CountryCode;CountryName;latitude,longitude");
+            fout.flush();
+            fout.close();
+        }
+
+        if(operatoriAutorizzatiFile.length() <= operatoriAutorizzatiFileHeaderLength) {
+            fout = new PrintWriter(new BufferedWriter(new FileWriter(operatoriAutorizzatiFile)));
+            fout.println("Email");
+            fout.flush();
+            fout.close();
+        }
+
+        if(operatoriRegistratiFile.length() <= operatoriRegistratiFileHeaderLength) {
+            fout = new PrintWriter(new BufferedWriter(new FileWriter(operatoriRegistratiFile)));
+            fout.println("Cognome;Nome;CodiceFiscale;Email;UserID;Password;CentroAfferenza");
+            fout.flush();
+            fout.close();
+        }
+
+        if(parametriClimaticiFile.length() <= parametriClimaticiFileHeaderLength) {
+            fout = new PrintWriter(new BufferedWriter(new FileWriter(parametriClimaticiFile)));
+            fout.println("Nome;AreaInteresse;DataRilevazione;Vento;Umidità;Pressione;Temperatura;Precipitazioni;" +
+                    "AltitudineGhiacciai;MassaGhiacciai");
+            fout.flush();
+            fout.close();
+        }
+    }
+
+    private static void checkFilesExistence() throws IOException {
         checkFileExistence(geonamesCoordinatesFile);
         checkFileExistence(centroMonitoraggioFile);
         checkFileExistence(coordinateMonitoraggioFile);
-        writeHeader();
+        checkFileExistence(operatoriAutorizzatiFile);
+        checkFileExistence(operatoriRegistratiFile);
+        checkFileExistence(parametriClimaticiFile);
     }
 
     private static void checkFileExistence(File file) throws IOException {
@@ -75,13 +132,6 @@ public class DBInterface {
             if (res && DEBUG) System.out.println("Created new file at: " +
                     file.getAbsolutePath());
         }
-    }
-
-    private static void writeHeader() throws IOException {
-        PrintWriter fout = new PrintWriter(new BufferedWriter(new FileWriter(coordinateMonitoraggioFile)));
-        fout.println("geonameID;AsciiName;CountryCode;CountryName;latitude,longitude");
-        fout.flush();
-        fout.close();
     }
 
     private HashMap<String, City> getGeonamesDBCache(){return this.geonamesDBCache;}

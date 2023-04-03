@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import it.uninsubria.climatemonitoring.city.City;
 import it.uninsubria.climatemonitoring.dbref.DBInterface;
+import it.uninsubria.climatemonitoring.operatore.Operatore;
 import javafx.util.Pair;
 
 /**
@@ -26,18 +27,37 @@ public class ReaderDB {
 
     /**
      *
-     * @return
-     * @throws IOException
+     * @return HashMap contenente l'elenco delle aree di interesse salvate sul file geonames-and-coordinates.csv
+     * @throws IOException non è stato trovato il file geonames-and-coordinates.csv
      */
     public HashMap<String, City> readGeonamesAndCoordinatesFile() throws IOException {
-        HashMap<String, City> res = new HashMap<String, City>();
+        HashMap<String, City> res = new HashMap<>();
         BufferedReader bReader = new BufferedReader(new FileReader(dbRef.getGeonamesCoordinatesFile()));
-        String line = bReader.readLine(); //read first line
+        bReader.readLine();
+        String line;
         while((line = bReader.readLine()) != null){
             Pair<String, City> tmp = parseGeoname(line);
             res.put(tmp.getKey(), tmp.getValue());
         }
         bReader.close();
+        return res;
+    }
+
+    /**
+     *
+     * @return HashMap contenente l'elenco degli operatori registrati salvati sul file OperatoriRegistrati.dati
+     * @throws IOException non è stato possibile creare il file OperatoriRegistrati.dati
+     */
+    public HashMap<String, Operatore> readOperatoriAutorizzatiFile() throws IOException {
+        HashMap<String, Operatore> res = new HashMap<>();
+        BufferedReader br = new BufferedReader(new FileReader(dbRef.getOperatoriAutorizzatiFile()));
+        br.readLine();
+        String line;
+        while ((line = br.readLine()) != null) {
+            Pair<String, Operatore> tmp = parseOperatore(line);
+            res.put(tmp.getKey(), tmp.getValue());
+        }
+        br.close();
         return res;
     }
 
@@ -49,7 +69,13 @@ public class ReaderDB {
         String[] coordsTmp = res[5].split(coordsRegex);
         City c = new City(res[0], res[2], res[3], res[4],
                 Float.parseFloat(coordsTmp[0]), Float.parseFloat(coordsTmp[1]));
-        return new Pair<String, City>(res[0], c);
+        return new Pair<>(res[0], c);
     }
 
+    private Pair<String, Operatore> parseOperatore(String line){
+        String generalRegex = ";";
+        String[] res = line.split(generalRegex);
+        Operatore operatore = new Operatore(res[0]);
+        return new Pair<>(res[0], operatore);
+    }
 }
