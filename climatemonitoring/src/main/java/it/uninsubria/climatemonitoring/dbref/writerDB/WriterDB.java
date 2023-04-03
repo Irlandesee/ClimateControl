@@ -1,12 +1,11 @@
-package com.climatemonitoring.climatemonitoring.dbref.writerDB;
+package it.uninsubria.climatemonitoring.dbref.writerDB;
 
-import com.climatemonitoring.climatemonitoring.city.City;
-import com.climatemonitoring.climatemonitoring.dbref.DBInterface;
+import it.uninsubria.climatemonitoring.city.City;
+import it.uninsubria.climatemonitoring.dbref.DBInterface;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.HashMap;
 
 public class WriterDB {

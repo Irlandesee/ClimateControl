@@ -1,4 +1,4 @@
-package com.climatemonitoring.climatemonitoring;
+package it.uninsubria.climatemonitoring;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

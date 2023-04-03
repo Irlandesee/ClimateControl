@@ -1,7 +1,7 @@
-package com.climatemonitoring.climatemonitoring;
+package it.uninsubria.climatemonitoring;
 
-import com.climatemonitoring.climatemonitoring.city.City;
-import com.climatemonitoring.climatemonitoring.dbref.DBInterface;
+import it.uninsubria.climatemonitoring.city.City;
+import it.uninsubria.climatemonitoring.dbref.DBInterface;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -9,7 +9,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
 
 public class climateMonitoringApp extends Application {
     @Override

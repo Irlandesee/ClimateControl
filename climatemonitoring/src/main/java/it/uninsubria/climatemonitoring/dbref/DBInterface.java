@@ -1,8 +1,8 @@
-package com.climatemonitoring.climatemonitoring.dbref;
+package it.uninsubria.climatemonitoring.dbref;
 
-import com.climatemonitoring.climatemonitoring.city.City;
-import com.climatemonitoring.climatemonitoring.dbref.readerDB.ReaderDB;
-import com.climatemonitoring.climatemonitoring.dbref.writerDB.WriterDB;
+import it.uninsubria.climatemonitoring.city.City;
+import it.uninsubria.climatemonitoring.dbref.readerDB.ReaderDB;
+import it.uninsubria.climatemonitoring.dbref.writerDB.WriterDB;
 
 import java.io.*;
 import java.util.HashMap;

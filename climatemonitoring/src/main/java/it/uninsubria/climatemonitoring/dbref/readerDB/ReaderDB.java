@@ -1,12 +1,12 @@
-package com.climatemonitoring.climatemonitoring.dbref.readerDB;
+package it.uninsubria.climatemonitoring.dbref.readerDB;
 
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.HashMap;
 
-import com.climatemonitoring.climatemonitoring.city.City;
-import com.climatemonitoring.climatemonitoring.dbref.DBInterface;
+import it.uninsubria.climatemonitoring.city.City;
+import it.uninsubria.climatemonitoring.dbref.DBInterface;
 import javafx.util.Pair;
 
 public class ReaderDB {

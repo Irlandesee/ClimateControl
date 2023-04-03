@@ -1,4 +1,4 @@
-package com.climatemonitoring.climatemonitoring.city;
+package it.uninsubria.climatemonitoring.city;
 
 public class City {
 
