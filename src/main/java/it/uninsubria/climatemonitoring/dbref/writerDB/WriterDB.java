@@ -2,6 +2,7 @@ package it.uninsubria.climatemonitoring.dbref.writerDB;
 
 import it.uninsubria.climatemonitoring.city.City;
 import it.uninsubria.climatemonitoring.dbref.DBInterface;
+import it.uninsubria.climatemonitoring.operatore.Operatore;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -33,6 +34,13 @@ public class WriterDB {
         if(!isFileEmpty()) return;
         writeFile(cache);
         debug("Copia della cache coordinate monitoraggio nel file CoordinateMonitoraggio.dati...");
+    }
+
+    public void registraOperatore(Operatore operatore) throws IOException {
+        PrintWriter fout = new PrintWriter(new BufferedWriter(new FileWriter(dbRef.getOperatoriRegistratiFile(), true)));
+        fout.println(operatore);
+        fout.flush();
+        fout.close();
     }
 
     private void writeFile(HashMap<String, City> cache) throws IOException {

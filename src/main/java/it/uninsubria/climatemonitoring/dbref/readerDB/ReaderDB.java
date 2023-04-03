@@ -45,8 +45,8 @@ public class ReaderDB {
 
     /**
      *
-     * @return HashMap contenente l'elenco degli operatori registrati salvati sul file OperatoriRegistrati.dati
-     * @throws IOException non è stato possibile creare il file OperatoriRegistrati.dati
+     * @return HashMap contenente l'elenco degli operatori autorizzati salvati sul file OperatoriAutorizzati.dati
+     * @throws IOException non è stato possibile creare il file OperatoriAutorizzati.dati
      */
     public HashMap<String, Operatore> readOperatoriAutorizzatiFile() throws IOException {
         HashMap<String, Operatore> res = new HashMap<>();
@@ -54,13 +54,30 @@ public class ReaderDB {
         br.readLine();
         String line;
         while ((line = br.readLine()) != null) {
-            Pair<String, Operatore> tmp = parseOperatore(line);
+            Pair<String, Operatore> tmp = parseOperatoreAutorizzato(line);
             res.put(tmp.getKey(), tmp.getValue());
         }
         br.close();
         return res;
     }
 
+    /**
+     *
+     * @return HashMap contenente l'elenco degli operatori registrati salvati sul file OperatoriRegistrati.dati
+     * @throws IOException non è stato possibile creare il file OperatoriRegistrati.dati
+     */
+    public HashMap<String, Operatore> readOperatoriRegistratiFile() throws IOException {
+        HashMap<String, Operatore> res = new HashMap<>();
+        BufferedReader br = new BufferedReader(new FileReader(dbRef.getOperatoriRegistratiFile()));
+        br.readLine();
+        String line;
+        while ((line = br.readLine()) != null) {
+            Pair<String, Operatore> tmp = parseOperatoreRegistrato(line);
+            res.put(tmp.getKey(), tmp.getValue());
+        }
+        br.close();
+        return res;
+    }
 
     private Pair<String, City> parseGeoname(String line){
         String generalRegex = ";";
@@ -72,10 +89,17 @@ public class ReaderDB {
         return new Pair<>(res[0], c);
     }
 
-    private Pair<String, Operatore> parseOperatore(String line){
+    private Pair<String, Operatore> parseOperatoreAutorizzato(String line){
         String generalRegex = ";";
         String[] res = line.split(generalRegex);
         Operatore operatore = new Operatore(res[0]);
         return new Pair<>(res[0], operatore);
+    }
+
+    private Pair<String, Operatore> parseOperatoreRegistrato(String line){
+        String generalRegex = ";";
+        String[] res = line.split(generalRegex);
+        Operatore operatore = new Operatore(res[0], res[1], res[2], res[3], res[4], res[5], res[6]);
+        return new Pair<>(res[3], operatore);
     }
 }

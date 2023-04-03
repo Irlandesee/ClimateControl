@@ -50,8 +50,16 @@ public class DBInterface {
         return readerREF.readOperatoriAutorizzatiFile();
     }
 
+    public HashMap<String, Operatore> readOperatoriRegistratiFile() throws IOException {
+        return readerREF.readOperatoriRegistratiFile();
+    }
+
     public void writeCoordinateMonitoraggioFile(HashMap<String, City> cache) throws IOException {
         writerREF.writeCoordinateMonitoraggioFile(cache);
+    }
+
+    public void registraOperatore(Operatore operatore) throws IOException {
+        writerREF.registraOperatore(operatore);
     }
 
     public File getGeonamesCoordinatesFile() {
@@ -64,7 +72,7 @@ public class DBInterface {
     public File getOperatoriAutorizzatiFile() {
         return operatoriAutorizzatiFile;
     }
-    public File getOperatoriAutorizzati() {
+    public File getOperatoriRegistratiFile() {
         return  operatoriRegistratiFile;
     }
     public File getParametriClimaticiFile() {

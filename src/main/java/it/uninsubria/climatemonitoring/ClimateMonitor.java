@@ -27,13 +27,38 @@ public class ClimateMonitor extends Application {
         HashMap<String, City> geonamesCache = dbRef.readGeonamesFile();
         HashMap<String, Operatore> operatoriAutorizzatiCache = dbRef.readOperatoriAutorizzatiFile();
 
+        HashMap<String, Operatore> operatoriRegistratiCache = dbRef.readOperatoriRegistratiFile();
+
+        registraOperatore(dbRef, operatoriAutorizzatiCache, operatoriRegistratiCache,
+                "example00@climateMonitor.it");
+        operatoriRegistratiCache = dbRef.readOperatoriRegistratiFile();
+
+        registraOperatore(dbRef, operatoriAutorizzatiCache, operatoriRegistratiCache,
+                "example01@climateMonitor.it");
+        operatoriRegistratiCache = dbRef.readOperatoriRegistratiFile();
+
         printCache(geonamesCache);
         debug("Done");
 
+        debug("Stampa cache operatori autorizzati...");
         printCache(operatoriAutorizzatiCache);
+        debug("Stampa cache operatori autorizzati completata.");
+
+        debug("Stampa cache operatori registrati...");
+        printCache(operatoriRegistratiCache);
+        debug("Stampa cache operatori registrati completata.");
 
         dbRef.writeCoordinateMonitoraggioFile(geonamesCache);
         debug("Copia sul file CoordinateMonitoraggio.dati completata.");
+    }
+
+    private static void registraOperatore(DBInterface dbRef, HashMap<String, Operatore> operatoriAutorizzatiCache,
+                                          HashMap<String, Operatore> operatoriRegistratiCache,
+                                          String email) throws IOException {
+        if(!operatoriRegistratiCache.containsKey(email))
+            dbRef.registraOperatore(operatoriAutorizzatiCache.get(email));
+        else
+            debug("Operatore già registrato!");
     }
 
     /**

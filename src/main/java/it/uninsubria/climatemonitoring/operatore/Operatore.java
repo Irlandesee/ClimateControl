@@ -37,7 +37,13 @@ public class Operatore {
 
     @Override
     public String toString() {
-        return "Operatore Autorizzato identificato da: " + email;
+        return cognome + ";" +
+                nome + ";" +
+                codiceFiscale + ";" +
+                email + ";" +
+                userID + ";" +
+                password + ";" +
+                centroAfferenza;
     }
 
     public String getCognome() {
