@@ -10,12 +10,16 @@ import java.util.HashMap;
 
 public class WriterDB {
 
+    private static WriterDB writerInstance;
 
     private final DBInterface dbRef;
 
-
-    public WriterDB(DBInterface dbRef){
-        this.dbRef = dbRef;
+    public static WriterDB getInstance(){
+        if(writerInstance == null) writerInstance = new WriterDB();
+        return writerInstance;
+    }
+    private WriterDB(){
+        this.dbRef = DBInterface.getInstance();
     }
 
     public void writeGeonamesAndCoordinates(HashMap<String, City> cache){

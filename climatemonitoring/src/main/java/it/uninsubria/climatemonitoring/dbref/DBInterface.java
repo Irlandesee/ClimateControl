@@ -8,6 +8,9 @@ import java.io.*;
 import java.util.HashMap;
 
 public class DBInterface {
+
+    private static DBInterface dbInstance;
+
     private final String geonamesAndCoordinatesDati = "data/geonames-and-coordinates.csv";
     private final String centroMonitoraggioDati = "data/centroMonitoraggio.dati";
     private final String coordinateMonitoraggioDati = "data/coordinateMonitoraggio.dati";
@@ -31,13 +34,18 @@ public class DBInterface {
     private final ReaderDB readerREF;
     private final WriterDB writerREF;
 
-    public DBInterface(){
+    public static DBInterface getInstance(){
+        if(dbInstance == null) dbInstance = new DBInterface();
+        return dbInstance;
+    }
+
+    private DBInterface(){
         geonamesCoordinatesFile = new File(geonamesAndCoordinatesDati);
         centroMonitoraggioFile = new File(centroMonitoraggioDati);
         coordinateMonitoraggioFile = new File(coordinateMonitoraggioDati);
 
         this.readerREF = new ReaderDB(this);
-        this.writerREF = new WriterDB(this);
+        this.writerREF = WriterDB.getInstance();
 
         try {
             if (!geonamesCoordinatesFile.exists()) {
@@ -66,6 +74,7 @@ public class DBInterface {
         }catch(IOException ioe){ioe.printStackTrace();}
 
     }
+
 
     public File getGeonamesCoordinatesFile() {
         return this.geonamesCoordinatesFile;
