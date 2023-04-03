@@ -26,16 +26,15 @@ public class ClimateMonitor extends Application {
         DBInterface dbRef = DBInterface.getInstance();
         HashMap<String, City> geonamesCache = dbRef.readGeonamesFile();
         HashMap<String, Operatore> operatoriAutorizzatiCache = dbRef.readOperatoriAutorizzatiFile();
-
         HashMap<String, Operatore> operatoriRegistratiCache = dbRef.readOperatoriRegistratiFile();
 
-        registraOperatore(dbRef, operatoriAutorizzatiCache, operatoriRegistratiCache,
-                "example00@climateMonitor.it");
-        operatoriRegistratiCache = dbRef.readOperatoriRegistratiFile();
+        String email00 = "example00@climateMonitor.it";
+        String email01 = "example01@climateMonitor.it";
+        String email02 = "example10@climateMonitor.it";
 
-        registraOperatore(dbRef, operatoriAutorizzatiCache, operatoriRegistratiCache,
-                "example01@climateMonitor.it");
-        operatoriRegistratiCache = dbRef.readOperatoriRegistratiFile();
+        signUp(dbRef, operatoriAutorizzatiCache, operatoriRegistratiCache, email00);
+        signUp(dbRef, operatoriAutorizzatiCache, operatoriRegistratiCache, email01);
+        signUp(dbRef, operatoriAutorizzatiCache, operatoriRegistratiCache, email02);
 
         printCache(geonamesCache);
         debug("Done");
@@ -52,13 +51,28 @@ public class ClimateMonitor extends Application {
         debug("Copia sul file CoordinateMonitoraggio.dati completata.");
     }
 
-    private static void registraOperatore(DBInterface dbRef, HashMap<String, Operatore> operatoriAutorizzatiCache,
-                                          HashMap<String, Operatore> operatoriRegistratiCache,
-                                          String email) throws IOException {
-        if(!operatoriRegistratiCache.containsKey(email))
-            dbRef.registraOperatore(operatoriAutorizzatiCache.get(email));
+    private static void signUp(DBInterface dbRef, HashMap<String, Operatore> operatoriAutorizzatiCache,
+                               HashMap<String, Operatore> operatoriRegistratiCache,
+                               String email) throws IOException {
+        if(!operatoriAutorizzatiCache.containsKey(email))
+            debug("Accesso Negato!");
+        else if(!operatoriRegistratiCache.containsKey(email)) {
+            registrazione(dbRef, operatoriAutorizzatiCache, email);
+            operatoriRegistratiCache.put(email, operatoriAutorizzatiCache.get(email));
+        }
         else
             debug("Operatore già registrato!");
+    }
+
+    private static void registrazione(DBInterface dbRef, HashMap<String, Operatore> operatoriAutorizzatiCache, String email) throws IOException {
+        Operatore operatore = operatoriAutorizzatiCache.get(email);
+        operatore.setCognome("Cognome");
+        operatore.setNome("Nome");
+        operatore.setCodiceFiscale("CodiceFiscale");
+        operatore.setUserID("UserID");
+        operatore.setPassword("Password");
+        operatore.setCentroAfferenza("CentroAfferenza");
+        dbRef.registraOperatore(operatore);
     }
 
     /**
