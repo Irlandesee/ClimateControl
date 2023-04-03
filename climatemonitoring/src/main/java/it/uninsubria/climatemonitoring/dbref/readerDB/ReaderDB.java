@@ -11,16 +11,10 @@ import javafx.util.Pair;
 
 public class ReaderDB {
 
-    private static ReaderDB readerInstance;
-
     private final DBInterface dbRef;
 
-    public static ReaderDB getInstance(){
-        if(readerInstance == null) readerInstance = new ReaderDB();
-        return readerInstance;
-    }
-    private ReaderDB(){
-        this.dbRef = DBInterface.getInstance();
+    public ReaderDB(DBInterface dbRef){
+        this.dbRef = dbRef;
     }
 
     public HashMap<String, City> readGeonamesAndCoordinatesFile(){

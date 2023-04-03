@@ -9,23 +9,19 @@ import java.util.HashMap;
 
 public class DBInterface {
 
-    private static DBInterface dbInstance;
-
     private final String geonamesAndCoordinatesDati = "data/geonames-and-coordinates.csv";
     private final String centroMonitoraggioDati = "data/centroMonitoraggio.dati";
     private final String coordinateMonitoraggioDati = "data/coordinateMonitoraggio.dati";
 
-//    Nella mia versione ho dovuto usare questi percorsi perchè il mio progetto inizia dalla cartella ClimateControl
-//    e non dalla cartella climatemonitoring.
 
 //    private final String geonamesAndCoordinatesDati = "climatemonitoring/data/geonames-and-coordinates.csv";
 //    private final String centroMonitoraggioDati = "climatemonitoring/data/centroMonitoraggio.dati";
 //    private final String coordinateMonitoraggioDati = "climatemonitoring/data/coordinateMonitoraggio.dati";
 
 
-    private File geonamesCoordinatesFile;
-    private File centroMonitoraggioFile;
-    private File coordinateMonitoraggioFile;
+    private final File geonamesCoordinatesFile;
+    private final File centroMonitoraggioFile;
+    private final File coordinateMonitoraggioFile;
 
     private final boolean DEBUG = true;
 
@@ -34,18 +30,14 @@ public class DBInterface {
     private final ReaderDB readerREF;
     private final WriterDB writerREF;
 
-    public static DBInterface getInstance(){
-        if(dbInstance == null) dbInstance = new DBInterface();
-        return dbInstance;
-    }
 
-    private DBInterface(){
+    public DBInterface(){
         geonamesCoordinatesFile = new File(geonamesAndCoordinatesDati);
         centroMonitoraggioFile = new File(centroMonitoraggioDati);
         coordinateMonitoraggioFile = new File(coordinateMonitoraggioDati);
 
         this.readerREF = new ReaderDB(this);
-        this.writerREF = WriterDB.getInstance();
+        this.writerREF = new WriterDB(this);
 
         try {
             if (!geonamesCoordinatesFile.exists()) {
