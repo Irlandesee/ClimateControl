@@ -32,23 +32,25 @@ public class ClimateMonitor extends Application {
         String email01 = "example01@climateMonitor.it";
         String email02 = "example10@climateMonitor.it";
 
+        debug("Registrazione in corso...");
         signUp(dbRef, operatoriAutorizzatiCache, operatoriRegistratiCache, email00);
         signUp(dbRef, operatoriAutorizzatiCache, operatoriRegistratiCache, email01);
         signUp(dbRef, operatoriAutorizzatiCache, operatoriRegistratiCache, email02);
 
+        debug("Stampa cache coordinate monitoraggio...");
         printCache(geonamesCache);
-        debug("Done");
+        debug("Stampa cache coordinate monitoraggio completata.\n");
 
         debug("Stampa cache operatori autorizzati...");
         printCache(operatoriAutorizzatiCache);
-        debug("Stampa cache operatori autorizzati completata.");
+        debug("Stampa cache operatori autorizzati completata.\n");
 
         debug("Stampa cache operatori registrati...");
         printCache(operatoriRegistratiCache);
-        debug("Stampa cache operatori registrati completata.");
+        debug("Stampa cache operatori registrati completata.\n");
 
         dbRef.writeCoordinateMonitoraggioFile(geonamesCache);
-        debug("Copia sul file CoordinateMonitoraggio.dati completata.");
+        debug("Copia sul file CoordinateMonitoraggio.dati completata.\n");
     }
 
     /**

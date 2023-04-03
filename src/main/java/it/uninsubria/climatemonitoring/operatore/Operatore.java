@@ -37,6 +37,8 @@ public class Operatore {
 
     @Override
     public String toString() {
+        if(cognome == null)
+            return email;
         return cognome + ";" +
                 nome + ";" +
                 codiceFiscale + ";" +
