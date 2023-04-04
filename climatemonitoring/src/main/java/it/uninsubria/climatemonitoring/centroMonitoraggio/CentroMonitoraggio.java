@@ -3,6 +3,7 @@ package it.uninsubria.climatemonitoring.centroMonitoraggio;
 import it.uninsubria.climatemonitoring.areaInteresse.AreaInteresse;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class CentroMonitoraggio {
 
@@ -19,6 +20,18 @@ public class CentroMonitoraggio {
 
     public CentroMonitoraggio(String centroID){
         this.centroID = centroID;
+    }
+
+    public CentroMonitoraggio(String centroID, String nomeCentro,
+                              String via, short numCivico, int cap,
+                              String comune, String provincia){
+        this.centroID = centroID;
+        this.nomeCentro = nomeCentro;
+        this.via = via;
+        this.numCivico = numCivico;
+        this.cap = cap;
+        this.comune = comune;
+        this.provincia = provincia;
     }
 
     public String getCentroID() {
@@ -81,9 +94,33 @@ public class CentroMonitoraggio {
         return areeInteresse;
     }
 
+    //Only checks if centroID is the same
+    public boolean equals(Object obj){
+        if(obj.getClass() == CentroMonitoraggio.class){
+            return ((CentroMonitoraggio) obj).getCentroID().equals(this.centroID);
+        }
+        return false;
+    }
+
     public String toString(){
-        //TODO: return new string representing this instance
-        return null;
+        final String generalSeparator = ";";
+        final String areeSeparator = ",";
+        StringBuilder builder = new StringBuilder();
+        builder.append(centroID).append(generalSeparator)
+                .append(nomeCentro).append(generalSeparator)
+                .append(via).append(generalSeparator)
+                .append(numCivico).append(generalSeparator)
+                .append(comune).append(generalSeparator)
+                .append(cap).append(generalSeparator)
+                .append(provincia).append(generalSeparator);
+
+        if(areeInteresse.isEmpty()) builder.append("\n");
+        else
+            for(String tmp: areeInteresse.keySet()) //append the keys
+                builder.append(tmp).append(areeSeparator);
+            builder.append("\n");
+
+        return builder.toString();
     }
 
 }
