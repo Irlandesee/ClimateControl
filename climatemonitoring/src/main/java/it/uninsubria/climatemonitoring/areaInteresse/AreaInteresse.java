@@ -18,11 +18,20 @@ public class AreaInteresse {
     public float getLongitude(){return this.longitude;}
 
     public boolean equals(Object o){
-        //TODO:
+        if(o.getClass() == AreaInteresse.class)
+            if(((AreaInteresse) o).getAreaID().equals(this.getAreaID()))
+                return true;
         return false;
     }
     public String toString(){
-        //TODO: return stringa rappresentante l'area di interesse
-        return null;
+        String separatorArea = ":";
+        StringBuilder builder = new StringBuilder();
+        builder.append(areaID).append(separatorArea)
+                .append(denominazione).append(separatorArea)
+                .append(stato).append(separatorArea)
+                .append(latitude).append(separatorArea)
+                .append(longitude).append("\n");
+
+        return builder.toString();
     }
 }
