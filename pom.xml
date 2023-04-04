@@ -86,7 +86,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                com.climatemonitoring.climatemonitoring/it.uninsubria.climatemonitoring.ClimateMonitor
+                                it.uninsubria.climatemonitoring.ClimateMonitor
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>

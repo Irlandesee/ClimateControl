@@ -1,14 +1,11 @@
-package it.uninsubria.climatemonitoring.dbref.writerDB;
+package it.uninsubria.climatemonitoring.gestioneFile;
 
-import it.uninsubria.climatemonitoring.city.City;
-import it.uninsubria.climatemonitoring.dbref.DBInterface;
-import it.uninsubria.climatemonitoring.operatore.Operatore;
+import it.uninsubria.climatemonitoring.AreaInteresse;
+import it.uninsubria.climatemonitoring.Operatore;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 /**
  * @author : Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
@@ -30,20 +27,18 @@ public class WriterDB {
      * @param cache copia in memoria del file geonames-and-coordinates.csv
      * @throws IOException il file non esiste
      */
-    public void writeCoordinateMonitoraggioFile(HashMap<String, City> cache) throws IOException {
+    public void writeCoordinateMonitoraggioFile(HashMap<String, AreaInteresse> cache) throws IOException {
         if(!isFileEmpty()) return;
         writeFile(cache);
         debug("Copia della cache coordinate monitoraggio nel file CoordinateMonitoraggio.dati...");
     }
 
-    public void registraOperatore(Operatore operatore) throws IOException {
-        PrintWriter fout = new PrintWriter(new BufferedWriter(new FileWriter(dbRef.getOperatoriRegistratiFile(), true)));
-        fout.println(operatore);
-        fout.flush();
-        fout.close();
-    }
+//    public void registraOperatore(Operatore operatore, String fileName) throws IOException {
+//        ObjectOutputStream write = new ObjectOutputStream(new FileOutputStream(fileName));
+//        write.writeObject(operatore);
+//    }
 
-    private void writeFile(HashMap<String, City> cache) throws IOException {
+    private void writeFile(HashMap<String, AreaInteresse> cache) throws IOException {
         PrintWriter fout = new PrintWriter(new BufferedWriter(new FileWriter(dbRef.getCoordinateMonitoraggioFile(), true)));
         cache.forEach(
                 (key, value) -> {
@@ -51,6 +46,11 @@ public class WriterDB {
                     fout.flush();
                 });
         fout.close();
+    }
+
+    public void serializeFileOut(Object object, String fileName) throws IOException {
+        ObjectOutputStream write = new ObjectOutputStream(new FileOutputStream(fileName));
+        write.writeObject(object);
     }
 
     private void debug(String s) {

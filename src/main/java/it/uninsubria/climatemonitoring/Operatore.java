@@ -1,13 +1,14 @@
-package it.uninsubria.climatemonitoring.operatore;
+package it.uninsubria.climatemonitoring;
+
+import java.io.Serializable;
 
 /**
  * @author : Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
  * @author : Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it, VA
  **/
-public class Operatore {
+public class Operatore implements Serializable {
     private String cognome, nome, codiceFiscale, email, userID, password;
-    //Questo sarà un oggetto di tipo centroAfferenza
-    private String centroAfferenza;
+    private CentroMonitoraggio centroAfferenza;
 
     /**
      *
@@ -21,7 +22,7 @@ public class Operatore {
      *                        potrà inserire dati solo qui
      */
     public Operatore(String cognome, String nome, String codiceFiscale, String email, String userID, String password,
-                     String centroAfferenza){
+                     CentroMonitoraggio centroAfferenza){
         this.cognome = cognome;
         this.nome = nome;
         this.codiceFiscale = codiceFiscale;
@@ -96,11 +97,11 @@ public class Operatore {
         this.password = password;
     }
 
-    public String getCentroAfferenza() {
+    public CentroMonitoraggio getCentroAfferenza() {
         return centroAfferenza;
     }
 
-    public void setCentroAfferenza(String centroAfferenza) {
+    public void setCentroAfferenza(CentroMonitoraggio centroAfferenza) {
         this.centroAfferenza = centroAfferenza;
     }
 }

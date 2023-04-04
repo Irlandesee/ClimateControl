@@ -1,10 +1,10 @@
-package it.uninsubria.climatemonitoring.city;
+package it.uninsubria.climatemonitoring;
 
 /**
  * @author : Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
  * @author : Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it, VA
  **/
-public class City {
+public class AreaInteresse {
 
     private String geonameID;
     private String asciiName;
@@ -22,7 +22,7 @@ public class City {
      * @param latitude
      * @param longitude
      */
-    public City(String geonameID, String asciiName, String countryCode, String country, float latitude, float longitude){
+    public AreaInteresse(String geonameID, String asciiName, String countryCode, String country, float latitude, float longitude){
         this.geonameID = geonameID;
         this.asciiName = asciiName;
         this.country = country;

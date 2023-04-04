@@ -9,8 +9,4 @@ module com.climatemonitoring.climatemonitoring {
 
     opens it.uninsubria.climatemonitoring to javafx.fxml;
     exports it.uninsubria.climatemonitoring;
-    exports it.uninsubria.climatemonitoring.operatore;
-    opens it.uninsubria.climatemonitoring.operatore to javafx.fxml;
-    exports it.uninsubria.climatemonitoring.centroMonitoraggio;
-    opens it.uninsubria.climatemonitoring.centroMonitoraggio to javafx.fxml;
 }
