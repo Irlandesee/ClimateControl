@@ -11,6 +11,16 @@ public class AreaInteresse {
     public AreaInteresse(String areaID){
         this.areaID = areaID;
     }
+
+    public AreaInteresse(String areaID, String denominazione,
+                         String stato, float latitude, float longitude) {
+        this.areaID = areaID;
+        this.denominazione = denominazione;
+        this.stato = stato;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
     public String getAreaID(){return this.areaID;}
     public String getDenominazione(){return this.denominazione;}
     public String getStato(){return this.stato;}
