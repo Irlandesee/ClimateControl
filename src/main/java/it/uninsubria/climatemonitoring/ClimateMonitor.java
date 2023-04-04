@@ -41,110 +41,10 @@ public class ClimateMonitor extends Application {
                         (solo operatori autorizzati).
                         Digitare 'uscita' per terminare il programma.""");
                 switch (reader.readLine()) {
-                    case "cerca" -> {
-                        printCache(geonamesCache);
-                        System.out.println("\nE' possibile visualizzare i dati climatici di un area di interesse digitando" +
-                                " il suo geonameID");
-                        String geonameID = reader.readLine();
-                        AreaInteresse areaGeografica;
-                        while ((areaGeografica = geonamesCache.get(geonameID)) == null) {
-                            System.out.println("GeonameID inserito non valido. Riprovare.");
-                            geonameID = reader.readLine();
-                        }
-                        System.out.println("Dati climatici di: " + areaGeografica);
-                    }
-                    case "login" -> {
-                        while (!loggedIn) {
-                            System.out.println("Digitare l'userID:");
-                            String userID = reader.readLine();
-                            if (userID.equals(""))
-                                break;
-                            String password;
-                            String enteredPassword;
-                            for (Operatore operatore : operatoriRegistratiCache) {
-                                if (userID.equals(operatore.getUserID())) {
-                                    password = operatore.getPassword();
-                                    System.out.println("Digitare la password:");
-                                    while (!loggedIn) {
-                                        enteredPassword = reader.readLine();
-                                        if (enteredPassword.equals(""))
-                                            break;
-                                        if (password.equals(enteredPassword)) {
-                                            System.out.println("Accesso effettuato!\nBenvenuto " + operatore.getCognome()
-                                                    + " " + operatore.getNome());
-                                            loggedIn = true;
-                                        } else {
-                                            System.out.println("Password errata!");
-                                        }
-                                    }
-                                    break;
-                                }
-                            }
-                            if (!loggedIn)
-                                System.out.println("userID errato!");
-                        }
-                    }
-                    case "registrazione" -> {
-                        String cognome, nome, codiceFiscale, email, userID, password, nomeCentroAfferenza;
-                        System.out.println("Digitare il cognome:");
-                        cognome = reader.readLine();
-                        System.out.println("Digitare il nome:");
-                        nome = reader.readLine();
-                        System.out.println("Digitare il codice fiscale:");
-                        codiceFiscale = reader.readLine();
-                        System.out.println("Digitare l'email aziendale:");
-                        email = reader.readLine();
-                        boolean isEmailValid = false;
-                        for (Operatore operatore : operatoriRegistratiCache) {
-                            if (operatore.getEmail().equals(email)) {
-                                System.out.println("Utente gia' registrato!");
-                                break;
-                            }
-                        }
-                        for (String tmp : operatoriAutorizzatiCache) {
-                            if (tmp.equals(email)) {
-                                isEmailValid = true;
-                                break;
-                            }
-                        }
-                        if(!isEmailValid) {
-                            System.out.println("Email non valida!");
-                            break;
-                        }
-                        System.out.println("Digitare l'userID:");
-                        userID = reader.readLine();
-                        System.out.println("Digitare la password:");
-                        password = reader.readLine();
-                        System.out.println("Digitare il geonameID del centro di afferenza:");
-                        nomeCentroAfferenza = reader.readLine();
-                        CentroMonitoraggio centroAfferenza = null;
-                        for (CentroMonitoraggio centroMonitoraggio : centriMonitoraggioCache) {
-                            if (centroMonitoraggio.getNomeCentro().equals(nomeCentroAfferenza))
-                                centroAfferenza = centroMonitoraggio;
-                            else {
-                                String via, comune, provincia;
-                                int numeroCivico, cap;
-                                System.out.println("Digitare la via del centro di afferenza:");
-                                via = reader.readLine();
-                                System.out.println("Digitare il comune del centro di afferenza:");
-                                comune = reader.readLine();
-                                System.out.println("Digitare la provincia del centro di afferenza:");
-                                provincia = reader.readLine();
-                                System.out.println("Digitare il numero civico del centro di afferenza:");
-                                numeroCivico = Integer.parseInt(reader.readLine());
-                                System.out.println("Digitare il CAP del centro di afferenza:");
-                                cap = Integer.parseInt(reader.readLine());
-                                centriMonitoraggioCache.add(new CentroMonitoraggio(nomeCentroAfferenza,
-                                        new Indirizzo(via, comune, provincia, numeroCivico, cap)));
-                            }
-                        }
-                        Operatore operatore = new Operatore(cognome, nome, codiceFiscale, email, userID,
-                                password, centroAfferenza);
-                        operatoriRegistratiCache.add(operatore);
-                        loggedIn = true;
-                        dbRef.registraOperatore(operatoriRegistratiCache);
-                        System.out.println("Accesso effettuato!\nBenvenuto " + cognome + " " + nome + "\n");
-                    }
+                    case "cerca" -> cercaAreaGeografica(geonamesCache, reader);
+                    case "login" -> loggedIn = login(operatoriRegistratiCache, reader);
+                    case "registrazione" -> loggedIn = registrazione(dbRef, operatoriAutorizzatiCache,
+                            operatoriRegistratiCache, centriMonitoraggioCache, reader);
                     case "uscita" -> System.exit(0);
                 }
             }
@@ -164,6 +64,121 @@ public class ClimateMonitor extends Application {
                 }
             }
         }
+    }
+
+    private static boolean registrazione(DBInterface dbRef, LinkedList<String> operatoriAutorizzatiCache,
+                                         LinkedList<Operatore> operatoriRegistratiCache,
+                                         LinkedList<CentroMonitoraggio> centriMonitoraggioCache,
+                                         BufferedReader reader) throws IOException {
+        boolean loggedIn;
+        String cognome, nome, codiceFiscale, email, userID, password, nomeCentroAfferenza;
+        System.out.println("Digitare il cognome:");
+        cognome = reader.readLine();
+        System.out.println("Digitare il nome:");
+        nome = reader.readLine();
+        System.out.println("Digitare il codice fiscale:");
+        codiceFiscale = reader.readLine();
+        System.out.println("Digitare l'email aziendale:");
+        email = reader.readLine();
+        boolean isEmailValid = false;
+        for (Operatore operatore : operatoriRegistratiCache) {
+            if (operatore.getEmail().equals(email)) {
+                System.out.println("Utente gia' registrato!");
+                break;
+            }
+        }
+        for (String tmp : operatoriAutorizzatiCache) {
+            if (tmp.equals(email)) {
+                isEmailValid = true;
+                break;
+            }
+        }
+        if(!isEmailValid) {
+            System.out.println("Email non valida!");
+            return false;
+        }
+        System.out.println("Digitare l'userID:");
+        userID = reader.readLine();
+        System.out.println("Digitare la password:");
+        password = reader.readLine();
+        System.out.println("Digitare il geonameID del centro di afferenza:");
+        nomeCentroAfferenza = reader.readLine();
+        CentroMonitoraggio centroAfferenza = null;
+        for (CentroMonitoraggio centroMonitoraggio : centriMonitoraggioCache) {
+            if (centroMonitoraggio.getNomeCentro().equals(nomeCentroAfferenza))
+                centroAfferenza = centroMonitoraggio;
+            else {
+                String via, comune, provincia;
+                int numeroCivico, cap;
+                System.out.println("Digitare la via del centro di afferenza:");
+                via = reader.readLine();
+                System.out.println("Digitare il comune del centro di afferenza:");
+                comune = reader.readLine();
+                System.out.println("Digitare la provincia del centro di afferenza:");
+                provincia = reader.readLine();
+                System.out.println("Digitare il numero civico del centro di afferenza:");
+                numeroCivico = Integer.parseInt(reader.readLine());
+                System.out.println("Digitare il CAP del centro di afferenza:");
+                cap = Integer.parseInt(reader.readLine());
+                centriMonitoraggioCache.add(new CentroMonitoraggio(nomeCentroAfferenza,
+                        new Indirizzo(via, comune, provincia, numeroCivico, cap)));
+            }
+        }
+        Operatore operatore = new Operatore(cognome, nome, codiceFiscale, email, userID,
+                password, centroAfferenza);
+        operatoriRegistratiCache.add(operatore);
+        loggedIn = true;
+        dbRef.registraOperatore(operatoriRegistratiCache);
+        System.out.println("Accesso effettuato!\nBenvenuto " + cognome + " " + nome + "\n");
+        return loggedIn;
+    }
+
+    private static boolean login(LinkedList<Operatore> operatoriRegistratiCache,
+                                 BufferedReader reader) throws IOException {
+        boolean loggedIn = false;
+        while (!loggedIn) {
+            System.out.println("Digitare l'userID:");
+            String userID = reader.readLine();
+            if (userID.equals(""))
+                break;
+            String password;
+            String enteredPassword;
+            for (Operatore operatore : operatoriRegistratiCache) {
+                if (userID.equals(operatore.getUserID())) {
+                    password = operatore.getPassword();
+                    System.out.println("Digitare la password:");
+                    while (!loggedIn) {
+                        enteredPassword = reader.readLine();
+                        if (enteredPassword.equals(""))
+                            break;
+                        if (password.equals(enteredPassword)) {
+                            System.out.println("Accesso effettuato!\nBenvenuto " + operatore.getCognome()
+                                    + " " + operatore.getNome());
+                            loggedIn = true;
+                        } else {
+                            System.out.println("Password errata!");
+                        }
+                    }
+                    break;
+                }
+            }
+            if (!loggedIn)
+                System.out.println("userID errato!");
+        }
+        return loggedIn;
+    }
+
+    private static void cercaAreaGeografica(HashMap<String, AreaInteresse> geonamesCache, BufferedReader reader) throws IOException {
+        printCache(geonamesCache);
+        System.out.println("\nE' possibile visualizzare i dati climatici di un area di interesse digitando" +
+                " il suo geonameID");
+        String geonameID = reader.readLine();
+        AreaInteresse areaGeografica;
+        while ((areaGeografica = geonamesCache.get(geonameID)) == null) {
+            System.out.println("GeonameID inserito non valido. Riprovare.");
+            geonameID = reader.readLine();
+        }
+        System.out.println("Dati climatici di: " + areaGeografica);
     }
 
     /**
