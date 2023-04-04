@@ -107,7 +107,9 @@ public class CentroMonitoraggio {
     }
 
 
-    //remove from file?
+    //TODO: remove from file?
+    //if this method returns true, then it is surely present in
+    //the corresponding database file.
     public boolean rmAreaInteresse(String areaID){
         if(!areeInteresse.containsKey(areaID)) return false;
         areeInteresse.remove(areaID);
@@ -115,7 +117,9 @@ public class CentroMonitoraggio {
     }
 
     //If not already present, add it
-    //add to file?
+    //TODO: add to file?
+    //if this methods returns true, then it surely not present
+    //in the corresponding database file
     public boolean addAreaInteresse(AreaInteresse area){
         if(!this.areeInteresse.containsKey(area.getAreaID())) {
             this.areeInteresse.put(area.getAreaID(), area);
