@@ -18,6 +18,10 @@ public class CentroMonitoraggio {
     //key: String => areaID
     private HashMap<String, AreaInteresse> areeInteresse;
 
+    final String emptyAreeInteresse = "null";
+    final String generalSeparator = ";";
+    final String areeSeparator = ",";
+
     public CentroMonitoraggio(String centroID){
         this.centroID = centroID;
     }
@@ -90,8 +94,34 @@ public class CentroMonitoraggio {
         this.provincia = provincia;
     }
 
-    public HashMap<String, AreaInteresse> getAreeInteresse() {
-        return areeInteresse;
+    public String getAreeInteresse(){
+        StringBuilder builder = new StringBuilder();
+        if(!areeInteresse.isEmpty()) {
+            for (String key : areeInteresse.keySet())
+                builder.append(key).append(areeSeparator);
+            builder.append("\n");
+        }
+        else
+            builder.append(emptyAreeInteresse).append("\n");
+        return builder.toString();
+    }
+
+
+    //remove from file?
+    public boolean rmAreaInteresse(String areaID){
+        if(!areeInteresse.containsKey(areaID)) return false;
+        areeInteresse.remove(areaID);
+        return true;
+    }
+
+    //If not already present, add it
+    //add to file?
+    public boolean addAreaInteresse(AreaInteresse area){
+        if(!this.areeInteresse.containsKey(area.getAreaID())) {
+            this.areeInteresse.put(area.getAreaID(), area);
+            return true;
+        }
+        return false;
     }
 
     //Only checks if centroID is the same
@@ -103,8 +133,6 @@ public class CentroMonitoraggio {
     }
 
     public String toString(){
-        final String generalSeparator = ";";
-        final String areeSeparator = ",";
         StringBuilder builder = new StringBuilder();
         builder.append(centroID).append(generalSeparator)
                 .append(nomeCentro).append(generalSeparator)
@@ -114,12 +142,12 @@ public class CentroMonitoraggio {
                 .append(cap).append(generalSeparator)
                 .append(provincia).append(generalSeparator);
 
-        if(areeInteresse.isEmpty()) builder.append("\n");
-        else
-            for(String tmp: areeInteresse.keySet()) //append the keys
+        if(areeInteresse.isEmpty()) builder.append(emptyAreeInteresse).append("\n");
+        else{
+            for (String tmp : areeInteresse.keySet()) //append the keys
                 builder.append(tmp).append(areeSeparator);
             builder.append("\n");
-
+        }
         return builder.toString();
     }
 
