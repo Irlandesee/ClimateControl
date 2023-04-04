@@ -4,6 +4,7 @@ import it.uninsubria.climatemonitoring.areaInteresse.AreaInteresse;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class CentroMonitoraggio {
 
@@ -114,6 +115,11 @@ public class CentroMonitoraggio {
         if(!areeInteresse.containsKey(areaID)) return false;
         areeInteresse.remove(areaID);
         return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(centroID, nomeCentro);
     }
 
     //If not already present, add it
