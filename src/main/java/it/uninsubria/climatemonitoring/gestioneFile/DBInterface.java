@@ -46,8 +46,8 @@ public class DBInterface {
         return (LinkedList<Operatore>) readerREF.serializeFileIn(operatoriRegistratiFile.getPath());
     }
 
-    public LinkedList<CentroMonitoraggio> readCentriMonitoraggioFile() throws IOException {
-        return  readerREF.readCentriMonitoraggioFile();
+    public LinkedList<CentroMonitoraggio> readCentriMonitoraggioFile() throws IOException, ClassNotFoundException {
+        return (LinkedList<CentroMonitoraggio>) readerREF.serializeFileIn(centriMonitoraggioFile.getPath());
     }
 
     public void writeCoordinateMonitoraggioFile(HashMap<String, AreaInteresse> cache) throws IOException {
@@ -56,6 +56,10 @@ public class DBInterface {
 
     public void writeOperatoriRegistrati(LinkedList<Operatore> operatori) throws IOException {
         writerREF.serializeFileOut(operatori, operatoriRegistratiFile.getAbsolutePath());
+    }
+
+    public void writeCentriMonitoraggioFile(LinkedList<CentroMonitoraggio> centriMonitoraggio) throws IOException {
+        writerREF.serializeFileOut(centriMonitoraggio, centriMonitoraggioFile.getAbsolutePath());
     }
 
     public void registraOperatore(LinkedList<Operatore> operatore) throws IOException {
@@ -92,7 +96,6 @@ public class DBInterface {
 
         final int coordinateMonitoraggioFileHeaderLength = 64;
         final int operatoriAutorizzatiFileHeaderLength = 7;
-        final int operatoriRegistratiFileHeaderLength = 66;
         final int parametriClimaticiFileHeaderLength = 123;
 
         if(coordinateMonitoraggioFile.length() <= coordinateMonitoraggioFileHeaderLength) {
@@ -109,17 +112,10 @@ public class DBInterface {
             fout.close();
         }
 
-//        if(operatoriRegistratiFile.length() <= operatoriRegistratiFileHeaderLength) {
-//            fout = new PrintWriter(new BufferedWriter(new FileWriter(operatoriRegistratiFile)));
-//            fout.println("Cognome;Nome;CodiceFiscale;Email;UserID;Password;CentroAfferenza");
-//            fout.flush();
-//            fout.close();
-//        }
-
         if(parametriClimaticiFile.length() <= parametriClimaticiFileHeaderLength) {
             fout = new PrintWriter(new BufferedWriter(new FileWriter(parametriClimaticiFile)));
-            fout.println("Nome;AreaInteresse;DataRilevazione;Vento;Umidità;Pressione;Temperatura;Precipitazioni;" +
-                    "AltitudineGhiacciai;MassaGhiacciai");
+            fout.println("CentroMonitoraggio;AreaInteresse;DataRilevazione;Vento;Umidità;Pressione;Temperatura;" +
+                    "Precipitazioni;AltitudineGhiacciai;MassaGhiacciai");
             fout.flush();
             fout.close();
         }

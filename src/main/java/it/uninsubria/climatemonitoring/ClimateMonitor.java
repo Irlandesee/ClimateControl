@@ -70,7 +70,6 @@ public class ClimateMonitor extends Application {
                                          LinkedList<Operatore> operatoriRegistratiCache,
                                          LinkedList<CentroMonitoraggio> centriMonitoraggioCache,
                                          BufferedReader reader) throws IOException {
-        boolean loggedIn;
         String cognome, nome, codiceFiscale, email, userID, password, nomeCentroAfferenza;
         System.out.println("Digitare il cognome:");
         cognome = reader.readLine();
@@ -101,36 +100,43 @@ public class ClimateMonitor extends Application {
         userID = reader.readLine();
         System.out.println("Digitare la password:");
         password = reader.readLine();
-        System.out.println("Digitare il geonameID del centro di afferenza:");
+        System.out.println("Digitare il nome del centro di afferenza:");
         nomeCentroAfferenza = reader.readLine();
         CentroMonitoraggio centroAfferenza = null;
+        if(centriMonitoraggioCache.isEmpty())
+            registraCentroAree(dbRef, centriMonitoraggioCache, reader, nomeCentroAfferenza);
         for (CentroMonitoraggio centroMonitoraggio : centriMonitoraggioCache) {
             if (centroMonitoraggio.getNomeCentro().equals(nomeCentroAfferenza))
                 centroAfferenza = centroMonitoraggio;
             else {
-                String via, comune, provincia;
-                int numeroCivico, cap;
-                System.out.println("Digitare la via del centro di afferenza:");
-                via = reader.readLine();
-                System.out.println("Digitare il comune del centro di afferenza:");
-                comune = reader.readLine();
-                System.out.println("Digitare la provincia del centro di afferenza:");
-                provincia = reader.readLine();
-                System.out.println("Digitare il numero civico del centro di afferenza:");
-                numeroCivico = Integer.parseInt(reader.readLine());
-                System.out.println("Digitare il CAP del centro di afferenza:");
-                cap = Integer.parseInt(reader.readLine());
-                centriMonitoraggioCache.add(new CentroMonitoraggio(nomeCentroAfferenza,
-                        new Indirizzo(via, comune, provincia, numeroCivico, cap)));
+                registraCentroAree(dbRef, centriMonitoraggioCache, reader, nomeCentroAfferenza);
             }
         }
         Operatore operatore = new Operatore(cognome, nome, codiceFiscale, email, userID,
                 password, centroAfferenza);
         operatoriRegistratiCache.add(operatore);
-        loggedIn = true;
         dbRef.registraOperatore(operatoriRegistratiCache);
         System.out.println("Accesso effettuato!\nBenvenuto " + cognome + " " + nome + "\n");
-        return loggedIn;
+        return true;
+    }
+
+    private static void registraCentroAree(DBInterface dbRef, LinkedList<CentroMonitoraggio> centriMonitoraggioCache,
+                                           BufferedReader reader, String nomeCentroAfferenza) throws IOException {
+        String via, comune, provincia;
+        int numeroCivico, cap;
+        System.out.println("Digitare la via del centro di afferenza:");
+        via = reader.readLine();
+        System.out.println("Digitare il comune del centro di afferenza:");
+        comune = reader.readLine();
+        System.out.println("Digitare la provincia del centro di afferenza:");
+        provincia = reader.readLine();
+        System.out.println("Digitare il numero civico del centro di afferenza:");
+        numeroCivico = Integer.parseInt(reader.readLine());
+        System.out.println("Digitare il CAP del centro di afferenza:");
+        cap = Integer.parseInt(reader.readLine());
+        centriMonitoraggioCache.add(new CentroMonitoraggio(nomeCentroAfferenza,
+                new Indirizzo(via, comune, provincia, numeroCivico, cap)));
+        dbRef.writeCentriMonitoraggioFile(centriMonitoraggioCache);
     }
 
     private static boolean login(LinkedList<Operatore> operatoriRegistratiCache,

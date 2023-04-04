@@ -77,16 +77,16 @@ public class ReaderDB {
 //        return res;
 //    }
 
-    public LinkedList<CentroMonitoraggio> readCentriMonitoraggioFile() throws IOException {
-        LinkedList<CentroMonitoraggio> res = new LinkedList<>();
-        BufferedReader br = new BufferedReader(new FileReader(dbRef.getCentriMonitoraggioFile()));
-        br.readLine();
-        String line;
-        while ((line = br.readLine()) != null)
-             res.add(parseCentroMonitoraggio(line));
-        br.close();
-        return res;
-    }
+//    public LinkedList<CentroMonitoraggio> readCentriMonitoraggioFile() throws IOException {
+//        LinkedList<CentroMonitoraggio> res = new LinkedList<>();
+//        BufferedReader br = new BufferedReader(new FileReader(dbRef.getCentriMonitoraggioFile()));
+//        br.readLine();
+//        String line;
+//        while ((line = br.readLine()) != null)
+//             res.add(parseCentroMonitoraggio(line));
+//        br.close();
+//        return res;
+//    }
 
     private Pair<String, AreaInteresse> parseGeoname(String line) {
         String generalRegex = ";";
@@ -119,10 +119,10 @@ public class ReaderDB {
 //        return new Pair<>(res[3], operatore);
 //    }
 
-    private CentroMonitoraggio parseCentroMonitoraggio(String line) {
-        String generalRegex = ";";
-        String[] res = line.split(generalRegex);
-        return new CentroMonitoraggio(res[1], new Indirizzo(res[2], res[3], res[4],
-                Integer.parseInt(res[5]), Integer.parseInt(res[6])));
-    }
+//    private CentroMonitoraggio parseCentroMonitoraggio(String line) {
+//        String generalRegex = ";";
+//        String[] res = line.split(generalRegex);
+//        return new CentroMonitoraggio(res[1], new Indirizzo(res[2], res[3], res[4],
+//                Integer.parseInt(res[5]), Integer.parseInt(res[6])));
+//    }
 }
