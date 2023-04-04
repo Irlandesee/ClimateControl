@@ -1,5 +1,7 @@
 package it.uninsubria.climatemonitoring.areaInteresse;
 
+import java.util.Objects;
+
 public class AreaInteresse {
 
     private String areaID;
@@ -27,12 +29,17 @@ public class AreaInteresse {
     public float getLatitude(){return this.latitude;}
     public float getLongitude(){return this.longitude;}
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(areaID, denominazione);
+    }
+
     public boolean equals(Object o){
         if(o.getClass() == AreaInteresse.class)
-            if(((AreaInteresse) o).getAreaID().equals(this.getAreaID()))
-                return true;
+            return ((AreaInteresse) o).getAreaID().equals(this.getAreaID());
         return false;
     }
+    @Override
     public String toString(){
         String separatorArea = ":";
         StringBuilder builder = new StringBuilder();
