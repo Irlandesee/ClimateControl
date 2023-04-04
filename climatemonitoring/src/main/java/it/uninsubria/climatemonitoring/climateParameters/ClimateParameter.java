@@ -2,6 +2,7 @@ package it.uninsubria.climatemonitoring.climateParameters;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class ClimateParameter {
@@ -24,7 +25,14 @@ public class ClimateParameter {
     private static final short minVal = 1;
     private static final short maxVal = 5;
     private static final short maxNoteLength = 256;
-
+    private static final String generalSeparator = ";";
+    private static final String generalParamSeparator = ",";
+    private static final String paramKeySeparator = ":";
+    private static final String ERROR_STR_NOT_VALID = "param str must be a valid string!\n";
+    private static final String ERROR_PARAM_KEY= "param key must be valid a valid string!\n";
+    private static final String ERROR_TOO_MANY_CHARS = "note length must be under 256 chars!\n";
+    private static final String ERROR_INVALID_MIN_VALUE = "min value must be >= 1\n";
+    private static final String ERROR_INVALID_MAX_VALUE = "max value must be <= 5\n";
 
     private HashMap<String, Short> paramValues;
 
@@ -33,11 +41,30 @@ public class ClimateParameter {
     }
 
     public boolean addParameter(String param, short value) {
-        //TODO:
+        if(param == null || param.isBlank())
+            throw new IllegalArgumentException(ClimateParameter.ERROR_PARAM_KEY);
+        else if(value < minVal)
+            throw new IllegalArgumentException(ClimateParameter.ERROR_INVALID_MIN_VALUE);
+        else if(value > maxVal)
+            throw new IllegalArgumentException(ClimateParameter.ERROR_INVALID_MAX_VALUE);
+        if(!paramValues.containsKey(param)){
+            paramValues.put(param, value);
+            return true;
+        }
+        return false;
     }
 
     public boolean rmParameter(String param){
-        //TODO:
+        if(param == null || param.isBlank())
+            throw new IllegalArgumentException(ClimateParameter.ERROR_PARAM_KEY);
+        if(!paramValues.isEmpty()){
+            if(paramValues.containsKey(param)){
+                paramValues.remove(param);
+                return true;
+            }
+            else return false;
+        }
+        return false;
     }
 
     public String getIdCentro() {
@@ -69,15 +96,26 @@ public class ClimateParameter {
     }
 
     public void setNotes(String notes) {
-        this.notes = notes;
+        if(notes.isBlank() || notes.isEmpty()) throw new IllegalArgumentException(ERROR_STR_NOT_VALID);
+        else if(notes.length() > ClimateParameter.maxNoteLength) throw new IllegalArgumentException(ERROR_TOO_MANY_CHARS);
+        else this.notes = notes;
     }
 
     public String getParameterID() {
         return parameterID;
     }
 
-    public HashMap<String, Short> getParamValues() {
-        return paramValues;
+    //params1,...,paramN;
+    public String getParamValues() {
+        StringBuilder builder = new StringBuilder();
+        for(Map.Entry<String, Short> tmp: paramValues.entrySet()){
+            builder.append(tmp.getKey())
+                    .append(ClimateParameter.paramKeySeparator) //:
+                    .append(tmp.getValue())
+                    .append(ClimateParameter.generalParamSeparator); //,
+        }
+        builder.append(ClimateParameter.generalSeparator);
+        return builder.toString();
     }
 
     @Override
@@ -94,8 +132,16 @@ public class ClimateParameter {
         return Objects.hash(parameterID, pubDate);
     }
 
+    //centroID;areaInteresse;data;params1,paramN;note
     @Override
     public String toString(){
-        //TODO:
+        StringBuilder builder = new StringBuilder();
+        builder.append(this.parameterID).append(ClimateParameter.generalSeparator)
+                .append(this.idCentro).append(ClimateParameter.generalSeparator)
+                .append(this.areaInteresse).append(ClimateParameter.generalSeparator)
+                .append(this.pubDate).append(ClimateParameter.generalSeparator)
+                .append(this.getParamValues()).append(ClimateParameter.generalSeparator)
+                .append(this.notes).append(ClimateParameter.generalSeparator);
+        return builder.toString();
     }
 }
