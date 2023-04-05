@@ -9,8 +9,10 @@ import it.uninsubria.climatemonitoring.dbref.writerDB.WriterDB;
 import it.uninsubria.climatemonitoring.operatore.Operatore;
 import it.uninsubria.climatemonitoring.operatore.opeatoreAutorizzato.OperatoreAutorizzato;
 import it.uninsubria.climatemonitoring.operatore.opeatoreRegistrato.OperatoreRegistrato;
+import javafx.util.Pair;
 
 import java.io.*;
+import java.util.Collection;
 import java.util.HashMap;
 
 public class DBInterface {
@@ -37,7 +39,7 @@ public class DBInterface {
 
     private final File parametriClimaticiFile;
     private final File operatoriAutorizzatiFile;
-    private final File operatoriRegistrati;
+    private final File operatoriRegistratiFile;
     private final File areeInteresseFile;
     private final boolean DEBUG = true;
 
@@ -56,27 +58,40 @@ public class DBInterface {
         coordinateMonitoraggioFile = new File(DBInterface.coordinateMonitoraggioDati);
         parametriClimaticiFile = new File(DBInterface.parametriClimaticiDati);
         operatoriAutorizzatiFile = new File(DBInterface.operatoriAutorizzatiDati);
-        operatoriRegistrati = new File(DBInterface.operatoriRegistratiDati);
+        operatoriRegistratiFile = new File(DBInterface.operatoriRegistratiDati);
         areeInteresseFile = new File(DBInterface.areeInteresseDati);
 
         this.readerREF = new ReaderDB(this);
         this.writerREF = new WriterDB(this);
+        BufferedWriter bWriter;
 
         try {
             if (!geonamesCoordinatesFile.exists()) {
                 boolean res = geonamesCoordinatesFile.createNewFile();
+                try{
+                    bWriter = new BufferedWriter(new FileWriter(geonamesCoordinatesFile));
+                    bWriter.write(geonamesFileHeader);
+                    bWriter.write("\n");
+                    bWriter.close();
+                }catch(IOException ioe){ioe.printStackTrace();}
                 if (res && DEBUG) System.out.println("Created new file at: " +
                         geonamesCoordinatesFile.getAbsolutePath());
             }
             if (!centroMonitoraggioFile.exists()) {
                 boolean res = centroMonitoraggioFile.createNewFile();
+                try{
+                    bWriter = new BufferedWriter(new FileWriter(centroMonitoraggioFile));
+                    bWriter.write(centroMonitoraggioFileHeader);
+                    bWriter.write("\n");
+                    bWriter.close();
+                }catch(IOException ioe){ioe.printStackTrace();}
                 if (res && DEBUG) System.out.println("Created new file at: " +
                         centroMonitoraggioFile.getAbsolutePath());
             }
             if (!coordinateMonitoraggioFile.exists()) {
                 boolean res = coordinateMonitoraggioFile.createNewFile();
                 try {
-                    BufferedWriter bWriter = new BufferedWriter(new FileWriter(coordinateMonitoraggioFile));
+                    bWriter = new BufferedWriter(new FileWriter(coordinateMonitoraggioFile));
                     bWriter.write(coordinateFileHeader);
                     bWriter.write("\n");
                     bWriter.close();
@@ -85,6 +100,49 @@ public class DBInterface {
                 }
                 if (res && DEBUG) System.out.println("Created new file at: " +
                         coordinateMonitoraggioFile.getAbsolutePath());
+            }
+            if(!parametriClimaticiFile.exists()){
+                boolean res = parametriClimaticiFile.createNewFile();
+                try{
+                    bWriter = new BufferedWriter(new FileWriter(parametriClimaticiFile));
+                    bWriter.write(parametriClimaticiHeader);
+                    bWriter.write("\n");
+                    bWriter.close();
+                }catch(IOException ioe){ioe.printStackTrace();}
+                if (res && DEBUG) System.out.println("Created new file at: " +
+                        parametriClimaticiFile.getAbsolutePath());
+            }
+            if(!operatoriAutorizzatiFile.exists()){
+                boolean res = operatoriAutorizzatiFile.createNewFile();
+                try{
+                    bWriter = new BufferedWriter(new FileWriter(operatoriAutorizzatiFile));
+                    bWriter.write(operatoriAutorizzatiHeader);
+                    bWriter.write("\n");
+                    bWriter.close();
+                }catch(IOException ioe){ioe.printStackTrace();}
+                if (res && DEBUG) System.out.println("Created new file at: " +
+                        operatoriAutorizzatiFile.getAbsolutePath());
+            }
+            if(!operatoriRegistratiFile.exists()){
+                boolean res = operatoriRegistratiFile.createNewFile();
+                try{
+                    bWriter = new BufferedWriter(new FileWriter(operatoriRegistratiFile));
+                    bWriter.write(operatoriRegistratiHeader);
+                    bWriter.write("\n");
+                    bWriter.close();
+                }catch(IOException ioe){ioe.printStackTrace();}
+                if (res && DEBUG) System.out.println("Created new file at: " +
+                        operatoriRegistratiFile.getAbsolutePath());
+            }
+            if(!areeInteresseFile.exists()){
+                boolean res = areeInteresseFile.createNewFile();
+                try{
+                    bWriter = new BufferedWriter(new FileWriter(areeInteresseFile));
+                    bWriter.write(areeInteresseHeader);
+                    bWriter.close();
+                }catch(IOException ioe){ioe.printStackTrace();}
+                if (res && DEBUG) System.out.println("Created new file at: " +
+                        areeInteresseFile.getAbsolutePath());
             }
         }catch(IOException ioe){ioe.printStackTrace();}
 
@@ -96,78 +154,127 @@ public class DBInterface {
     public File getCoordinateMonitoraggioFile() {
         return  this.coordinateMonitoraggioFile;
     }
+    public File getCentroMonitoraggioFile(){return this.centroMonitoraggioFile;}
+    public File getParametriClimaticiFile(){return this.parametriClimaticiFile;}
+    public File getOperatoriAutorizzatiFile(){return this.operatoriAutorizzatiFile;}
+    public File getOperatoriRegistratiFile(){return this.operatoriRegistratiFile;}
+    public File getAreeInteresseFile(){return this.areeInteresseFile;}
 
     private HashMap<String, City> getGeonamesCache(){return this.geonamesCache;}
+    private HashMap<String, CentroMonitoraggio> getCentroMonitoraggioCache(){return this.centroMonitoraggioCache;}
+    private HashMap<String, Operatore> getOperatoreRegistratoCache(){return this.operatoreRegistratoCache;}
+    private HashMap<String, Operatore> getOperatoreAutorizzatoCache(){return this.operatoreAutorizzatoCache;}
+    private HashMap<String, AreaInteresse> getAreeInteresseCache(){return this.areeInteresseCache;}
 
     public boolean isDEBUG(){ return this.DEBUG;}
 
 
-    private void writeCoordinataMonitoraggio(City c){
+    private boolean writeCentroMonitoraggio(CentroMonitoraggio c){
         //TODO:
-    }
-
-    private void writeCentroMonitoraggio(CentroMonitoraggio c){
-        //TODO:
+        return writerREF.writeCentroMonitoraggio(c);
     }
 
     //TODO: refactor
-    private void writeCoordinateMonitoraggioCache(HashMap<String, City> cache) {
-        writerREF.writeCoordinateMonitoraggioFile(cache);
+    private boolean writeCoordinateMonitoraggioCache(HashMap<String, City> cache) {
+        return writerREF.writeCoordinateMonitoraggioFile(cache);
     }
 
     //TODO: refactor
-    private void writeGeonamesAndCoordinatesCache(HashMap<String, City> cache){
-        writerREF.writeGeonamesAndCoordinates(cache);
+    private boolean writeGeonamesAndCoordinatesCache(HashMap<String, City> cache){
+        return writerREF.writeGeonamesAndCoordinates(cache);
     }
 
     private boolean writeOperatoreRegistrato(OperatoreRegistrato o){
-        //TODO:
-        return false;
+        return writerREF.writeOperatoreRegistrato(o);
     }
 
     private boolean writeOperatoreAutorizzato(OperatoreAutorizzato o){
-        //TODO:
-        return false;
+        return writerREF.writeOperatoreAutorizzato(o);
     }
 
     private boolean writeParam(ClimateParameter c){
-        //TODO:
-        return false;
+        return writerREF.writeClimateParameter(c);
     }
 
-    private boolean writeArea(AreaInteresse a){
-        //TODO:
-        return false;
+    private boolean writeAreaInteresse(AreaInteresse a){
+        return writerREF.writeAreaInteresse(a);
     }
     
-    public void write(String op){
+    public void write(Object o){
         //TODO: in base alla stringa passata, chiama il metodo writer corrispondente
+        boolean res;
+        if(o instanceof AreaInteresse){
+            res = this.writeAreaInteresse((AreaInteresse) o);
+        }else if(o instanceof CentroMonitoraggio){
+            res = this.writeCentroMonitoraggio((CentroMonitoraggio) o);
+        }else if(o instanceof ClimateParameter){
+            res = this.writeParam((ClimateParameter) o);
+        }else if(o instanceof Operatore){
+            if(o instanceof OperatoreAutorizzato){
+                res = this.writeOperatoreAutorizzato((OperatoreAutorizzato) o);
+            }else if(o instanceof  OperatoreRegistrato){
+                res = this.writeOperatoreRegistrato((OperatoreRegistrato) o);
+            }
+        }
+    }
+
+    public void writeObjects(HashMap<String, Object> objs){
+        //TODO: determine objects class at compile time and call appropriate method
     }
 
     //TODO: refactor
     private HashMap<String, City> readGeonamesCache(){ return readerREF.readGeonamesAndCoordinatesFile();}
 
+    private HashMap<String, CentroMonitoraggio> readCentroMonitoraggio(){
+        return readerREF.readCentroMonitoraggio();
+    }
+
     private HashMap<String, Operatore> readOperatoreRegistrato(){
-        //TODO:
-        return null;
+        return readerREF.readOperatoriRegistrati();
     }
 
     private HashMap<String, Operatore> readOperatoreAutorizzato(){
-        //TODO:
-        return null;
+        return readerREF.readOperatoriAutorizzati();
     }
 
     private HashMap<String, ClimateParameter> readClimateParameter(){
-        //TODO:
-        return null;
+        return readerREF.readClimateParameters();
     }
 
     private HashMap<String, AreaInteresse> readAreaInteresse(){
-        //TODO:
-        return null;
+        return readerREF.readAreeInteresse();
     }
 
-    public void read(String op) {
+    public HashMap<String, ?> read(String objClass) {
         //TODO: in base alla stringa passata, chiama il metodo reader corrispondente }
+        HashMap<String, ?> res = new HashMap<>();
+        switch(objClass){
+            case "AreaInteresse":
+                res = readAreaInteresse();
+                break;
+            case "GeoName":
+                res = readGeonamesCache();
+                break;
+            case "OperatoreRegistrato":
+                res = readOperatoreRegistrato();
+                break;
+            case "OperatoreAutorizzato":
+                res = readOperatoreAutorizzato();
+                break;
+            case "ClimateParameter":
+                res = readClimateParameter();
+                break;
+            case "CentroMonitoraggio":
+                res = readCentroMonitoraggio();
+                    break;
+            default:
+                throw new IllegalArgumentException("invalid argument");
+        }
+        return res;
+    }
+
+    public <T> Pair<String, T>readLast(T objClass){
+        //TODO:
+        return null;
     }
 }
