@@ -168,52 +168,20 @@ public class DBInterface {
 
     public boolean isDEBUG(){ return this.DEBUG;}
 
-
-    private boolean writeCentroMonitoraggio(CentroMonitoraggio c){
-        //TODO:
-        return writerREF.writeCentroMonitoraggio(c);
-    }
-
-    //TODO: refactor
-    private boolean writeCoordinateMonitoraggioCache(HashMap<String, City> cache) {
-        return writerREF.writeCoordinateMonitoraggioFile(cache);
-    }
-
-    //TODO: refactor
-    private boolean writeGeonamesAndCoordinatesCache(HashMap<String, City> cache){
-        return writerREF.writeGeonamesAndCoordinates(cache);
-    }
-
-    private boolean writeOperatoreRegistrato(OperatoreRegistrato o){
-        return writerREF.writeOperatoreRegistrato(o);
-    }
-
-    private boolean writeOperatoreAutorizzato(OperatoreAutorizzato o){
-        return writerREF.writeOperatoreAutorizzato(o);
-    }
-
-    private boolean writeParam(ClimateParameter c){
-        return writerREF.writeClimateParameter(c);
-    }
-
-    private boolean writeAreaInteresse(AreaInteresse a){
-        return writerREF.writeAreaInteresse(a);
-    }
-    
     public void write(Object o){
         //TODO: in base alla stringa passata, chiama il metodo writer corrispondente
         boolean res;
         if(o instanceof AreaInteresse){
-            res = this.writeAreaInteresse((AreaInteresse) o);
+            res = this.writerREF.writeAreaInteresse((AreaInteresse) o);
         }else if(o instanceof CentroMonitoraggio){
-            res = this.writeCentroMonitoraggio((CentroMonitoraggio) o);
+            res = this.writerREF.writeCentroMonitoraggio((CentroMonitoraggio) o);
         }else if(o instanceof ClimateParameter){
-            res = this.writeParam((ClimateParameter) o);
+            res = this.writerREF.writeParametroClimatico((ClimateParameter) o);
         }else if(o instanceof Operatore){
             if(o instanceof OperatoreAutorizzato){
-                res = this.writeOperatoreAutorizzato((OperatoreAutorizzato) o);
+                res = this.writerREF.writeOperatoreAutorizzato((OperatoreAutorizzato) o);
             }else if(o instanceof  OperatoreRegistrato){
-                res = this.writeOperatoreRegistrato((OperatoreRegistrato) o);
+                res = this.writerREF.writeOperatoreRegistrato((OperatoreRegistrato) o);
             }
         }
     }
@@ -222,50 +190,27 @@ public class DBInterface {
         //TODO: determine objects class at compile time and call appropriate method
     }
 
-    //TODO: refactor
-    private HashMap<String, City> readGeonamesCache(){ return readerREF.readGeonamesAndCoordinatesFile();}
-
-    private HashMap<String, CentroMonitoraggio> readCentroMonitoraggio(){
-        return readerREF.readCentroMonitoraggio();
-    }
-
-    private HashMap<String, Operatore> readOperatoreRegistrato(){
-        return readerREF.readOperatoriRegistrati();
-    }
-
-    private HashMap<String, Operatore> readOperatoreAutorizzato(){
-        return readerREF.readOperatoriAutorizzati();
-    }
-
-    private HashMap<String, ClimateParameter> readClimateParameter(){
-        return readerREF.readClimateParameters();
-    }
-
-    private HashMap<String, AreaInteresse> readAreaInteresse(){
-        return readerREF.readAreeInteresse();
-    }
-
     public HashMap<String, ?> read(String objClass) {
         //TODO: in base alla stringa passata, chiama il metodo reader corrispondente }
-        HashMap<String, ?> res = new HashMap<>();
+        HashMap<String, ?> res;
         switch(objClass){
             case "AreaInteresse":
-                res = readAreaInteresse();
+                res = this.readerREF.readAreeInteresseFile();
                 break;
             case "GeoName":
-                res = readGeonamesCache();
+                res = this.readerREF.readGeonamesAndCoordinatesFile();
                 break;
             case "OperatoreRegistrato":
-                res = readOperatoreRegistrato();
+                res = this.readerREF.readOperatoriRegistratiFile();
                 break;
             case "OperatoreAutorizzato":
-                res = readOperatoreAutorizzato();
+                res = this.readerREF.readOperatoriAutorizzatiFile();
                 break;
             case "ClimateParameter":
-                res = readClimateParameter();
+                res = this.readerREF.readClimateParametersFile();
                 break;
             case "CentroMonitoraggio":
-                res = readCentroMonitoraggio();
+                res = this.readerREF.readCentroMonitoraggiFile();
                     break;
             default:
                 throw new IllegalArgumentException("invalid argument");

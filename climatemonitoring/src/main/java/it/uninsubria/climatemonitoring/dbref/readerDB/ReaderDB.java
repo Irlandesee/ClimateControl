@@ -5,8 +5,12 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.HashMap;
 
+import it.uninsubria.climatemonitoring.areaInteresse.AreaInteresse;
+import it.uninsubria.climatemonitoring.centroMonitoraggio.CentroMonitoraggio;
 import it.uninsubria.climatemonitoring.city.City;
+import it.uninsubria.climatemonitoring.climateParameters.ClimateParameter;
 import it.uninsubria.climatemonitoring.dbref.DBInterface;
+import it.uninsubria.climatemonitoring.operatore.Operatore;
 import javafx.util.Pair;
 
 public class ReaderDB {
@@ -16,6 +20,27 @@ public class ReaderDB {
     public ReaderDB(DBInterface dbRef){
         this.dbRef = dbRef;
     }
+
+    public HashMap<String, CentroMonitoraggio> readCentroMonitoraggiFile(){
+        //TODO:
+    }
+
+    public HashMap<String, Operatore> readOperatoriRegistratiFile(){
+        //TODO:
+    }
+
+    public HashMap<String, Operatore> readOperatoriAutorizzatiFile(){
+        //TODO:
+    }
+
+    public HashMap<String, ClimateParameter> readClimateParametersFile(){
+        //TODO:
+    }
+
+    public HashMap<String, AreaInteresse> readAreeInteresseFile(){
+        //TODO:
+    }
+
 
     public HashMap<String, City> readGeonamesAndCoordinatesFile(){
         HashMap<String, City> res = new HashMap<String, City>();

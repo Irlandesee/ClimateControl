@@ -1,7 +1,12 @@
 package it.uninsubria.climatemonitoring.dbref.writerDB;
 
+import it.uninsubria.climatemonitoring.areaInteresse.AreaInteresse;
+import it.uninsubria.climatemonitoring.centroMonitoraggio.CentroMonitoraggio;
 import it.uninsubria.climatemonitoring.city.City;
+import it.uninsubria.climatemonitoring.climateParameters.ClimateParameter;
 import it.uninsubria.climatemonitoring.dbref.DBInterface;
+import it.uninsubria.climatemonitoring.operatore.opeatoreAutorizzato.OperatoreAutorizzato;
+import it.uninsubria.climatemonitoring.operatore.opeatoreRegistrato.OperatoreRegistrato;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -14,6 +19,30 @@ public class WriterDB {
 
     public WriterDB(DBInterface dbRef){
         this.dbRef = dbRef;
+    }
+
+    public boolean writeCentroMonitoraggio(CentroMonitoraggio c){
+        //TODO:
+    }
+
+    public boolean writeOperatoreRegistrato(OperatoreRegistrato o){
+        //TODO:
+    }
+
+    public boolean writeOperatoreAutorizzato(OperatoreAutorizzato o){
+        //TODO:
+    }
+
+    public boolean writeParametroClimatico(ClimateParameter c){
+        //TODO:
+    }
+
+    public boolean writeAreaInteresse(AreaInteresse a){
+        //TODO:
+    }
+
+    public boolean writeCoordinateMonitoraggioCache(HashMap<String, City> cache){
+        //TODO:
     }
 
     public void writeGeonamesAndCoordinates(HashMap<String, City> cache){
