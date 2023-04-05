@@ -29,6 +29,7 @@ public class DBInterface {
     protected static final String operatoriRegistratiHeader = "userid;pwd;nomeOp;cognomeOp;codFiscale;mail;centroMonitoraggio";
     protected static final String operatoriAutorizzatiHeader = "cognomeOp;nomeOp;codFiscale;mailOp";
     protected static final String parametriClimaticiHeader = "centroID;areaInteresse;data;params1,paramN;note";
+    protected static final String areeInteresseHeader = "areaID:denominazione:stato:latitude:longitude";
 
     private final File geonamesCoordinatesFile;
     private final File centroMonitoraggioFile;
