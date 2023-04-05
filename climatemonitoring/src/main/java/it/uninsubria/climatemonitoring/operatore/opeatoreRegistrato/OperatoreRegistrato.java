@@ -50,4 +50,16 @@ public class OperatoreRegistrato extends Operatore {
     public int hashCode() {
         return Objects.hash(super.hashCode(), userID, centroID);
     }
+
+    public String toString(){
+        StringBuilder builder = new StringBuilder();
+        builder.append(super.getNome()).append(Operatore.generalSep)
+                .append(super.getCognome()).append(Operatore.generalSep)
+                .append(super.getCodFiscale()).append(Operatore.generalSep)
+                .append(super.getEmail()).append(Operatore.generalSep)
+                .append(this.userID).append(Operatore.generalSep)
+                .append(this.password).append(Operatore.generalSep)
+                .append(this.centroID).append(Operatore.terminatingChar);
+        return builder.toString();
+    }
 }
