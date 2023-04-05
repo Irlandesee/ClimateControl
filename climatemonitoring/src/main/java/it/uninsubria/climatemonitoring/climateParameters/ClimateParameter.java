@@ -1,6 +1,7 @@
 package it.uninsubria.climatemonitoring.climateParameters;
 
 import java.util.Date;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -10,7 +11,7 @@ public class ClimateParameter {
     private String parameterID;
     private String idCentro;
     private String areaInteresse;
-    private Date pubDate;
+    private LocalDate pubDate;
 
     private String notes; //max 256 chars
 
@@ -38,6 +39,15 @@ public class ClimateParameter {
 
     private ClimateParameter(String parameterID){
         this.parameterID = parameterID;
+    }
+
+    private ClimateParameter(String parameterID, String idCentro
+            , String areaInteresse
+            , LocalDate pubDate){
+        this.parameterID = parameterID;
+        this.idCentro = idCentro;
+        this.areaInteresse = areaInteresse;
+        this.pubDate = pubDate;
     }
 
     public boolean addParameter(String param, short value) {
@@ -83,11 +93,11 @@ public class ClimateParameter {
         this.areaInteresse = areaInteresse;
     }
 
-    public Date getPubDate() {
+    public LocalDate getPubDate() {
         return pubDate;
     }
 
-    public void setPubDate(Date pubDate) {
+    public void setPubDate(LocalDate pubDate) {
         this.pubDate = pubDate;
     }
 
