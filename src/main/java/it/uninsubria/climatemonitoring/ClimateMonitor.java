@@ -10,7 +10,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
@@ -63,7 +62,9 @@ public class ClimateMonitor extends Application {
                         Area riservata.
                         Digitare 'aggiungi' per aggiungere un aree di interesse al centro di monitoraggio.
                         Digitare 'logout' per effettuare il logout e tornare al menù principale.
-                        Digitare 'uscita' per terminare il programma.""");
+                        Digitare 'uscita' per terminare il programma.
+                        Aree di interesse registrate:""");
+                printCache(loggedOperator.getCentroAfferenza().getAreeInteresse());
 
                 switch (reader.readLine()) {
                     case "aggiungi" -> {
@@ -262,7 +263,7 @@ public class ClimateMonitor extends Application {
         stage.show();
     }
 
-    private static void printCache(HashMap<String, ?> cache) {
-        cache.forEach((key, value) -> System.out.println(value));
+    private static void printCache(LinkedList<?> cache) {
+        cache.forEach(System.out::println);
     }
 }
