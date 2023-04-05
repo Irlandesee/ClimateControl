@@ -1,10 +1,12 @@
 package it.uninsubria.climatemonitoring;
 
+import java.io.Serializable;
+
 /**
  * @author : Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
  * @author : Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it, VA
  **/
-public class AreaInteresse {
+public class AreaInteresse implements Serializable {
 
     private String geonameID;
     private String asciiName;

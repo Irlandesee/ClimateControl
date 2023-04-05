@@ -1,4 +1,4 @@
-module com.climatemonitoring.climatemonitoring {
+module it.uninsubria.climatemonitoring {
     requires javafx.controls;
     requires javafx.fxml;
 

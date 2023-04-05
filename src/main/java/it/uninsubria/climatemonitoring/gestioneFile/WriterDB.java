@@ -33,11 +33,6 @@ public class WriterDB {
         debug("Copia della cache coordinate monitoraggio nel file CoordinateMonitoraggio.dati...");
     }
 
-//    public void registraOperatore(Operatore operatore, String fileName) throws IOException {
-//        ObjectOutputStream write = new ObjectOutputStream(new FileOutputStream(fileName));
-//        write.writeObject(operatore);
-//    }
-
     private void writeFile(HashMap<String, AreaInteresse> cache) throws IOException {
         PrintWriter fout = new PrintWriter(new BufferedWriter(new FileWriter(dbRef.getCoordinateMonitoraggioFile(), true)));
         cache.forEach(

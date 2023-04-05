@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
@@ -24,52 +25,72 @@ public class ClimateMonitor extends Application {
      */
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         DBInterface dbRef = new DBInterface();
-        HashMap<String, AreaInteresse> geonamesCache = dbRef.readGeonamesFile();
+        LinkedList<AreaInteresse> areeInteresseDisponibiliCache = dbRef.readCoordinateMonitoraggioFile();
+        LinkedList<AreaInteresse> areeInteresseAssociateCache = dbRef.readAreeInteresseFile();
         LinkedList<String> operatoriAutorizzatiCache = dbRef.readOperatoriAutorizzatiFile();
         LinkedList<Operatore> operatoriRegistratiCache = dbRef.readOperatoriRegistratiFile();
         LinkedList<CentroMonitoraggio> centriMonitoraggioCache = dbRef.readCentriMonitoraggioFile();
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        boolean loggedIn = false;
+        Operatore loggedOperator = null;
 
         while (true) {
-            while (!loggedIn) {
+            while (loggedOperator == null) {
                 System.out.println("""
-                        Benvenuto, digitare 'cerca' per visualizzare le aree di interesse disponibili.
+                        Benvenuto!
+                        Digitare 'cerca' per visualizzare le aree di interesse disponibili.
                         Digitare 'login' per effettuare il login (solo operatori registrati).
                         Digitare 'registrazione' per effettuare la registrazione all'applicazione\s
                         (solo operatori autorizzati).
                         Digitare 'uscita' per terminare il programma.""");
                 switch (reader.readLine()) {
-                    case "cerca" -> cercaAreaGeografica(geonamesCache, reader);
-                    case "login" -> loggedIn = login(operatoriRegistratiCache, reader);
-                    case "registrazione" -> loggedIn = registrazione(dbRef, operatoriAutorizzatiCache,
+                    case "cerca" -> {
+                        AreaInteresse areaInteresse = cercaAreaGeografica(areeInteresseAssociateCache, reader);
+                        if (areaInteresse == null)
+                            System.out.println("Area di interesse non trovata!\n");
+                        else
+                            System.out.println("Dati meteorologici di " + areaInteresse);
+                    }
+                    case "login" -> loggedOperator = login(operatoriRegistratiCache, reader);
+                    case "registrazione" -> loggedOperator = registrazione(dbRef, operatoriAutorizzatiCache,
                             operatoriRegistratiCache, centriMonitoraggioCache, reader);
                     case "uscita" -> System.exit(0);
                 }
             }
 
-            while (loggedIn) {
+            while (loggedOperator != null) {
                 System.out.println("""
-                        Area riservata, digitare 'aggiungi' per aggiungere un aree di interesse al centro di monitoraggio.
+                        Area riservata.
+                        Digitare 'aggiungi' per aggiungere un aree di interesse al centro di monitoraggio.
                         Digitare 'logout' per effettuare il logout e tornare al menù principale.
                         Digitare 'uscita' per terminare il programma.""");
 
                 switch (reader.readLine()) {
                     case "aggiungi" -> {
-                        //TODO
+                        AreaInteresse areaInteresse = cercaAreaGeografica(areeInteresseDisponibiliCache, reader);
+                        if (areaInteresse == null) {
+                            System.out.println("Area di interesse non trovata!");
+                        } else {
+                            areeInteresseDisponibiliCache.remove(areaInteresse);
+                            areeInteresseAssociateCache.add(areaInteresse);
+                            loggedOperator.getCentroAfferenza().addAreaInteresse(areaInteresse);
+                            dbRef.writeAreeInteresseFile(areeInteresseAssociateCache);
+                            dbRef.writeCoordinateMonitoraggioFile(areeInteresseDisponibiliCache);
+                            dbRef.writeCentriMonitoraggioFile(centriMonitoraggioCache);
+                        }
+                        System.out.println("Area di interesse aggiunta con successo!");
                     }
-                    case "logout" -> loggedIn = false;
+                    case "logout" -> loggedOperator = null;
                     case "uscita" -> System.exit(0);
                 }
             }
         }
     }
 
-    private static boolean registrazione(DBInterface dbRef, LinkedList<String> operatoriAutorizzatiCache,
-                                         LinkedList<Operatore> operatoriRegistratiCache,
-                                         LinkedList<CentroMonitoraggio> centriMonitoraggioCache,
-                                         BufferedReader reader) throws IOException {
+    private static Operatore registrazione(DBInterface dbRef, LinkedList<String> operatoriAutorizzatiCache,
+                                           LinkedList<Operatore> operatoriRegistratiCache,
+                                           LinkedList<CentroMonitoraggio> centriMonitoraggioCache,
+                                           BufferedReader reader) throws IOException {
         String cognome, nome, codiceFiscale, email, userID, password, nomeCentroAfferenza;
         System.out.println("Digitare il cognome:");
         cognome = reader.readLine();
@@ -94,7 +115,7 @@ public class ClimateMonitor extends Application {
         }
         if(!isEmailValid) {
             System.out.println("Email non valida!");
-            return false;
+            return null;
         }
         System.out.println("Digitare l'userID:");
         userID = reader.readLine();
@@ -103,24 +124,28 @@ public class ClimateMonitor extends Application {
         System.out.println("Digitare il nome del centro di afferenza:");
         nomeCentroAfferenza = reader.readLine();
         CentroMonitoraggio centroAfferenza = null;
-        if(centriMonitoraggioCache.isEmpty())
-            registraCentroAree(dbRef, centriMonitoraggioCache, reader, nomeCentroAfferenza);
-        for (CentroMonitoraggio centroMonitoraggio : centriMonitoraggioCache) {
-            if (centroMonitoraggio.getNomeCentro().equals(nomeCentroAfferenza))
-                centroAfferenza = centroMonitoraggio;
-            else {
-                registraCentroAree(dbRef, centriMonitoraggioCache, reader, nomeCentroAfferenza);
-            }
+        boolean centroTrovato = false;
+        if(centriMonitoraggioCache.isEmpty()) {
+            centroAfferenza = registraCentroAree(dbRef, centriMonitoraggioCache, reader, nomeCentroAfferenza);
+            centroTrovato = true;
         }
+        if(!centroTrovato)
+            for (CentroMonitoraggio centroMonitoraggio : centriMonitoraggioCache)
+                if (centroMonitoraggio.getNomeCentro().equals(nomeCentroAfferenza)) {
+                    centroAfferenza = centroMonitoraggio;
+                    centroTrovato = true;
+                }
+        if(!centroTrovato)
+            centroAfferenza = registraCentroAree(dbRef, centriMonitoraggioCache, reader, nomeCentroAfferenza);
         Operatore operatore = new Operatore(cognome, nome, codiceFiscale, email, userID,
                 password, centroAfferenza);
         operatoriRegistratiCache.add(operatore);
         dbRef.registraOperatore(operatoriRegistratiCache);
         System.out.println("Accesso effettuato!\nBenvenuto " + cognome + " " + nome + "\n");
-        return true;
+        return operatore;
     }
 
-    private static void registraCentroAree(DBInterface dbRef, LinkedList<CentroMonitoraggio> centriMonitoraggioCache,
+    private static CentroMonitoraggio registraCentroAree(DBInterface dbRef, LinkedList<CentroMonitoraggio> centriMonitoraggioCache,
                                            BufferedReader reader, String nomeCentroAfferenza) throws IOException {
         String via, comune, provincia;
         int numeroCivico, cap;
@@ -134,15 +159,18 @@ public class ClimateMonitor extends Application {
         numeroCivico = Integer.parseInt(reader.readLine());
         System.out.println("Digitare il CAP del centro di afferenza:");
         cap = Integer.parseInt(reader.readLine());
-        centriMonitoraggioCache.add(new CentroMonitoraggio(nomeCentroAfferenza,
-                new Indirizzo(via, comune, provincia, numeroCivico, cap)));
+        CentroMonitoraggio centroMonitoraggio = new CentroMonitoraggio(nomeCentroAfferenza,
+                new Indirizzo(via, comune, provincia, numeroCivico, cap));
+        centriMonitoraggioCache.add(centroMonitoraggio);
         dbRef.writeCentriMonitoraggioFile(centriMonitoraggioCache);
+        System.out.println("Centro registrato con successo!");
+        return centroMonitoraggio;
     }
 
-    private static boolean login(LinkedList<Operatore> operatoriRegistratiCache,
+    private static Operatore login(LinkedList<Operatore> operatoriRegistratiCache,
                                  BufferedReader reader) throws IOException {
-        boolean loggedIn = false;
-        while (!loggedIn) {
+        Operatore loggedOperator = null;
+        while (loggedOperator == null) {
             System.out.println("Digitare l'userID:");
             String userID = reader.readLine();
             if (userID.equals(""))
@@ -153,14 +181,14 @@ public class ClimateMonitor extends Application {
                 if (userID.equals(operatore.getUserID())) {
                     password = operatore.getPassword();
                     System.out.println("Digitare la password:");
-                    while (!loggedIn) {
+                    while (loggedOperator == null) {
                         enteredPassword = reader.readLine();
                         if (enteredPassword.equals(""))
                             break;
                         if (password.equals(enteredPassword)) {
                             System.out.println("Accesso effettuato!\nBenvenuto " + operatore.getCognome()
                                     + " " + operatore.getNome());
-                            loggedIn = true;
+                            loggedOperator = operatore;
                         } else {
                             System.out.println("Password errata!");
                         }
@@ -168,23 +196,56 @@ public class ClimateMonitor extends Application {
                     break;
                 }
             }
-            if (!loggedIn)
+            if (loggedOperator == null)
                 System.out.println("userID errato!");
         }
-        return loggedIn;
+        return loggedOperator;
     }
 
-    private static void cercaAreaGeografica(HashMap<String, AreaInteresse> geonamesCache, BufferedReader reader) throws IOException {
-        printCache(geonamesCache);
-        System.out.println("\nE' possibile visualizzare i dati climatici di un area di interesse digitando" +
-                " il suo geonameID");
-        String geonameID = reader.readLine();
-        AreaInteresse areaGeografica;
-        while ((areaGeografica = geonamesCache.get(geonameID)) == null) {
-            System.out.println("GeonameID inserito non valido. Riprovare.");
-            geonameID = reader.readLine();
+    private static AreaInteresse cercaAreaGeografica(LinkedList<AreaInteresse> areeInteresseCache, BufferedReader reader) throws IOException {
+        System.out.println("Digitare 'nome' per ricercare l'area di interesse per nome.\n" +
+                "Digitare 'coordinate' per cercare l'area di interesse per coordinate geografiche.");
+        AreaInteresse areaInteresse = null;
+        switch (reader.readLine()) {
+            case "nome" -> {
+                System.out.println("Digitare il nome dell'area di interesse:");
+                areaInteresse = cercaAreaGeografica(areeInteresseCache, reader.readLine());
+            }
+            case "coordinate" -> {
+                System.out.println("Digitare la latitudine dell'area di interesse:");
+                double latitudine = Double.parseDouble(reader.readLine());
+                System.out.println("Digitare la longitudine dell'area di interesse:");
+                double longitudine = Double.parseDouble(reader.readLine());
+                areaInteresse = cercaAreaGeografica(areeInteresseCache, latitudine, longitudine);
+            }
         }
-        System.out.println("Dati climatici di: " + areaGeografica);
+        return areaInteresse;
+    }
+
+    public static AreaInteresse cercaAreaGeografica(LinkedList<AreaInteresse> areeInteresseCache, String nome) {
+        for(AreaInteresse areaInteresse : areeInteresseCache)
+            if(areaInteresse.getAsciiName().contains(nome))
+                return areaInteresse;
+        return null;
+    }
+
+    public static AreaInteresse cercaAreaGeografica(LinkedList<AreaInteresse> areeInteresseCache,
+                                                    double latitude, double longitude) {
+        if(areeInteresseCache.isEmpty())
+            return null;
+        AreaInteresse primoElemento = areeInteresseCache.get(0);
+        double minimumDistance = Math.hypot(latitude - primoElemento.getLatitude(),
+                longitude - primoElemento.getLongitude());
+        int minimumIndex = 0;
+        for(AreaInteresse areaInteresse : areeInteresseCache) {
+            double distance = Math.hypot(latitude - areaInteresse.getLatitude(),
+                    longitude - areaInteresse.getLongitude());
+            if (minimumDistance > distance) {
+                minimumDistance = distance;
+                minimumIndex = areeInteresseCache.indexOf(areaInteresse);
+            }
+        }
+        return areeInteresseCache.get(minimumIndex);
     }
 
     /**

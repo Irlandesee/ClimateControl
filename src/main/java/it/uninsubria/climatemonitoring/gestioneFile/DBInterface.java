@@ -12,7 +12,6 @@ import java.util.LinkedList;
  * @author : Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
  * @author : Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it, VA
  **/
-@SuppressWarnings("FieldCanBeLocal")
 public class DBInterface {
     private final File geonamesCoordinatesFile = new File("data/geonames-and-coordinates.csv");
     private final File centriMonitoraggioFile = new File("data/CentriMonitoraggio.dati");
@@ -20,6 +19,7 @@ public class DBInterface {
     private final File operatoriAutorizzatiFile = new File("data/OperatoriAutorizzati.dati");
     private final File operatoriRegistratiFile = new File("data/OperatoriRegistrati.dati");
     private final File parametriClimaticiFile = new File("data/ParametriClimatici.dati");
+    private final File areeInteresseFile = new File("data/AreeInteresse.dati");
 
     private final boolean DEBUG = true;
 
@@ -34,12 +34,21 @@ public class DBInterface {
 
     public boolean isDEBUG(){ return DEBUG;}
 
-    public HashMap<String, AreaInteresse> readGeonamesFile() throws IOException {
-        return readerREF.readGeonamesAndCoordinatesFile();
+    public LinkedList<String> readOperatoriAutorizzatiFile() throws IOException {
+        return readerREF.readOperatoriAutorizzatiFile();
     }
 
-    public LinkedList<String> readOperatoriAutorizzatiFile() throws IOException, ClassNotFoundException {
-        return readerREF.readOperatoriAutorizzatiFile();
+    public LinkedList<AreaInteresse> readCoordinateMonitoraggioFile() throws IOException, ClassNotFoundException {
+        if(coordinateMonitoraggioFile.length() == 0) {
+            LinkedList<AreaInteresse> areeInteresse = readerREF.readGeonamesAndCoordinatesFile();
+            writerREF.serializeFileOut(areeInteresse, coordinateMonitoraggioFile.getPath());
+            return areeInteresse;
+        }
+        return (LinkedList<AreaInteresse>) readerREF.serializeFileIn(coordinateMonitoraggioFile.getPath());
+    }
+
+    public LinkedList<AreaInteresse> readAreeInteresseFile() throws IOException, ClassNotFoundException {
+        return  (LinkedList<AreaInteresse>) readerREF.serializeFileIn(areeInteresseFile.getPath());
     }
 
     public LinkedList<Operatore> readOperatoriRegistratiFile() throws IOException, ClassNotFoundException {
@@ -50,12 +59,16 @@ public class DBInterface {
         return (LinkedList<CentroMonitoraggio>) readerREF.serializeFileIn(centriMonitoraggioFile.getPath());
     }
 
-    public void writeCoordinateMonitoraggioFile(HashMap<String, AreaInteresse> cache) throws IOException {
-        writerREF.writeCoordinateMonitoraggioFile(cache);
+    public void writeCoordinateMonitoraggioFile(LinkedList<AreaInteresse> areeInteresseDisponibili) throws IOException {
+        writerREF.serializeFileOut(areeInteresseDisponibili, coordinateMonitoraggioFile.getPath());
     }
 
     public void writeOperatoriRegistrati(LinkedList<Operatore> operatori) throws IOException {
         writerREF.serializeFileOut(operatori, operatoriRegistratiFile.getAbsolutePath());
+    }
+
+    public void writeAreeInteresseFile(LinkedList<AreaInteresse> areeInteresseAssociate) throws IOException {
+        writerREF.serializeFileOut(areeInteresseAssociate, areeInteresseFile.getPath());
     }
 
     public void writeCentriMonitoraggioFile(LinkedList<CentroMonitoraggio> centriMonitoraggio) throws IOException {
@@ -94,16 +107,8 @@ public class DBInterface {
     private void writeHeaders() throws IOException {
         PrintWriter fout;
 
-        final int coordinateMonitoraggioFileHeaderLength = 64;
         final int operatoriAutorizzatiFileHeaderLength = 7;
         final int parametriClimaticiFileHeaderLength = 123;
-
-        if(coordinateMonitoraggioFile.length() <= coordinateMonitoraggioFileHeaderLength) {
-            fout = new PrintWriter(new BufferedWriter(new FileWriter(coordinateMonitoraggioFile)));
-            fout.println("geonameID;AsciiName;CountryCode;CountryName;latitude,longitude");
-            fout.flush();
-            fout.close();
-        }
 
         if(operatoriAutorizzatiFile.length() <= operatoriAutorizzatiFileHeaderLength) {
             fout = new PrintWriter(new BufferedWriter(new FileWriter(operatoriAutorizzatiFile)));
