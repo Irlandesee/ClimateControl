@@ -4,34 +4,35 @@ import java.util.Objects;
 
 public class Operatore {
 
-    private String nomeOp;
-    private String cognomeOp;
+    private String nome;
+    private String cognome;
     private String codFiscale;
     private String email;
 
-    private static final String generalSep = ";";
+    protected static final String generalSep = ";";
+    protected static final String terminatingChar = ",";
 
     public Operatore(String nome, String cognome, String codFiscale, String email){
-        this.nomeOp = nome;
-        this.cognomeOp = cognome;
+        this.nome = nome;
+        this.cognome = cognome;
         this.codFiscale = codFiscale;
         this.email = email;
     }
 
-    public String getNomeOp() {
-        return nomeOp;
+    public String getNome() {
+        return nome;
     }
 
-    public void setNomeOp(String nomeOp) {
-        this.nomeOp = nomeOp;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
-    public String getCognomeOp() {
-        return cognomeOp;
+    public String getCognome() {
+        return cognome;
     }
 
-    public void setCognomeOp(String cognomeOp) {
-        this.cognomeOp = cognomeOp;
+    public void setCognome(String cognome) {
+        this.cognome = cognome;
     }
 
     public String getCodFiscale() {
@@ -66,8 +67,8 @@ public class Operatore {
     @Override
     public String toString(){
         StringBuilder builder = new StringBuilder();
-        builder.append(this.nomeOp).append(Operatore.generalSep)
-                .append(this.cognomeOp).append(Operatore.generalSep)
+        builder.append(this.nome).append(Operatore.generalSep)
+                .append(this.cognome).append(Operatore.generalSep)
                 .append(this.codFiscale).append(Operatore.generalSep)
                 .append(this.email);
         return builder.toString();
