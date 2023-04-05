@@ -10,13 +10,6 @@ import java.util.HashMap;
 
 public class WriterDB {
 
-    private static final String centroMonitoraggioFileHeader = "centroID;nomeCentro;via/piazza;numCivico;cap;comune;provincia;areaInteresse1,areaInteresseN";
-    private static final String geonamesFileHeader = "Geoname ID;Name;ASCII Name;Country Code;Country Name;Coordinates";
-    private static final String coordinateFileHeader = "geonameID;ASCII Name;CountryCode;Country;latitude,longitude";
-
-    private static final String operatoriRegistratiHeader = "userid;pwd;nomeOp;cognomeOp;codFisc;mail;centroMonitoraggio";
-    private static final String operatoriAutorizzatiHeader = "cognomeOp;nomeOp;codFisc;mailOp";
-    private static final String parametriClimaticiHeader = "centroID;areaInteresse;data;params1,paramN;note";
     private final DBInterface dbRef;
 
     public WriterDB(DBInterface dbRef){

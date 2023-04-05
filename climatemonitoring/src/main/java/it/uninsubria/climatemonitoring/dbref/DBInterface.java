@@ -15,9 +15,21 @@ import java.util.HashMap;
 
 public class DBInterface {
 
-    private static final String geonamesAndCoordinatesDati = "data/geonames-and-coordinates.csv";
-    private static final String centroMonitoraggioDati = "data/centroMonitoraggio.dati";
-    private static final String coordinateMonitoraggioDati = "data/coordinateMonitoraggio.dati";
+    protected static final String geonamesAndCoordinatesDati = "data/geonames-and-coordinates.csv";
+    protected static final String centroMonitoraggioDati = "data/centroMonitoraggio.dati";
+    protected static final String coordinateMonitoraggioDati = "data/coordinateMonitoraggio.dati";
+    protected static final String parametriClimaticiDati = "data/parametriClimatici.dati";
+    protected static final String operatoriRegistratiDati = "data/operatoriRegistrati.dati";
+    protected static final String operatoriAutorizzatiDati = "data/operatoriAutorizzati.dati";
+    protected static final String areeInteresseDati = "data/areeInteresse.dati";
+
+    protected static final String centroMonitoraggioFileHeader = "centroID;nomeCentro;via/piazza;numCivico;cap;comune;provincia;areaInteresse1,areaInteresseN";
+    protected static final String geonamesFileHeader = "Geoname ID;Name;ASCII Name;Country Code;Country Name;Coordinates";
+    protected static final String coordinateFileHeader = "geonameID;ASCII Name;CountryCode;Country;latitude,longitude";
+    protected static final String operatoriRegistratiHeader = "userid;pwd;nomeOp;cognomeOp;codFiscale;mail;centroMonitoraggio";
+    protected static final String operatoriAutorizzatiHeader = "cognomeOp;nomeOp;codFiscale;mailOp";
+    protected static final String parametriClimaticiHeader = "centroID;areaInteresse;data;params1,paramN;note";
+
     private final File geonamesCoordinatesFile;
     private final File centroMonitoraggioFile;
     private final File coordinateMonitoraggioFile;
@@ -38,10 +50,14 @@ public class DBInterface {
     private final WriterDB writerREF;
 
     public DBInterface(){
-        geonamesCoordinatesFile = new File(geonamesAndCoordinatesDati);
-        centroMonitoraggioFile = new File(centroMonitoraggioDati);
-        coordinateMonitoraggioFile = new File(coordinateMonitoraggioDati);
-        
+        geonamesCoordinatesFile = new File(DBInterface.geonamesAndCoordinatesDati);
+        centroMonitoraggioFile = new File(DBInterface.centroMonitoraggioDati);
+        coordinateMonitoraggioFile = new File(DBInterface.coordinateMonitoraggioDati);
+        parametriClimaticiFile = new File(DBInterface.parametriClimaticiDati);
+        operatoriAutorizzatiFile = new File(DBInterface.operatoriAutorizzatiDati);
+        operatoriRegistrati = new File(DBInterface.operatoriRegistratiDati);
+        areeInteresseFile = new File(DBInterface.areeInteresseDati);
+
         this.readerREF = new ReaderDB(this);
         this.writerREF = new WriterDB(this);
 
@@ -60,8 +76,8 @@ public class DBInterface {
                 boolean res = coordinateMonitoraggioFile.createNewFile();
                 try {
                     BufferedWriter bWriter = new BufferedWriter(new FileWriter(coordinateMonitoraggioFile));
-                    String line = "geonameID;AsciiName;CountryCode;CountryName;latitude,longitude\n";
-                    bWriter.write(line);
+                    bWriter.write(coordinateFileHeader);
+                    bWriter.write("\n");
                     bWriter.close();
                 } catch (IOException ioe) {
                     ioe.printStackTrace();
