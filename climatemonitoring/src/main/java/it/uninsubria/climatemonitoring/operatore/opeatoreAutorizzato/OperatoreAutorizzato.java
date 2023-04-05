@@ -2,6 +2,8 @@ package it.uninsubria.climatemonitoring.operatore.opeatoreAutorizzato;
 
 import it.uninsubria.climatemonitoring.operatore.Operatore;
 
+import java.util.Objects;
+
 public class OperatoreAutorizzato extends Operatore {
 
     private String nome;
@@ -65,4 +67,19 @@ public class OperatoreAutorizzato extends Operatore {
         return builder.toString();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        OperatoreAutorizzato that = (OperatoreAutorizzato) o;
+        return Objects.equals(nome, that.nome)
+                && Objects.equals(cognome, that.cognome)
+                && Objects.equals(codFiscale, that.codFiscale);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), nome, cognome, codFiscale);
+    }
 }
