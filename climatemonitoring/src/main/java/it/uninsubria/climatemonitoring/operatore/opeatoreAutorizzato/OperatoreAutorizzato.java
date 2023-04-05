@@ -63,7 +63,7 @@ public class OperatoreAutorizzato extends Operatore {
         builder.append(nome).append(Operatore.generalSep)
                 .append(cognome).append(Operatore.generalSep)
                 .append(codFiscale).append(Operatore.generalSep)
-                .append(email).append(",");
+                .append(email);
         return builder.toString();
     }
 

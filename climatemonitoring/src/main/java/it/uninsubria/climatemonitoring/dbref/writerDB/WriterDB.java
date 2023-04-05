@@ -9,6 +9,7 @@ import it.uninsubria.climatemonitoring.operatore.opeatoreAutorizzato.OperatoreAu
 import it.uninsubria.climatemonitoring.operatore.opeatoreRegistrato.OperatoreRegistrato;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
@@ -23,26 +24,65 @@ public class WriterDB {
 
     public boolean writeCentroMonitoraggio(CentroMonitoraggio c){
         //TODO:
+        boolean res = false;
+        try{
+            BufferedWriter bWriter = new BufferedWriter(new FileWriter(dbRef.getCentroMonitoraggioFile()));
+            bWriter.write(c.toString());
+            bWriter.close();
+            res = true;
+        }catch(IOException ioe){ioe.printStackTrace();}
+        return res;
     }
 
     public boolean writeOperatoreRegistrato(OperatoreRegistrato o){
-        //TODO:
+        boolean res = false;
+        try{
+            BufferedWriter bWriter = new BufferedWriter(
+                    new FileWriter(dbRef.getOperatoriRegistratiFile()));
+            bWriter.write(o.toString());
+            bWriter.write("\n");
+            bWriter.close();
+            res = true;
+        }catch(IOException ioe){ioe.printStackTrace();}
+        return res;
     }
 
     public boolean writeOperatoreAutorizzato(OperatoreAutorizzato o){
-        //TODO:
+        boolean res = false;
+        try{
+            BufferedWriter bWriter = new BufferedWriter(
+                    new FileWriter(dbRef.getOperatoriAutorizzatiFile()));
+            bWriter.write(o.toString());
+            bWriter.write("\n");
+            bWriter.close();
+            res = true;
+        }catch(IOException ioe){ioe.printStackTrace();}
+        return res;
     }
 
     public boolean writeParametroClimatico(ClimateParameter c){
-        //TODO:
+        boolean res = false;
+        try{
+            BufferedWriter bWriter = new BufferedWriter(
+                    new FileWriter(dbRef.getParametriClimaticiFile()));
+            bWriter.write(c.toString());
+            bWriter.write("\n");
+            bWriter.close();
+            res = true;
+        }catch(IOException ioe){ioe.printStackTrace();}
+        return res;
     }
 
     public boolean writeAreaInteresse(AreaInteresse a){
-        //TODO:
-    }
-
-    public boolean writeCoordinateMonitoraggioCache(HashMap<String, City> cache){
-        //TODO:
+        boolean res = false;
+        try{
+            BufferedWriter bWriter = new BufferedWriter(
+                    new FileWriter(dbRef.getAreeInteresseFile()));
+            bWriter.write(a.toString());
+            bWriter.close();
+            res = true;
+        }catch(IOException ioe){ioe.printStackTrace();}
+        return res;
     }
 
     public void writeGeonamesAndCoordinates(HashMap<String, City> cache){
