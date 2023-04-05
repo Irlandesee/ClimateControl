@@ -27,18 +27,16 @@ public class ReaderDB {
 
     /**
      *
-     * @return HashMap contenente l'elenco delle aree di interesse salvate sul file geonames-and-coordinates.csv
+     * @return HashMap contenente l'elenco delle aree d'interesse salvate sul file geonames-and-coordinates.csv
      * @throws IOException non è stato trovato il file geonames-and-coordinates.csv
      */
-    public HashMap<String, AreaInteresse> readGeonamesAndCoordinatesFile() throws IOException {
-        HashMap<String, AreaInteresse> res = new HashMap<>();
+    public LinkedList<AreaInteresse> readGeonamesAndCoordinatesFile() throws IOException {
+        LinkedList<AreaInteresse> res = new LinkedList<>();
         BufferedReader bReader = new BufferedReader(new FileReader(dbRef.getGeonamesCoordinatesFile()));
         bReader.readLine();
         String line;
-        while((line = bReader.readLine()) != null){
-            Pair<String, AreaInteresse> tmp = parseGeoname(line);
-            res.put(tmp.getKey(), tmp.getValue());
-        }
+        while((line = bReader.readLine()) != null)
+            res.add(parseGeoname(line));
         bReader.close();
         return res;
     }
@@ -59,43 +57,13 @@ public class ReaderDB {
         return list;
     }
 
-//    /**
-//     *
-//     * @return HashMap contenente l'elenco degli operatori registrati salvati sul file OperatoriRegistrati.dati
-//     * @throws IOException non è stato possibile creare il file OperatoriRegistrati.dati
-//     */
-//    public HashMap<String, Operatore> readOperatoriRegistratiFile() throws IOException {
-//        HashMap<String, Operatore> res = new HashMap<>();
-//        BufferedReader br = new BufferedReader(new FileReader(dbRef.getOperatoriRegistratiFile()));
-//        br.readLine();
-//        String line;
-//        while ((line = br.readLine()) != null) {
-//            Pair<String, Operatore> tmp = parseOperatoreRegistrato(line);
-//            res.put(tmp.getKey(), tmp.getValue());
-//        }
-//        br.close();
-//        return res;
-//    }
-
-//    public LinkedList<CentroMonitoraggio> readCentriMonitoraggioFile() throws IOException {
-//        LinkedList<CentroMonitoraggio> res = new LinkedList<>();
-//        BufferedReader br = new BufferedReader(new FileReader(dbRef.getCentriMonitoraggioFile()));
-//        br.readLine();
-//        String line;
-//        while ((line = br.readLine()) != null)
-//             res.add(parseCentroMonitoraggio(line));
-//        br.close();
-//        return res;
-//    }
-
-    private Pair<String, AreaInteresse> parseGeoname(String line) {
+    private AreaInteresse parseGeoname(String line) {
         String generalRegex = ";";
-        String coordsRegex = ",";
+        String coordinatesRegex = ",";
         String[] res = line.split(generalRegex);
-        String[] coordsTmp = res[5].split(coordsRegex);
-        AreaInteresse c = new AreaInteresse(res[0], res[2], res[3], res[4],
-                Float.parseFloat(coordsTmp[0]), Float.parseFloat(coordsTmp[1]));
-        return new Pair<>(res[0], c);
+        String[] coordinatesTmp = res[5].split(coordinatesRegex);
+        return new AreaInteresse(res[0], res[2], res[3], res[4],
+                Float.parseFloat(coordinatesTmp[0]), Float.parseFloat(coordinatesTmp[1]));
     }
 
     public Object serializeFileIn(String fileName) throws IOException, ClassNotFoundException {
@@ -104,25 +72,4 @@ public class ReaderDB {
         ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName));
         return ois.readObject();
     }
-
-    private Pair<String, Operatore> parseOperatoreAutorizzato(String line) {
-        String generalRegex = ";";
-        String[] res = line.split(generalRegex);
-        Operatore operatore = new Operatore(res[0]);
-        return new Pair<>(res[0], operatore);
-    }
-
-//    private Pair<String, Operatore> parseOperatoreRegistrato(String line) {
-//        String generalRegex = ";";
-//        String[] res = line.split(generalRegex);
-//        Operatore operatore = new Operatore(res[0], res[1], res[2], res[3], res[4], res[5], res[6]);
-//        return new Pair<>(res[3], operatore);
-//    }
-
-//    private CentroMonitoraggio parseCentroMonitoraggio(String line) {
-//        String generalRegex = ";";
-//        String[] res = line.split(generalRegex);
-//        return new CentroMonitoraggio(res[1], new Indirizzo(res[2], res[3], res[4],
-//                Integer.parseInt(res[5]), Integer.parseInt(res[6])));
-//    }
 }
