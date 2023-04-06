@@ -201,29 +201,15 @@ public class DBInterface {
 
     public HashMap<String, ?> read(String objClass) {
         //TODO: in base alla stringa passata, chiama il metodo reader corrispondente }
-        HashMap<String, ?> res;
-        switch(objClass){
-            case "AreaInteresse":
-                res = this.readerREF.readAreeInteresseFile();
-                break;
-            case "GeoName":
-                res = this.readerREF.readGeonamesAndCoordinatesFile();
-                break;
-            case "OperatoreRegistrato":
-                res = this.readerREF.readOperatoriRegistratiFile();
-                break;
-            case "OperatoreAutorizzato":
-                res = this.readerREF.readOperatoriAutorizzatiFile();
-                break;
-            case "ClimateParameter":
-                res = this.readerREF.readClimateParametersFile();
-                break;
-            case "CentroMonitoraggio":
-                res = this.readerREF.readCentroMonitoraggiFile();
-                    break;
-            default:
-                throw new IllegalArgumentException("invalid argument");
-        }
+        HashMap<String, ?> res = switch (objClass) {
+            case "AreaInteresse" -> this.readerREF.readAreeInteresseFile();
+            case "GeoName" -> this.readerREF.readGeonamesAndCoordinatesFile();
+            case "OperatoreRegistrato" -> this.readerREF.readOperatoriRegistratiFile();
+            case "OperatoreAutorizzato" -> this.readerREF.readOperatoriAutorizzatiFile();
+            case "ClimateParameter" -> this.readerREF.readClimateParametersFile();
+            case "CentroMonitoraggio" -> this.readerREF.readCentroMonitoraggiFile();
+            default -> throw new IllegalArgumentException("invalid argument");
+        };
         return res;
     }
 
