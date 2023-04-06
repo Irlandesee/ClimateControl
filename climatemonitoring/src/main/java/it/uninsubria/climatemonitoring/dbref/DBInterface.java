@@ -14,6 +14,8 @@ import javafx.util.Pair;
 import java.io.*;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 public class DBInterface {
 
@@ -167,6 +169,13 @@ public class DBInterface {
     private HashMap<String, AreaInteresse> getAreeInteresseCache(){return this.areeInteresseCache;}
 
     public boolean isDEBUG(){ return this.DEBUG;}
+    public List<AreaInteresse> getAreeInteresseWithKey(List<String> keys){
+        List<AreaInteresse> aree = new LinkedList<AreaInteresse>();
+        keys.forEach((key) -> {
+            if(areeInteresseCache.containsKey(key)) aree.add(areeInteresseCache.get(key));
+        });
+        return aree;
+    }
 
     public void write(Object o){
         //TODO: in base alla stringa passata, chiama il metodo writer corrispondente

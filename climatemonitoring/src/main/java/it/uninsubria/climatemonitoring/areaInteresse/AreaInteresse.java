@@ -10,6 +10,9 @@ public class AreaInteresse {
     private float latitude;
     private float longitude;
 
+    public static final String separatorArea = ";";
+    public static final String separatorCoords = ",";
+
     public AreaInteresse(String areaID){
         this.areaID = areaID;
     }
@@ -29,6 +32,26 @@ public class AreaInteresse {
     public float getLatitude(){return this.latitude;}
     public float getLongitude(){return this.longitude;}
 
+    public void setAreaID(String areaID) {
+        this.areaID = areaID;
+    }
+
+    public void setDenominazione(String denominazione) {
+        this.denominazione = denominazione;
+    }
+
+    public void setStato(String stato) {
+        this.stato = stato;
+    }
+
+    public void setLatitude(float latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(float longitude) {
+        this.longitude = longitude;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(areaID, denominazione);
@@ -41,12 +64,11 @@ public class AreaInteresse {
     }
     @Override
     public String toString(){
-        String separatorArea = ":";
         StringBuilder builder = new StringBuilder();
         builder.append(areaID).append(separatorArea)
                 .append(denominazione).append(separatorArea)
                 .append(stato).append(separatorArea)
-                .append(latitude).append(separatorArea)
+                .append(latitude).append(separatorCoords)
                 .append(longitude).append("\n");
 
         return builder.toString();

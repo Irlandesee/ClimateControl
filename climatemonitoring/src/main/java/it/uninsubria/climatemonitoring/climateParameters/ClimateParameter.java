@@ -1,10 +1,7 @@
 package it.uninsubria.climatemonitoring.climateParameters;
 
-import java.util.Date;
+import java.util.*;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 
 public class ClimateParameter {
 
@@ -26,18 +23,26 @@ public class ClimateParameter {
     private static final short minVal = 1;
     private static final short maxVal = 5;
     private static final short maxNoteLength = 256;
-    private static final String generalSeparator = ";";
-    private static final String generalParamSeparator = ",";
-    private static final String paramKeySeparator = ":";
-    private static final String ERROR_STR_NOT_VALID = "param str must be a valid string!\n";
-    private static final String ERROR_PARAM_KEY= "param key must be valid a valid string!\n";
-    private static final String ERROR_TOO_MANY_CHARS = "note length must be under 256 chars!\n";
-    private static final String ERROR_INVALID_MIN_VALUE = "min value must be >= 1\n";
-    private static final String ERROR_INVALID_MAX_VALUE = "max value must be <= 5\n";
+    public static final String generalSeparator = ";";
+    public static final String generalParamSeparator = ",";
+    public static final String paramKeySeparator = ":";
+    public static final String ERROR_STR_NOT_VALID = "param str must be a valid string!\n";
+    public static final String ERROR_PARAM_KEY= "param key must be valid a valid string!\n";
+    public static final String ERROR_TOO_MANY_CHARS = "note length must be under 256 chars!\n";
+    public static final String ERROR_INVALID_MIN_VALUE = "min value must be >= 1\n";
+    public static final String ERROR_INVALID_MAX_VALUE = "max value must be <= 5\n";
+    public static final String ERROR_INVALID_KEY = "invalid parameter key!\n";
+
+    public static final String paramVento = "vento";
+    public static final String paramUmidita = "umidita";
+    public static final String paramPressione = "pressione";
+    public static final String paramTemp = "temperature";
+    public static final String paramAltGhiacciai = "altGhiacciai";
+    public static final String paramMassaGhiacciai = "massaGhiacciai";
 
     private HashMap<String, Short> paramValues;
 
-    private ClimateParameter(String parameterID){
+    public ClimateParameter(String parameterID){
         this.parameterID = parameterID;
     }
 
@@ -127,6 +132,12 @@ public class ClimateParameter {
         builder.append(ClimateParameter.generalSeparator);
         return builder.toString();
     }
+
+    public TreeMap<String, Short> getParamsSortedByKey(){
+        return new TreeMap<>(paramValues);
+    }
+
+
 
     @Override
     public boolean equals(Object o) {

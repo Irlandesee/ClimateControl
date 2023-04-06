@@ -9,8 +9,8 @@ public class Operatore {
     private String codFiscale;
     private String email;
 
-    protected static final String generalSep = ";";
-    protected static final String terminatingChar = ",";
+    public static final String generalSep = ";";
+    public static final String terminatingChar = ",";
 
     public Operatore(String nome, String cognome, String codFiscale, String email){
         this.nome = nome;
