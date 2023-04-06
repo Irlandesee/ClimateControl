@@ -20,7 +20,6 @@ import it.uninsubria.climatemonitoring.operatore.opeatoreAutorizzato.OperatoreAu
 import it.uninsubria.climatemonitoring.operatore.opeatoreRegistrato.OperatoreRegistrato;
 import javafx.util.Pair;
 
-import static java.util.stream.Collectors.toList;
 
 public class ReaderDB {
 
