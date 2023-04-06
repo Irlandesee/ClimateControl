@@ -12,14 +12,17 @@ import java.util.LinkedList;
  * @author : Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
  * @author : Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it, VA
  **/
+@SuppressWarnings("ResultOfMethodCallIgnored")
 public class DBInterface {
-    private final File geonamesCoordinatesFile = new File("data/geonames-and-coordinates.csv");
-    private final File centriMonitoraggioFile = new File("data/CentriMonitoraggio.dati");
-    private final File coordinateMonitoraggioFile = new File("data/CoordinateMonitoraggio.dati");
-    private final File operatoriAutorizzatiFile = new File("data/OperatoriAutorizzati.dati");
-    private final File operatoriRegistratiFile = new File("data/OperatoriRegistrati.dati");
-    private final File parametriClimaticiFile = new File("data/ParametriClimatici.dati");
-    private final File areeInteresseFile = new File("data/AreeInteresse.dati");
+    File directory = new File("data");
+
+    private File geonamesCoordinatesFile;
+    private File centriMonitoraggioFile;
+    private File coordinateMonitoraggioFile;
+    private File operatoriAutorizzatiFile;
+    private File operatoriRegistratiFile;
+    private File parametriClimaticiFile;
+    private File areeInteresseFile;
 
     private final boolean DEBUG = true;
 
@@ -97,36 +100,24 @@ public class DBInterface {
     }
 
     private void initialize() throws IOException {
+        if (!directory.exists())
+            directory.mkdir();
         readerREF = new ReaderDB(this);
         writerREF = new WriterDB(this);
 
+        geonamesCoordinatesFile = new File("data/geonames-and-coordinates.csv");
+        centriMonitoraggioFile = new File("data/CentriMonitoraggio.dati");
+        coordinateMonitoraggioFile = new File("data/CoordinateMonitoraggio.dati");
+        operatoriAutorizzatiFile = new File("data/OperatoriAutorizzati.dati");
+        operatoriRegistratiFile = new File("data/OperatoriRegistrati.dati");
+        parametriClimaticiFile = new File("data/ParametriClimatici.dati");
+        areeInteresseFile = new File("data/AreeInteresse.dati");
+
         checkFilesExistence();
-        writeHeaders();
-    }
-
-    private void writeHeaders() throws IOException {
-        PrintWriter fout;
-
-        final int operatoriAutorizzatiFileHeaderLength = 7;
-        final int parametriClimaticiFileHeaderLength = 123;
-
-        if(operatoriAutorizzatiFile.length() <= operatoriAutorizzatiFileHeaderLength) {
-            fout = new PrintWriter(new BufferedWriter(new FileWriter(operatoriAutorizzatiFile)));
-            fout.println("Email");
-            fout.flush();
-            fout.close();
-        }
-
-        if(parametriClimaticiFile.length() <= parametriClimaticiFileHeaderLength) {
-            fout = new PrintWriter(new BufferedWriter(new FileWriter(parametriClimaticiFile)));
-            fout.println("CentroMonitoraggio;AreaInteresse;DataRilevazione;Vento;Umidità;Pressione;Temperatura;" +
-                    "Precipitazioni;AltitudineGhiacciai;MassaGhiacciai");
-            fout.flush();
-            fout.close();
-        }
     }
 
     private void checkFilesExistence() throws IOException {
+        checkFileExistence(areeInteresseFile);
         checkFileExistence(geonamesCoordinatesFile);
         checkFileExistence(centriMonitoraggioFile);
         checkFileExistence(coordinateMonitoraggioFile);

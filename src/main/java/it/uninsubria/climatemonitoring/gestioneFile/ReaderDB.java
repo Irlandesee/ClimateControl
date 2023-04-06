@@ -49,7 +49,6 @@ public class ReaderDB {
     public LinkedList<String> readOperatoriAutorizzatiFile() throws IOException {
         LinkedList<String> list = new LinkedList<>();
         BufferedReader br = new BufferedReader(new FileReader(dbRef.getOperatoriAutorizzatiFile()));
-        br.readLine();
         String line;
         while ((line = br.readLine()) != null)
             list.add(line);
