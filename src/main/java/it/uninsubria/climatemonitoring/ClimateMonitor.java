@@ -108,12 +108,28 @@ public class ClimateMonitor extends Application {
 
         //TODO verifica interi in lettura e max caratteri.
         for(int i = 0; i < 7; i++) {
-            System.out.println("Digitare il punteggio relativo " + nomiParametri.get(i) + ":");
+            System.out.println("Digitare il punteggio relativo " +
+                    nomiParametri.get(i) + "(da 1 critico a 5 ottimale, 0 per nessun inserimento):");
             String punteggio = reader.readLine();
-            if (isNumeric(punteggio))
-                punteggi.add(i, Integer.parseInt(punteggio));
+            int punteggioNumerico = 0;
+            if (isNumeric(punteggio)) {
+                punteggioNumerico = Integer.parseInt(punteggio);
+            } else {
+                System.err.println("Il punteggio deve essere un numero compreso tra 1-critico e 5-ottimale!");
+                return;
+            }
+            if(punteggioNumerico < 0 || punteggioNumerico > 5) {
+                System.err.println("Il punteggio deve essere un numero compreso tra 1-critico e 5-ottimale!");
+                return;
+            }
+            punteggi.add(i, Integer.parseInt(punteggio));
             System.out.println("Digitare le note relative " + nomiParametri.get(i) + " (massimo 256 caratteri):");
-            note.add(i, reader.readLine());
+            String nota = reader.readLine();
+            if (nota.length() > 256) {
+                System.err.println("Nota troppo lunga!\nLa nota deve essere al massimo di 256 caratteri!");
+                return;
+            }
+            note.add(i, nota);
         }
 
         //TODO verify date input
