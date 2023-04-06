@@ -3,23 +3,25 @@ package it.uninsubria.climatemonitoring;
 import java.io.Serializable;
 
 /**
+ * Rappresenta un operatore registrato.
  * @author : Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
  * @author : Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it, VA
  **/
+@SuppressWarnings("unused")
 public class Operatore implements Serializable {
     private String cognome, nome, codiceFiscale, email, userID, password;
     private CentroMonitoraggio centroAfferenza;
 
     /**
-     *
-     * @param cognome cognome dell'operatore
-     * @param nome nome dell'operatore
-     * @param codiceFiscale codice fiscale dell'operatore
-     * @param email email aziendale dell'operatore
-     * @param userID userID scelto dall'operatore al momento della registrazione
-     * @param password password scelta dall'operatore al momento della registrazione
+     * Crea un operatore registrato.
+     * @param cognome cognome dell'operatore.
+     * @param nome nome dell'operatore.
+     * @param codiceFiscale codice fiscale dell'operatore.
+     * @param email email aziendale dell'operatore.
+     * @param userID userID scelto dall'operatore al momento della registrazione.
+     * @param password password scelta dall'operatore al momento della registrazione.
      * @param centroAfferenza centro di afferenza scelto dall'operatore al momento della registrazione. L'operatore
-     *                        potrà inserire dati solo qui
+     *                        potrà inserire dati solo qui.
      */
     public Operatore(String cognome, String nome, String codiceFiscale, String email, String userID, String password,
                      CentroMonitoraggio centroAfferenza){
@@ -32,14 +34,12 @@ public class Operatore implements Serializable {
         this.centroAfferenza = centroAfferenza;
     }
 
-    public Operatore(String email) {
-        this.email = email;
-    }
-
+    /**
+     * Crea una stringa per la stampa o per il salvataggio su file csv dell'operatore.
+     * @return una stringa csv con separatore ';' che descrive l'operatore.
+     */
     @Override
     public String toString() {
-        if(cognome == null)
-            return email;
         return cognome + ";" +
                 nome + ";" +
                 codiceFiscale + ";" +
@@ -48,6 +48,8 @@ public class Operatore implements Serializable {
                 password + ";" +
                 centroAfferenza;
     }
+
+    //getters and setters
 
     public String getCognome() {
         return cognome;
