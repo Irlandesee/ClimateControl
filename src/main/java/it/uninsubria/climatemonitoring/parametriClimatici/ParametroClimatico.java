@@ -1,6 +1,7 @@
-package it.uninsubria.climatemonitoring;
+package it.uninsubria.climatemonitoring.parametriClimatici;
 
-import java.util.Date;
+import java.io.Serializable;
+import java.time.LocalDate;
 
 /**
  * Rappresenta un parametro climatico.
@@ -8,24 +9,20 @@ import java.util.Date;
  * @author : Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it, VA
  **/
 @SuppressWarnings("unused")
-public class ParametroClimatico {
-    private String categoria;
-    private String spiegazione;
+public abstract class ParametroClimatico implements Serializable {
+    protected String CATEGORIA;
+    protected String SPIEGAZIONE;
     private int punteggio;
     private String note;
-    private Date dataRilevazione;
+    private LocalDate dataRilevazione;
 
     /**
      * Crea un parametro climatico.
-     * @param categoria categoria del parametro climatico.
-     * @param spiegazione spiegazione del parametro climatico.
      * @param punteggio punteggio del parametro climatico da 1 (critico) a 5 (ottimale).
      * @param note note del parametro climatico (massimo 256 caratteri).
      * @param dataRilevazione data di rilevazione del parametro climatico.
      */
-    public ParametroClimatico(String categoria, String spiegazione, int punteggio, String note, Date dataRilevazione) {
-        this.categoria = categoria;
-        this.spiegazione = spiegazione;
+    public ParametroClimatico(int punteggio, String note, LocalDate dataRilevazione) {
         this.punteggio = punteggio;
         this.note = note;
         this.dataRilevazione = dataRilevazione;
@@ -37,25 +34,25 @@ public class ParametroClimatico {
      */
     @Override
     public String toString() {
-        return dataRilevazione.toString() + " " + categoria + " " + spiegazione + " " + punteggio + " " + note + "\n";
+        return dataRilevazione.toString() + " " + CATEGORIA + " " + SPIEGAZIONE + " " + punteggio + " " + note + "\n";
     }
 
     //getters and setters
 
     public String getCategoria() {
-        return categoria;
+        return CATEGORIA;
     }
 
     public void setCategoria(String categoria) {
-        this.categoria = categoria;
+        this.CATEGORIA = categoria;
     }
 
     public String getSpiegazione() {
-        return spiegazione;
+        return SPIEGAZIONE;
     }
 
     public void setSpiegazione(String spiegazione) {
-        this.spiegazione = spiegazione;
+        this.SPIEGAZIONE = spiegazione;
     }
 
     public int getPunteggio() {
@@ -74,11 +71,11 @@ public class ParametroClimatico {
         this.note = note;
     }
 
-    public Date getDataRilevazione() {
+    public LocalDate getDataRilevazione() {
         return dataRilevazione;
     }
 
-    public void setDataRilevazione(Date dataRilevazione) {
+    public void setDataRilevazione(LocalDate dataRilevazione) {
         this.dataRilevazione = dataRilevazione;
     }
 }

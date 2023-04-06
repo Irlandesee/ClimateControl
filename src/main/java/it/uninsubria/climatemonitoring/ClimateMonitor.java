@@ -1,6 +1,7 @@
 package it.uninsubria.climatemonitoring;
 
 import it.uninsubria.climatemonitoring.gestioneFile.DBInterface;
+import it.uninsubria.climatemonitoring.parametriClimatici.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -9,7 +10,12 @@ import javafx.stage.Stage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.Locale;
 
 /**
  * @author : Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
@@ -46,8 +52,10 @@ public class ClimateMonitor extends Application {
                         AreaInteresse areaInteresse = cercaAreaGeografica(areeInteresseAssociateCache, reader);
                         if (areaInteresse == null)
                             System.out.println("Area di interesse non trovata!\n");
-                        else
-                            System.out.println("Dati meteorologici di " + areaInteresse);
+                        else {
+                            System.out.println("Dati meteorologici di " + areaInteresse + "\n");
+                            System.out.println(areaInteresse.getParametriClimatici());
+                        }
                     }
                     case "login" -> loggedOperator = login(operatoriRegistratiCache, reader);
                     case "registrazione" -> loggedOperator = registrazione(dbRef, operatoriAutorizzatiCache,
@@ -57,34 +65,117 @@ public class ClimateMonitor extends Application {
             }
 
             while (loggedOperator != null) {
+                CentroMonitoraggio centroAfferenza = loggedOperator.getCentroAfferenza();
+                System.out.println("Area riservata - Centro di monitoraggio " + centroAfferenza.getNomeCentro() + "\n");
                 System.out.println("""
-                        Area riservata.
                         Digitare 'aggiungi' per aggiungere un aree di interesse al centro di monitoraggio.
                         Digitare 'logout' per effettuare il logout e tornare al menù principale.
                         Digitare 'uscita' per terminare il programma.
+                        Digitare 'inserisci' per inserire i dati relativi ad una delle aree di interesse.
                         Aree di interesse registrate:""");
                 printCache(loggedOperator.getCentroAfferenza().getAreeInteresse());
 
                 switch (reader.readLine()) {
-                    case "aggiungi" -> {
-                        AreaInteresse areaInteresse = cercaAreaGeografica(areeInteresseDisponibiliCache, reader);
-                        if (areaInteresse == null) {
-                            System.out.println("Area di interesse non trovata!");
-                        } else {
-                            areeInteresseDisponibiliCache.remove(areaInteresse);
-                            areeInteresseAssociateCache.add(areaInteresse);
-                            loggedOperator.getCentroAfferenza().addAreaInteresse(areaInteresse);
-                            dbRef.writeAreeInteresseFile(areeInteresseAssociateCache);
-                            dbRef.writeCoordinateMonitoraggioFile(areeInteresseDisponibiliCache);
-                            dbRef.writeCentriMonitoraggioFile(centriMonitoraggioCache);
-                        }
-                        System.out.println("Area di interesse aggiunta con successo!");
-                    }
+                    case "aggiungi" -> aggiungiAreaInteresse(dbRef, areeInteresseDisponibiliCache,
+                            areeInteresseAssociateCache, centriMonitoraggioCache, operatoriRegistratiCache, reader,
+                            loggedOperator);
+                    case "inserisci" -> inserisciDatiParametri(reader, loggedOperator, dbRef, centriMonitoraggioCache,
+                            areeInteresseAssociateCache);
                     case "logout" -> loggedOperator = null;
                     case "uscita" -> System.exit(0);
                 }
             }
         }
+    }
+
+    private static void inserisciDatiParametri
+            (BufferedReader reader, Operatore loggedOperator, DBInterface dbRef,
+             LinkedList<CentroMonitoraggio> centriMonitoraggioCache,
+             LinkedList<AreaInteresse> areeInteresseAssociateCache) throws IOException {
+        LinkedList<AreaInteresse> areeInteresse =
+                loggedOperator.getCentroAfferenza().getAreeInteresse();
+        AreaInteresse areaInteresse = cercaAreaGeografica(areeInteresse, reader);
+        if(areaInteresse == null) {
+            System.out.println("Area di interesse non trovata!");
+            return;
+        }
+        System.out.println("Area di interesse scelta:\n" + areaInteresse);
+        LinkedList<ParametroClimatico> parametriClimatici = new LinkedList<>();
+        LinkedList<Integer> punteggi = new LinkedList<>();
+        LinkedList<String> note = new LinkedList<>();
+        ArrayList<String> nomiParametri = new ArrayList<>(Arrays.asList("al Vento", "all'Umidità", "alla Pressione",
+                "alla Temperatura", "alle Precipitazioni", "all'Altitudine dei ghiacciai", "alla Massa dei ghiacciai"));
+
+        //TODO verifica interi in lettura e max caratteri.
+        for(int i = 0; i < 7; i++) {
+            System.out.println("Digitare il punteggio relativo " + nomiParametri.get(i) + ":");
+            String punteggio = reader.readLine();
+            if (isNumeric(punteggio))
+                punteggi.add(i, Integer.parseInt(punteggio));
+            System.out.println("Digitare le note relative " + nomiParametri.get(i) + " (massimo 256 caratteri):");
+            note.add(i, reader.readLine());
+        }
+
+        //TODO verify date input
+        String annoRilevazione;
+        String meseRilevazione;
+        String giornoRilevazione;
+        System.out.println("Digitare la l'anno di rilevazione:");
+        annoRilevazione = reader.readLine();
+        System.out.println("Digitare il mese di rilevazione:");
+        meseRilevazione = reader.readLine();
+        if(meseRilevazione.length() == 1)
+            meseRilevazione = "0" + meseRilevazione;
+        System.out.println("Digitare il giorno di rilevazione:");
+        giornoRilevazione = reader.readLine();
+        if(giornoRilevazione.length() == 1)
+            giornoRilevazione = "0" + giornoRilevazione;
+        String string = giornoRilevazione + " " + meseRilevazione + " " + annoRilevazione;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MM yyyy", Locale.ITALIAN);
+        LocalDate date = LocalDate.parse(string, formatter);
+
+        parametriClimatici.add(0, new Vento(punteggi.get(0), note.get(0), date));
+        parametriClimatici.add(1, new Umidita(punteggi.get(1), note.get(1), date));
+        parametriClimatici.add(2, new Pressione(punteggi.get(2), note.get(2), date));
+        parametriClimatici.add(3, new Temperatura(punteggi.get(3), note.get(3), date));
+        parametriClimatici.add(4, new Precipitazioni(punteggi.get(4), note.get(4), date));
+        parametriClimatici.add(5, new AltitudineGhiacciai(punteggi.get(5), note.get(5), date));
+        parametriClimatici.add(6, new MassaGhiacciai(punteggi.get(6), note.get(6), date));
+
+        areaInteresse.addParametriClimatici(parametriClimatici);
+        dbRef.writeCentriMonitoraggioFile(centriMonitoraggioCache);
+        dbRef.writeAreeInteresseFile(areeInteresseAssociateCache);
+        System.out.println("Parametri climatici aggiunti con successo!");
+    }
+
+    public static boolean isNumeric(String str) {
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch(NumberFormatException e){
+            return false;
+        }
+    }
+
+    private static void aggiungiAreaInteresse(DBInterface dbRef, LinkedList<AreaInteresse>
+            areeInteresseDisponibiliCache, LinkedList<AreaInteresse> areeInteresseAssociateCache,
+                                              LinkedList<CentroMonitoraggio> centriMonitoraggioCache,
+                                              LinkedList<Operatore> operatoriRegistratiCache,
+                                              BufferedReader reader, Operatore loggedOperator) throws IOException {
+        AreaInteresse areaInteresse = cercaAreaGeografica(areeInteresseDisponibiliCache, reader);
+        if (areaInteresse == null) {
+            System.out.println("Area di interesse non trovata!");
+            return;
+        } else {
+            areeInteresseDisponibiliCache.remove(areaInteresse);
+            areeInteresseAssociateCache.add(areaInteresse);
+            loggedOperator.getCentroAfferenza().addAreaInteresse(areaInteresse);
+            dbRef.writeAreeInteresseFile(areeInteresseAssociateCache);
+            dbRef.writeCoordinateMonitoraggioFile(areeInteresseDisponibiliCache);
+            dbRef.writeCentriMonitoraggioFile(centriMonitoraggioCache);
+            dbRef.writeOperatoriRegistratiFile(operatoriRegistratiCache);
+        }
+        System.out.println("Area di interesse aggiunta con successo!");
     }
 
     private static Operatore registrazione(DBInterface dbRef, LinkedList<String> operatoriAutorizzatiCache,
@@ -145,8 +236,8 @@ public class ClimateMonitor extends Application {
         return operatore;
     }
 
-    private static CentroMonitoraggio registraCentroAree(DBInterface dbRef, LinkedList<CentroMonitoraggio> centriMonitoraggioCache,
-                                           BufferedReader reader, String nomeCentroAfferenza) throws IOException {
+    private static CentroMonitoraggio registraCentroAree(DBInterface dbRef, LinkedList<CentroMonitoraggio>
+            centriMonitoraggioCache, BufferedReader reader, String nomeCentroAfferenza) throws IOException {
         String via, comune, provincia;
         int numeroCivico, cap;
         System.out.println("Digitare la via del centro di afferenza:");
@@ -202,7 +293,8 @@ public class ClimateMonitor extends Application {
         return loggedOperator;
     }
 
-    private static AreaInteresse cercaAreaGeografica(LinkedList<AreaInteresse> areeInteresseCache, BufferedReader reader) throws IOException {
+    private static AreaInteresse cercaAreaGeografica(LinkedList<AreaInteresse> areeInteresseCache,
+                                                     BufferedReader reader) throws IOException {
         System.out.println("Digitare 'nome' per ricercare l'area di interesse per nome.\n" +
                 "Digitare 'coordinate' per cercare l'area di interesse per coordinate geografiche.");
         AreaInteresse areaInteresse = null;

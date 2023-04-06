@@ -9,4 +9,6 @@ module it.uninsubria.climatemonitoring {
 
     opens it.uninsubria.climatemonitoring to javafx.fxml;
     exports it.uninsubria.climatemonitoring;
+    exports it.uninsubria.climatemonitoring.parametriClimatici;
+    opens it.uninsubria.climatemonitoring.parametriClimatici to javafx.fxml;
 }

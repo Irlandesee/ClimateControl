@@ -66,7 +66,7 @@ public class DBInterface {
         writerREF.serializeFileOut(areeInteresseDisponibili, coordinateMonitoraggioFile.getPath());
     }
 
-    public void writeOperatoriRegistrati(LinkedList<Operatore> operatori) throws IOException {
+    public void writeOperatoriRegistratiFile(LinkedList<Operatore> operatori) throws IOException {
         writerREF.serializeFileOut(operatori, operatoriRegistratiFile.getAbsolutePath());
     }
 

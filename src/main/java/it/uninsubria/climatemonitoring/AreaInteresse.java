@@ -1,7 +1,8 @@
 package it.uninsubria.climatemonitoring;
 
+import it.uninsubria.climatemonitoring.parametriClimatici.ParametroClimatico;
+
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -17,7 +18,7 @@ public class AreaInteresse implements Serializable {
     private String countryCode;
     private double latitude;
     private double longitude;
-    private ArrayList<LinkedList<ParametroClimatico>> parametriClimatici = new ArrayList<>();
+    private LinkedList<LinkedList<ParametroClimatico>> parametriClimatici = new LinkedList<>();
 
     /**
      * Crea un'area d'interesse.
@@ -28,13 +29,31 @@ public class AreaInteresse implements Serializable {
      * @param latitude latitudine dell'area d'interesse.
      * @param longitude longitudine dell'area d'interesse.
      */
-    public AreaInteresse(String geonameID, String asciiName, String countryCode, String country, double latitude, double longitude) {
+    public AreaInteresse(String geonameID, String asciiName, String countryCode, String country, double latitude,
+                         double longitude) {
         this.geonameID = geonameID;
         this.asciiName = asciiName;
         this.country = country;
         this.countryCode = countryCode;
         this.latitude = latitude;
         this.longitude = longitude;
+
+        for (int i = 0; i < 7; i++)
+            parametriClimatici.add(new LinkedList<>());
+    }
+
+    /**
+     * Salva un nuovo gruppo di parametri climatici nella cache.
+     * @param parametriClimatici arrayList contenente i parametri climatici da aggiungere.
+     */
+    public void addParametriClimatici(LinkedList<ParametroClimatico> parametriClimatici) {
+        this.parametriClimatici.get(0).add(parametriClimatici.get(0));
+        this.parametriClimatici.get(1).add(parametriClimatici.get(1));
+        this.parametriClimatici.get(2).add(parametriClimatici.get(2));
+        this.parametriClimatici.get(3).add(parametriClimatici.get(3));
+        this.parametriClimatici.get(4).add(parametriClimatici.get(4));
+        this.parametriClimatici.get(5).add(parametriClimatici.get(5));
+        this.parametriClimatici.get(6).add(parametriClimatici.get(6));
     }
 
     /**
@@ -99,5 +118,13 @@ public class AreaInteresse implements Serializable {
 
     public void setLongitude(double longitude) {
         this.longitude = longitude;
+    }
+
+    public LinkedList<LinkedList<ParametroClimatico>> getParametriClimatici() {
+        return parametriClimatici;
+    }
+
+    public void setParametriClimatici(LinkedList<LinkedList<ParametroClimatico>> parametriClimatici) {
+        this.parametriClimatici = parametriClimatici;
     }
 }
