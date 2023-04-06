@@ -39,4 +39,46 @@ public class ParametroClimatico {
     public String toString() {
         return dataRilevazione.toString() + " " + categoria + " " + spiegazione + " " + punteggio + " " + note + "\n";
     }
+
+    //getters and setters
+
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
+
+    public String getSpiegazione() {
+        return spiegazione;
+    }
+
+    public void setSpiegazione(String spiegazione) {
+        this.spiegazione = spiegazione;
+    }
+
+    public int getPunteggio() {
+        return punteggio;
+    }
+
+    public void setPunteggio(int punteggio) {
+        this.punteggio = punteggio;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    public Date getDataRilevazione() {
+        return dataRilevazione;
+    }
+
+    public void setDataRilevazione(Date dataRilevazione) {
+        this.dataRilevazione = dataRilevazione;
+    }
 }
