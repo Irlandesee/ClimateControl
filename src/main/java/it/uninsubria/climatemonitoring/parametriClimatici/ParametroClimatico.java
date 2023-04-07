@@ -78,4 +78,20 @@ public abstract class ParametroClimatico implements Serializable {
     public void setDataRilevazione(LocalDate dataRilevazione) {
         this.dataRilevazione = dataRilevazione;
     }
+
+    public String getCATEGORIA() {
+        return CATEGORIA;
+    }
+
+    public void setCATEGORIA(String CATEGORIA) {
+        this.CATEGORIA = CATEGORIA;
+    }
+
+    public String getSPIEGAZIONE() {
+        return SPIEGAZIONE;
+    }
+
+    public void setSPIEGAZIONE(String SPIEGAZIONE) {
+        this.SPIEGAZIONE = SPIEGAZIONE;
+    }
 }

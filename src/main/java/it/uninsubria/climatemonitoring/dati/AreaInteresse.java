@@ -20,6 +20,8 @@ public class AreaInteresse implements Serializable {
     private double longitude;
     private LinkedList<LinkedList<ParametroClimatico>> parametriClimatici = new LinkedList<>();
 
+    private final int NUMERO_PARAMETRI = 7;
+
     /**
      * Crea un'area d'interesse.
      * @param geonameID geoname ufficiale dell'area d'interesse.
@@ -38,7 +40,7 @@ public class AreaInteresse implements Serializable {
         this.latitude = latitude;
         this.longitude = longitude;
 
-        for (int i = 0; i < 7; i++)
+        for (int i = 0; i < NUMERO_PARAMETRI; i++)
             parametriClimatici.add(new LinkedList<>());
     }
 
@@ -47,13 +49,11 @@ public class AreaInteresse implements Serializable {
      * @param parametriClimatici linkedList contenente i parametri climatici da aggiungere.
      */
     public void addParametriClimatici(LinkedList<ParametroClimatico> parametriClimatici) {
-        this.parametriClimatici.get(0).add(parametriClimatici.get(0));
-        this.parametriClimatici.get(1).add(parametriClimatici.get(1));
-        this.parametriClimatici.get(2).add(parametriClimatici.get(2));
-        this.parametriClimatici.get(3).add(parametriClimatici.get(3));
-        this.parametriClimatici.get(4).add(parametriClimatici.get(4));
-        this.parametriClimatici.get(5).add(parametriClimatici.get(5));
-        this.parametriClimatici.get(6).add(parametriClimatici.get(6));
+        for (int i = 0; i < NUMERO_PARAMETRI; i++) {
+            if(parametriClimatici.get(i).getPunteggio() == 0)
+                continue;
+            this.parametriClimatici.get(i).add(parametriClimatici.get(i));
+        }
     }
 
     /**
@@ -70,11 +70,11 @@ public class AreaInteresse implements Serializable {
                 longitude;
     }
 
-    //TODO non contare gli zeri e le stringhe vuote nel conteggio aggregato
+    //TODO solo i dati aggregati della prima esecuzione vengono salvati e visualizzati
     public String getDatiAggregati() {
         StringBuilder datiAggregati = new StringBuilder();
         String categoria = "";
-        int punteggioAggregato = 0;
+        double punteggioAggregato = 0.0;
         StringBuilder noteAggregate = new StringBuilder();
         for (LinkedList<ParametroClimatico> listaParametro : parametriClimatici) {
             if (listaParametro.size() == 0)
