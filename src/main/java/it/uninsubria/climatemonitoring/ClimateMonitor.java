@@ -25,6 +25,11 @@ public class ClimateMonitor {
      */
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         DBInterface dbRef = new DBInterface();
+
+        dbRef.writeOperatoriAutorizzatiFile();
+        dbRef.writeGeonamesAndCoordinatesFile();
+
+        dbRef.writeCoordinateMonitoraggioFile(dbRef.readGeonamesAndCoordinatesFile());
         LinkedList<AreaInteresse> areeInteresseDisponibiliCache = dbRef.readCoordinateMonitoraggioFile();
         LinkedList<AreaInteresse> areeInteresseAssociateCache = dbRef.readAreeInteresseFile();
         LinkedList<String> operatoriAutorizzatiCache = dbRef.readOperatoriAutorizzatiFile();
@@ -65,7 +70,7 @@ public class ClimateMonitor {
                 System.out.println("Area riservata - Centro di monitoraggio " + centroAfferenza.getNomeCentro() + "\n");
                 System.out.println("""
                         Digitare 'aggiungi' per aggiungere un aree di interesse al centro di monitoraggio.
-                        Digitare 'logout' per effettuare il logout e tornare al menù principale.
+                        Digitare 'logout' per effettuare il logout e tornare al menu' principale.
                         Digitare 'uscita' per terminare il programma.
                         Digitare 'inserisci' per inserire i dati relativi ad una delle aree di interesse.
                         Aree di interesse registrate:""");
@@ -77,6 +82,15 @@ public class ClimateMonitor {
                             loggedOperator);
                     case "inserisci" -> inserisciDatiParametri(reader, loggedOperator, dbRef, centriMonitoraggioCache,
                             areeInteresseAssociateCache);
+                    case "cerca" -> {
+                        AreaInteresse areaInteresse = cercaAreaGeografica(areeInteresseAssociateCache, reader);
+                        if (areaInteresse == null)
+                            System.out.println("Area di interesse non trovata!\n");
+                        else {
+                            System.out.println("Dati meteorologici di " + areaInteresse + "\n");
+                            System.out.println(areaInteresse.getParametriClimatici());
+                        }
+                    }
                     case "logout" -> loggedOperator = null;
                     case "uscita" -> System.exit(0);
                 }

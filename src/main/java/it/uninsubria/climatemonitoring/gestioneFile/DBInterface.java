@@ -5,7 +5,6 @@ import it.uninsubria.climatemonitoring.CentroMonitoraggio;
 import it.uninsubria.climatemonitoring.Operatore;
 
 import java.io.*;
-import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
@@ -14,7 +13,7 @@ import java.util.LinkedList;
  **/
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class DBInterface {
-    File directory = new File("src/main/resources");
+    File directory = new File(".data");
 
     private File geonamesCoordinatesFile;
     private File centriMonitoraggioFile;
@@ -25,8 +24,6 @@ public class DBInterface {
     private File areeInteresseFile;
 
     private final boolean DEBUG = true;
-
-    private HashMap<String, AreaInteresse> geonamesDBCache;
 
     private ReaderDB readerREF;
     private WriterDB writerREF;
@@ -54,6 +51,10 @@ public class DBInterface {
         return  (LinkedList<AreaInteresse>) readerREF.serializeFileIn(areeInteresseFile.getPath());
     }
 
+    public LinkedList<AreaInteresse> readGeonamesAndCoordinatesFile() throws IOException {
+        return  readerREF.readGeonamesAndCoordinatesFile();
+    }
+
     public LinkedList<Operatore> readOperatoriRegistratiFile() throws IOException, ClassNotFoundException {
         return (LinkedList<Operatore>) readerREF.serializeFileIn(operatoriRegistratiFile.getPath());
     }
@@ -66,8 +67,16 @@ public class DBInterface {
         writerREF.serializeFileOut(areeInteresseDisponibili, coordinateMonitoraggioFile.getPath());
     }
 
+    public void writeGeonamesAndCoordinatesFile() throws IOException {
+        writerREF.writeGeonamesAndCoordinatesFile();
+    }
+
     public void writeOperatoriRegistratiFile(LinkedList<Operatore> operatori) throws IOException {
         writerREF.serializeFileOut(operatori, operatoriRegistratiFile.getAbsolutePath());
+    }
+
+    public void writeOperatoriAutorizzatiFile() throws IOException {
+        writerREF.writeOperatoriAutorizzatiFile();
     }
 
     public void writeAreeInteresseFile(LinkedList<AreaInteresse> areeInteresseAssociate) throws IOException {
@@ -106,19 +115,19 @@ public class DBInterface {
         writerREF = new WriterDB(this);
 
         geonamesCoordinatesFile = new File(
-                "src/main/resources/it/uninsubria/climatemonitoring/geonames-and-coordinates.csv");
+                ".data/geonames-and-coordinates.csv");
         centriMonitoraggioFile = new File(
-                "src/main/resources/it/uninsubria/climatemonitoring/CentriMonitoraggio.dati");
+                ".data/CentriMonitoraggio.dati");
         coordinateMonitoraggioFile = new File(
-                "src/main/resources/it/uninsubria/climatemonitoring/CoordinateMonitoraggio.dati");
+                ".data/CoordinateMonitoraggio.dati");
         operatoriAutorizzatiFile = new File(
-                "src/main/resources/it/uninsubria/climatemonitoring/OperatoriAutorizzati.dati");
+                ".data/OperatoriAutorizzati.dati");
         operatoriRegistratiFile = new File(
-                "src/main/resources/it/uninsubria/climatemonitoring/OperatoriRegistrati.dati");
+                ".data/OperatoriRegistrati.dati");
         parametriClimaticiFile = new File(
-                "src/main/resources/it/uninsubria/climatemonitoring/ParametriClimatici.dati");
+                ".data/ParametriClimatici.dati");
         areeInteresseFile = new File(
-                "src/main/resources/it/uninsubria/climatemonitoring/AreeInteresse.dati");
+                ".data/AreeInteresse.dati");
 
         checkFilesExistence();
     }
@@ -140,6 +149,4 @@ public class DBInterface {
                     file.getAbsolutePath());
         }
     }
-
-    private HashMap<String, AreaInteresse> getGeonamesDBCache(){return this.geonamesDBCache;}
 }
