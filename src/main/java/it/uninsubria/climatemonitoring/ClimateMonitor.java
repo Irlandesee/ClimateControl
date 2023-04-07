@@ -95,7 +95,7 @@ public class ClimateMonitor {
                     case "cerca" -> {
                         AreaInteresse areaInteresse = cercaAreaGeografica(areeInteresseAssociateCache, reader);
                         if (areaInteresse == null)
-                            System.out.println("Area di interesse non trovata!\n");
+                            System.out.println("Area di interesse non trovata!");
                         else {
                             System.out.println("Dati meteorologici di " + areaInteresse + "\n");
                             System.out.println(areaInteresse.getParametriClimatici());
@@ -130,7 +130,8 @@ public class ClimateMonitor {
             System.out.println("Digitare il punteggio relativo " +
                     nomiParametri.get(i) + "(da 1 critico a 5 ottimale, 0 per nessun inserimento):");
             String punteggio = reader.readLine();
-            while (isNotNumeric(punteggio) || Integer.parseInt(punteggio) < 0 || Integer.parseInt(punteggio) > 5) {
+            while (isNotNumeric(punteggio) || isNotaInt(punteggio) || Integer.parseInt(punteggio) < 0 ||
+                    Integer.parseInt(punteggio) > 5) {
                 System.err.println("Il punteggio deve essere un numero compreso tra 1-critico e 5-ottimale!");
                 System.out.println("Digitare il punteggio relativo " +
                         nomiParametri.get(i) + "(da 1 critico a 5 ottimale, 0 per nessun inserimento):");
@@ -161,15 +162,23 @@ public class ClimateMonitor {
         do {
             System.out.println("Digitare la l'anno di rilevazione:");
             annoRilevazione = reader.readLine();
-            while (isNotNumeric(annoRilevazione)) {
+            while (isNotNumeric(annoRilevazione) || isNotaInt(annoRilevazione) ||
+                    Integer.parseInt(annoRilevazione) > 9999) {
                 System.out.println("Anno inserito non valido! L'anno deve essere un numero intero.");
                 System.out.println("Digitare la l'anno di rilevazione:");
                 annoRilevazione = reader.readLine();
             }
+            switch (annoRilevazione.length()) {
+                case (3) -> annoRilevazione = "0" + annoRilevazione;
+                case (2) -> annoRilevazione = "00" + annoRilevazione;
+                case (1) -> annoRilevazione = "000" + annoRilevazione;
+                case (0) -> annoRilevazione = "0000";
+                default -> {}
+            }
 
             System.out.println("Digitare il mese di rilevazione:");
             meseRilevazione = reader.readLine();
-            while (isNotNumeric(meseRilevazione) || Integer.parseInt(meseRilevazione) < 1 ||
+            while (isNotNumeric(meseRilevazione) || isNotaInt(meseRilevazione) || Integer.parseInt(meseRilevazione) < 1 ||
                     Integer.parseInt(meseRilevazione) > 12) {
                 System.out.println("Mese inserito non valido! Il mese deve essere un numero intero compreso tra 1 e 12.");
                 System.out.println("Digitare la il mese di rilevazione:");
@@ -180,7 +189,7 @@ public class ClimateMonitor {
 
             System.out.println("Digitare il giorno di rilevazione:");
             giornoRilevazione = reader.readLine();
-            while (isNotNumeric(giornoRilevazione) || Integer.parseInt(giornoRilevazione) < 1 ||
+            while (isNotNumeric(giornoRilevazione) || isNotaInt(giornoRilevazione) || Integer.parseInt(giornoRilevazione) < 1 ||
                     Integer.parseInt(giornoRilevazione) > 31) {
                 System.out.println("Giorno inserito non valido! Il giorno deve essere un " +
                         "numero intero compreso tra 1 e 31");
@@ -205,32 +214,12 @@ public class ClimateMonitor {
         parametriClimatici.add(6, new MassaGhiacciai(punteggi.get(6), note.get(6), date));
 
         //TODO bug rimuove l'area di interesse registrata dopo che si inseriscono i dati
-        // non sono riuscito a replicare il bug
+        // non sono riuscito a replicare il bug.
+        // i dati meteorologici non vengono salvati correttamente o non vengono visualizzati
         areaInteresse.addParametriClimatici(parametriClimatici);
         dbRef.writeCentriMonitoraggioFile(centriMonitoraggioCache);
         dbRef.writeAreeInteresseFile(areeInteresseAssociateCache);
         System.out.println("Parametri climatici aggiunti con successo!");
-    }
-
-    private static boolean isDateInvalid(String date) {
-        final String DATE_FORMAT = "dd-MM-yyyy";
-        try {
-            DateFormat df = new SimpleDateFormat(DATE_FORMAT);
-            df.setLenient(false);
-            df.parse(date);
-            return false;
-        } catch (ParseException e) {
-            return true;
-        }
-    }
-
-    private static boolean isNotNumeric(String str) {
-        try {
-            Double.parseDouble(str);
-            return false;
-        } catch(NumberFormatException e){
-            return true;
-        }
     }
 
     private static void aggiungiAreaInteresse(FileInterface dbRef, LinkedList<AreaInteresse>
@@ -328,7 +317,7 @@ public class ClimateMonitor {
 
         System.out.println("Digitare il numero civico del centro di afferenza:");
         numeroCivico = reader.readLine();
-        while (isNotNumeric(numeroCivico) || Integer.parseInt(numeroCivico) < 1) {
+        while (isNotNumeric(numeroCivico) || isNotaInt(numeroCivico) || Integer.parseInt(numeroCivico) < 1) {
             System.out.println("Il numero civico deve essere un numero maggiore di 0!");
             System.out.println("Digitare il numero civico del centro di afferenza:");
             numeroCivico = reader.readLine();
@@ -337,7 +326,7 @@ public class ClimateMonitor {
 
         System.out.println("Digitare il CAP del centro di afferenza:");
         cap = reader.readLine();
-        while (isNotNumeric(cap) || Integer.parseInt(cap) < 1) {
+        while (isNotNumeric(cap) ||isNotaInt(cap) || Integer.parseInt(cap) < 1) {
             System.out.println("Il CAP deve essere un numero maggiore di 0!");
             System.out.println("Digitare il CAP del centro di afferenza:");
             cap = reader.readLine();
@@ -432,6 +421,31 @@ public class ClimateMonitor {
             }
         }
         return areeInteresseCache.get(minimumIndex);
+    }
+
+    private static boolean isDateInvalid(String date) {
+        final String DATE_FORMAT = "dd-MM-yyyy";
+        try {
+            DateFormat df = new SimpleDateFormat(DATE_FORMAT);
+            df.setLenient(false);
+            df.parse(date);
+            return false;
+        } catch (ParseException e) {
+            return true;
+        }
+    }
+
+    private static boolean isNotNumeric(String str) {
+        try {
+            Double.parseDouble(str);
+            return false;
+        } catch(NumberFormatException e){
+            return true;
+        }
+    }
+
+    private static boolean isNotaInt(String number) {
+        return Double.parseDouble(number) != (int) Double.parseDouble(number);
     }
 
     private static void printCache(LinkedList<?> cache) {
