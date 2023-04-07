@@ -57,19 +57,11 @@ public class ClimateMonitor {
                         (solo operatori autorizzati).
                         Digitare 'uscita' per terminare il programma.""");
                 switch (reader.readLine()) {
-                    case "cerca" -> {
-                        AreaInteresse areaInteresse = cercaAreaGeografica(areeInteresseAssociateCache, reader);
-                        if (areaInteresse == null)
-                            System.out.println("Area di interesse non trovata!\n");
-                        else {
-                            System.out.println("Dati meteorologici di " + areaInteresse + "\n");
-                            System.out.println(areaInteresse.getParametriClimatici());
-                        }
-                    }
-                    case "login" -> loggedOperator = login(operatoriRegistratiCache, reader);
-                    case "registrazione" -> loggedOperator = registrazione(fileInterface, operatoriAutorizzatiCache,
+                    case "cerca", "c" -> cercaAreaGeografica(areeInteresseAssociateCache, reader);
+                    case "login", "l" -> loggedOperator = login(operatoriRegistratiCache, reader);
+                    case "registrazione", "r" -> loggedOperator = registrazione(fileInterface, operatoriAutorizzatiCache,
                             operatoriRegistratiCache, centriMonitoraggioCache, reader);
-                    case "uscita" -> System.exit(0);
+                    case "uscita", "u" -> System.exit(0);
                 }
             }
 
@@ -87,34 +79,36 @@ public class ClimateMonitor {
                 printCache(loggedOperator.getCentroAfferenza().getAreeInteresse());
 
                 switch (reader.readLine()) {
-                    case "aggiungi" -> aggiungiAreaInteresse(fileInterface, areeInteresseDisponibiliCache,
+                    case "aggiungi", "a" -> aggiungiAreaInteresse(fileInterface, areeInteresseDisponibiliCache,
                             areeInteresseAssociateCache, centriMonitoraggioCache, operatoriRegistratiCache, reader,
                             loggedOperator);
-                    case "inserisci" -> inserisciDatiParametri(reader, loggedOperator, fileInterface, centriMonitoraggioCache,
+                    case "inserisci", "i" -> inserisciDatiParametri(reader, loggedOperator, fileInterface, centriMonitoraggioCache,
                             areeInteresseAssociateCache);
-                    case "cerca" -> {
-                        AreaInteresse areaInteresse = cercaAreaGeografica(areeInteresseAssociateCache, reader);
-                        if (areaInteresse == null)
-                            System.out.println("Area di interesse non trovata!");
-                        else {
-                            System.out.println("Dati meteorologici di " + areaInteresse + "\n");
-                            System.out.println(areaInteresse.getParametriClimatici());
-                        }
-                    }
-                    case "logout" -> loggedOperator = null;
-                    case "uscita" -> System.exit(0);
+                    case "cerca", "c" -> cercaAreaGeografica(areeInteresseAssociateCache, reader);
+                    case "logout", "l" -> loggedOperator = null;
+                    case "uscita", "u" -> System.exit(0);
                 }
             }
         }
     }
 
+    private static void cercaAreaGeografica(LinkedList<AreaInteresse> areeInteresseAssociateCache, BufferedReader reader) throws IOException {
+        AreaInteresse areaInteresse = cercaArea(areeInteresseAssociateCache, reader);
+        if (areaInteresse == null)
+            System.out.println("Area di interesse non trovata!\n");
+        else {
+            System.out.println("Dati meteorologici di " + areaInteresse + "\n");
+            System.out.println(areaInteresse.getDatiAggregati());
+        }
+    }
+
     private static void inserisciDatiParametri
-            (BufferedReader reader, Operatore loggedOperator, FileInterface dbRef,
+            (BufferedReader reader, Operatore loggedOperator, FileInterface fileInterface,
              LinkedList<CentroMonitoraggio> centriMonitoraggioCache,
              LinkedList<AreaInteresse> areeInteresseAssociateCache) throws IOException {
         LinkedList<AreaInteresse> areeInteresse =
                 loggedOperator.getCentroAfferenza().getAreeInteresse();
-        AreaInteresse areaInteresse = cercaAreaGeografica(areeInteresse, reader);
+        AreaInteresse areaInteresse = cercaArea(areeInteresse, reader);
         if(areaInteresse == null) {
             System.out.println("Area di interesse non trovata!");
             return;
@@ -199,6 +193,7 @@ public class ClimateMonitor {
             if (giornoRilevazione.length() == 1)
                 giornoRilevazione = "0" + giornoRilevazione;
 
+            //TODO data stampata al contrario? yyyy.MM.gg
             data = giornoRilevazione + "-" + meseRilevazione + "-" + annoRilevazione;
             if(isDateInvalid(data))
                 System.out.println("Data non valida! Riprova.");
@@ -213,21 +208,18 @@ public class ClimateMonitor {
         parametriClimatici.add(5, new AltitudineGhiacciai(punteggi.get(5), note.get(5), date));
         parametriClimatici.add(6, new MassaGhiacciai(punteggi.get(6), note.get(6), date));
 
-        //TODO bug rimuove l'area di interesse registrata dopo che si inseriscono i dati
-        // non sono riuscito a replicare il bug.
-        // i dati meteorologici non vengono salvati correttamente o non vengono visualizzati
         areaInteresse.addParametriClimatici(parametriClimatici);
-        dbRef.writeCentriMonitoraggioFile(centriMonitoraggioCache);
-        dbRef.writeAreeInteresseFile(areeInteresseAssociateCache);
+        fileInterface.writeCentriMonitoraggioFile(centriMonitoraggioCache);
+        fileInterface.writeAreeInteresseFile(areeInteresseAssociateCache);
         System.out.println("Parametri climatici aggiunti con successo!");
     }
 
-    private static void aggiungiAreaInteresse(FileInterface dbRef, LinkedList<AreaInteresse>
+    private static void aggiungiAreaInteresse(FileInterface fileInterface, LinkedList<AreaInteresse>
             areeInteresseDisponibiliCache, LinkedList<AreaInteresse> areeInteresseAssociateCache,
                                               LinkedList<CentroMonitoraggio> centriMonitoraggioCache,
                                               LinkedList<Operatore> operatoriRegistratiCache,
                                               BufferedReader reader, Operatore loggedOperator) throws IOException {
-        AreaInteresse areaInteresse = cercaAreaGeografica(areeInteresseDisponibiliCache, reader);
+        AreaInteresse areaInteresse = cercaArea(areeInteresseDisponibiliCache, reader);
         if (areaInteresse == null) {
             System.out.println("Area di interesse non trovata!");
             return;
@@ -235,15 +227,15 @@ public class ClimateMonitor {
             areeInteresseDisponibiliCache.remove(areaInteresse);
             areeInteresseAssociateCache.add(areaInteresse);
             loggedOperator.getCentroAfferenza().addAreaInteresse(areaInteresse);
-            dbRef.writeAreeInteresseFile(areeInteresseAssociateCache);
-            dbRef.writeCoordinateMonitoraggioFile(areeInteresseDisponibiliCache);
-            dbRef.writeCentriMonitoraggioFile(centriMonitoraggioCache);
-            dbRef.writeOperatoriRegistratiFile(operatoriRegistratiCache);
+            fileInterface.writeAreeInteresseFile(areeInteresseAssociateCache);
+            fileInterface.writeCoordinateMonitoraggioFile(areeInteresseDisponibiliCache);
+            fileInterface.writeCentriMonitoraggioFile(centriMonitoraggioCache);
+            fileInterface.writeOperatoriRegistratiFile(operatoriRegistratiCache);
         }
         System.out.println("Area di interesse aggiunta con successo!");
     }
 
-    private static Operatore registrazione(FileInterface dbRef, LinkedList<String> operatoriAutorizzatiCache,
+    private static Operatore registrazione(FileInterface fileInterface, LinkedList<String> operatoriAutorizzatiCache,
                                            LinkedList<Operatore> operatoriRegistratiCache,
                                            LinkedList<CentroMonitoraggio> centriMonitoraggioCache,
                                            BufferedReader reader) throws IOException {
@@ -282,7 +274,7 @@ public class ClimateMonitor {
         CentroMonitoraggio centroAfferenza = null;
         boolean centroTrovato = false;
         if(centriMonitoraggioCache.isEmpty()) {
-            centroAfferenza = registraCentroAree(dbRef, centriMonitoraggioCache, reader, nomeCentroAfferenza);
+            centroAfferenza = registraCentroAree(fileInterface, centriMonitoraggioCache, reader, nomeCentroAfferenza);
             centroTrovato = true;
         }
         if(!centroTrovato)
@@ -292,16 +284,16 @@ public class ClimateMonitor {
                     centroTrovato = true;
                 }
         if(!centroTrovato)
-            centroAfferenza = registraCentroAree(dbRef, centriMonitoraggioCache, reader, nomeCentroAfferenza);
+            centroAfferenza = registraCentroAree(fileInterface, centriMonitoraggioCache, reader, nomeCentroAfferenza);
         Operatore operatore = new Operatore(cognome, nome, codiceFiscale, email, userID,
                 password, centroAfferenza);
         operatoriRegistratiCache.add(operatore);
-        dbRef.registraOperatore(operatoriRegistratiCache);
+        fileInterface.registraOperatore(operatoriRegistratiCache);
         System.out.println("Accesso effettuato!\nBenvenuto " + cognome + " " + nome + "\n");
         return operatore;
     }
 
-    private static CentroMonitoraggio registraCentroAree(FileInterface dbRef, LinkedList<CentroMonitoraggio>
+    private static CentroMonitoraggio registraCentroAree(FileInterface fileInterface, LinkedList<CentroMonitoraggio>
             centriMonitoraggioCache, BufferedReader reader, String nomeCentroAfferenza) throws IOException {
         String via, comune, provincia, numeroCivico, cap;
         int numeroCivicoNumerico, capNumerico;
@@ -336,7 +328,7 @@ public class ClimateMonitor {
         CentroMonitoraggio centroMonitoraggio = new CentroMonitoraggio(nomeCentroAfferenza,
                 new Indirizzo(via, comune, provincia, numeroCivicoNumerico, capNumerico));
         centriMonitoraggioCache.add(centroMonitoraggio);
-        dbRef.writeCentriMonitoraggioFile(centriMonitoraggioCache);
+        fileInterface.writeCentriMonitoraggioFile(centriMonitoraggioCache);
         System.out.println("Centro registrato con successo!");
         return centroMonitoraggio;
     }
@@ -376,36 +368,36 @@ public class ClimateMonitor {
         return loggedOperator;
     }
 
-    private static AreaInteresse cercaAreaGeografica(LinkedList<AreaInteresse> areeInteresseCache,
-                                                     BufferedReader reader) throws IOException {
+    private static AreaInteresse cercaArea(LinkedList<AreaInteresse> areeInteresseCache,
+                                           BufferedReader reader) throws IOException {
         System.out.println("Digitare 'nome' per ricercare l'area di interesse per nome.\n" +
                 "Digitare 'coordinate' per cercare l'area di interesse per coordinate geografiche.");
         AreaInteresse areaInteresse = null;
         switch (reader.readLine()) {
-            case "nome" -> {
+            case "nome", "n" -> {
                 System.out.println("Digitare il nome dell'area di interesse:");
-                areaInteresse = cercaAreaGeografica(areeInteresseCache, reader.readLine());
+                areaInteresse = cercaArea(areeInteresseCache, reader.readLine());
             }
-            case "coordinate" -> {
+            case "coordinate", "c" -> {
                 System.out.println("Digitare la latitudine dell'area di interesse:");
                 double latitudine = Double.parseDouble(reader.readLine());
                 System.out.println("Digitare la longitudine dell'area di interesse:");
                 double longitudine = Double.parseDouble(reader.readLine());
-                areaInteresse = cercaAreaGeografica(areeInteresseCache, latitudine, longitudine);
+                areaInteresse = cercaArea(areeInteresseCache, latitudine, longitudine);
             }
         }
         return areaInteresse;
     }
 
-    private static AreaInteresse cercaAreaGeografica(LinkedList<AreaInteresse> areeInteresseCache, String nome) {
+    private static AreaInteresse cercaArea(LinkedList<AreaInteresse> areeInteresseCache, String nome) {
         for(AreaInteresse areaInteresse : areeInteresseCache)
             if(areaInteresse.getAsciiName().contains(nome))
                 return areaInteresse;
         return null;
     }
 
-    private static AreaInteresse cercaAreaGeografica(LinkedList<AreaInteresse> areeInteresseCache,
-                                                    double latitude, double longitude) {
+    private static AreaInteresse cercaArea(LinkedList<AreaInteresse> areeInteresseCache,
+                                           double latitude, double longitude) {
         if(areeInteresseCache.isEmpty())
             return null;
         AreaInteresse primoElemento = areeInteresseCache.get(0);

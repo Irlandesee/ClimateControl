@@ -44,7 +44,7 @@ public class AreaInteresse implements Serializable {
 
     /**
      * Salva un nuovo gruppo di parametri climatici nella cache.
-     * @param parametriClimatici arrayList contenente i parametri climatici da aggiungere.
+     * @param parametriClimatici linkedList contenente i parametri climatici da aggiungere.
      */
     public void addParametriClimatici(LinkedList<ParametroClimatico> parametriClimatici) {
         this.parametriClimatici.get(0).add(parametriClimatici.get(0));
@@ -68,6 +68,30 @@ public class AreaInteresse implements Serializable {
                 country + ";" +
                 latitude + "," +
                 longitude;
+    }
+
+    //TODO non contare gli zeri e le stringhe vuote nel conteggio aggregato
+    public String getDatiAggregati() {
+        StringBuilder datiAggregati = new StringBuilder();
+        String categoria = "";
+        int punteggioAggregato = 0;
+        StringBuilder noteAggregate = new StringBuilder();
+        for (LinkedList<ParametroClimatico> listaParametro : parametriClimatici) {
+            if (listaParametro.size() == 0)
+                return "Non sono ancora stati inseriti dati.";
+            for (ParametroClimatico parametroClimatico : listaParametro) {
+                punteggioAggregato += parametroClimatico.getPunteggio();
+                noteAggregate.append(parametroClimatico.getDataRilevazione()).append(" : ").
+                        append(parametroClimatico.getNote()).append("\n");
+                categoria = parametroClimatico.getCategoria();
+            }
+            punteggioAggregato /= listaParametro.size();
+            datiAggregati.append(categoria).append(": ").append(punteggioAggregato).append("\nNote:\n").
+                    append(noteAggregate).append("\n");
+            punteggioAggregato = 0;
+            noteAggregate = new StringBuilder();
+        }
+        return datiAggregati.toString();
     }
 
     //getters and setters

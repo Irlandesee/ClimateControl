@@ -16,7 +16,7 @@ public class Umidita extends ParametroClimatico {
      */
     public Umidita(int punteggio, String note, LocalDate dataRilevazione) {
         super(punteggio, note, dataRilevazione);
-        CATEGORIA = "Umidità";
-        SPIEGAZIONE = "Percentuale di Umidità, suddivisa in fasce";
+        CATEGORIA = "Umidita'";
+        SPIEGAZIONE = "Percentuale di Umidita', suddivisa in fasce";
     }
 }

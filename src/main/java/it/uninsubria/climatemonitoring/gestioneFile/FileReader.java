@@ -10,14 +10,14 @@ import it.uninsubria.climatemonitoring.dati.AreaInteresse;
  * @author : Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it, VA
  **/
 public class FileReader {
-    private final FileInterface dbRef;
+    private final FileInterface fileInterface;
 
     /**
      *
-     * @param dbRef
+     * @param fileInterface interfaccia che gestisce la lettura e la scrittura da file.
      */
-    public FileReader(FileInterface dbRef){
-        this.dbRef = dbRef;
+    public FileReader(FileInterface fileInterface){
+        this.fileInterface = fileInterface;
     }
 
     /**
@@ -27,7 +27,7 @@ public class FileReader {
      */
     public LinkedList<AreaInteresse> readGeonamesAndCoordinatesFile() throws IOException {
         LinkedList<AreaInteresse> res = new LinkedList<>();
-        BufferedReader bReader = new BufferedReader(new java.io.FileReader(dbRef.getGeonamesCoordinatesFile()));
+        BufferedReader bReader = new BufferedReader(new java.io.FileReader(fileInterface.getGeonamesCoordinatesFile()));
         bReader.readLine();
         String line;
         while((line = bReader.readLine()) != null)
@@ -43,7 +43,7 @@ public class FileReader {
      */
     public LinkedList<String> readOperatoriAutorizzatiFile() throws IOException {
         LinkedList<String> list = new LinkedList<>();
-        BufferedReader br = new BufferedReader(new java.io.FileReader(dbRef.getOperatoriAutorizzatiFile()));
+        BufferedReader br = new BufferedReader(new java.io.FileReader(fileInterface.getOperatoriAutorizzatiFile()));
         String line;
         while ((line = br.readLine()) != null)
             list.add(line);

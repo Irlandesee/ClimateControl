@@ -1,8 +1,5 @@
 package it.uninsubria.climatemonitoring.dati;
 
-import it.uninsubria.climatemonitoring.dati.AreaInteresse;
-import it.uninsubria.climatemonitoring.dati.Indirizzo;
-
 import java.io.Serializable;
 import java.util.LinkedList;
 
