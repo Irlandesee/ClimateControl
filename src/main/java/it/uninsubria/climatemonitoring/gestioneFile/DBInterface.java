@@ -14,7 +14,7 @@ import java.util.LinkedList;
  **/
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class DBInterface {
-    File directory = new File("data");
+    File directory = new File("src/main/resources");
 
     private File geonamesCoordinatesFile;
     private File centriMonitoraggioFile;
@@ -105,13 +105,20 @@ public class DBInterface {
         readerREF = new ReaderDB(this);
         writerREF = new WriterDB(this);
 
-        geonamesCoordinatesFile = new File("data/geonames-and-coordinates.csv");
-        centriMonitoraggioFile = new File("data/CentriMonitoraggio.dati");
-        coordinateMonitoraggioFile = new File("data/CoordinateMonitoraggio.dati");
-        operatoriAutorizzatiFile = new File("data/OperatoriAutorizzati.dati");
-        operatoriRegistratiFile = new File("data/OperatoriRegistrati.dati");
-        parametriClimaticiFile = new File("data/ParametriClimatici.dati");
-        areeInteresseFile = new File("data/AreeInteresse.dati");
+        geonamesCoordinatesFile = new File(
+                "src/main/resources/it/uninsubria/climatemonitoring/geonames-and-coordinates.csv");
+        centriMonitoraggioFile = new File(
+                "src/main/resources/it/uninsubria/climatemonitoring/CentriMonitoraggio.dati");
+        coordinateMonitoraggioFile = new File(
+                "src/main/resources/it/uninsubria/climatemonitoring/CoordinateMonitoraggio.dati");
+        operatoriAutorizzatiFile = new File(
+                "src/main/resources/it/uninsubria/climatemonitoring/OperatoriAutorizzati.dati");
+        operatoriRegistratiFile = new File(
+                "src/main/resources/it/uninsubria/climatemonitoring/OperatoriRegistrati.dati");
+        parametriClimaticiFile = new File(
+                "src/main/resources/it/uninsubria/climatemonitoring/ParametriClimatici.dati");
+        areeInteresseFile = new File(
+                "src/main/resources/it/uninsubria/climatemonitoring/AreeInteresse.dati");
 
         checkFilesExistence();
     }

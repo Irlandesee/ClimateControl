@@ -2,10 +2,6 @@ package it.uninsubria.climatemonitoring;
 
 import it.uninsubria.climatemonitoring.gestioneFile.DBInterface;
 import it.uninsubria.climatemonitoring.parametriClimatici.*;
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,7 +17,7 @@ import java.util.Locale;
  * @author : Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
  * @author : Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it, VA
  **/
-public class ClimateMonitor extends Application {
+public class ClimateMonitor {
     /**
      *
      * @param args non usato
@@ -254,20 +250,38 @@ public class ClimateMonitor extends Application {
 
     private static CentroMonitoraggio registraCentroAree(DBInterface dbRef, LinkedList<CentroMonitoraggio>
             centriMonitoraggioCache, BufferedReader reader, String nomeCentroAfferenza) throws IOException {
-        String via, comune, provincia;
-        int numeroCivico, cap;
+        String via, comune, provincia, numeroCivico, cap;
+        int numeroCivicoNumerico, capNumerico;
+
         System.out.println("Digitare la via del centro di afferenza:");
         via = reader.readLine();
+
         System.out.println("Digitare il comune del centro di afferenza:");
         comune = reader.readLine();
+
         System.out.println("Digitare la provincia del centro di afferenza:");
         provincia = reader.readLine();
+
         System.out.println("Digitare il numero civico del centro di afferenza:");
-        numeroCivico = Integer.parseInt(reader.readLine());
+        numeroCivico = reader.readLine();
+        while (!isNumeric(numeroCivico) || Integer.parseInt(numeroCivico) < 1) {
+            System.out.println("Il numero civico deve essere un numero maggiore di 0!");
+            System.out.println("Digitare il numero civico del centro di afferenza:");
+            numeroCivico = reader.readLine();
+        }
+        numeroCivicoNumerico = Integer.parseInt(numeroCivico);
+
         System.out.println("Digitare il CAP del centro di afferenza:");
-        cap = Integer.parseInt(reader.readLine());
+        cap = reader.readLine();
+        while (!isNumeric(cap) || Integer.parseInt(cap) < 1) {
+            System.out.println("Il CAP deve essere un numero maggiore di 0!");
+            System.out.println("Digitare il CAP del centro di afferenza:");
+            cap = reader.readLine();
+        }
+        capNumerico = Integer.parseInt(cap);
+
         CentroMonitoraggio centroMonitoraggio = new CentroMonitoraggio(nomeCentroAfferenza,
-                new Indirizzo(via, comune, provincia, numeroCivico, cap));
+                new Indirizzo(via, comune, provincia, numeroCivicoNumerico, capNumerico));
         centriMonitoraggioCache.add(centroMonitoraggio);
         dbRef.writeCentriMonitoraggioFile(centriMonitoraggioCache);
         System.out.println("Centro registrato con successo!");
@@ -354,15 +368,6 @@ public class ClimateMonitor extends Application {
             }
         }
         return areeInteresseCache.get(minimumIndex);
-    }
-
-    @Override
-    public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(ClimateMonitor.class.getResource("main-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Hello World!");
-        stage.setScene(scene);
-        stage.show();
     }
 
     private static void printCache(LinkedList<?> cache) {

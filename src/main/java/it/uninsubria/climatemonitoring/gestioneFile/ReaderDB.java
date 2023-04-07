@@ -1,14 +1,9 @@
 package it.uninsubria.climatemonitoring.gestioneFile;
 
 import java.io.*;
-import java.util.HashMap;
 import java.util.LinkedList;
 
 import it.uninsubria.climatemonitoring.AreaInteresse;
-import it.uninsubria.climatemonitoring.CentroMonitoraggio;
-import it.uninsubria.climatemonitoring.Indirizzo;
-import it.uninsubria.climatemonitoring.Operatore;
-import javafx.util.Pair;
 
 /**
  * @author : Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
