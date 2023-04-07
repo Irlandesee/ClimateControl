@@ -1,4 +1,4 @@
-package it.uninsubria.climatemonitoring;
+package it.uninsubria.climatemonitoring.dati;
 
 import java.io.Serializable;
 

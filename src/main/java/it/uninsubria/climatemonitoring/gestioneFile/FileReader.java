@@ -3,20 +3,20 @@ package it.uninsubria.climatemonitoring.gestioneFile;
 import java.io.*;
 import java.util.LinkedList;
 
-import it.uninsubria.climatemonitoring.AreaInteresse;
+import it.uninsubria.climatemonitoring.dati.AreaInteresse;
 
 /**
  * @author : Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
  * @author : Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it, VA
  **/
-public class ReaderDB {
-    private final DBInterface dbRef;
+public class FileReader {
+    private final FileInterface dbRef;
 
     /**
      *
      * @param dbRef
      */
-    public ReaderDB(DBInterface dbRef){
+    public FileReader(FileInterface dbRef){
         this.dbRef = dbRef;
     }
 
@@ -27,7 +27,7 @@ public class ReaderDB {
      */
     public LinkedList<AreaInteresse> readGeonamesAndCoordinatesFile() throws IOException {
         LinkedList<AreaInteresse> res = new LinkedList<>();
-        BufferedReader bReader = new BufferedReader(new FileReader(dbRef.getGeonamesCoordinatesFile()));
+        BufferedReader bReader = new BufferedReader(new java.io.FileReader(dbRef.getGeonamesCoordinatesFile()));
         bReader.readLine();
         String line;
         while((line = bReader.readLine()) != null)
@@ -43,7 +43,7 @@ public class ReaderDB {
      */
     public LinkedList<String> readOperatoriAutorizzatiFile() throws IOException {
         LinkedList<String> list = new LinkedList<>();
-        BufferedReader br = new BufferedReader(new FileReader(dbRef.getOperatoriAutorizzatiFile()));
+        BufferedReader br = new BufferedReader(new java.io.FileReader(dbRef.getOperatoriAutorizzatiFile()));
         String line;
         while ((line = br.readLine()) != null)
             list.add(line);

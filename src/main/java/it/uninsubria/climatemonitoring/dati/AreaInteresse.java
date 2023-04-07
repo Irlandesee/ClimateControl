@@ -1,4 +1,4 @@
-package it.uninsubria.climatemonitoring;
+package it.uninsubria.climatemonitoring.dati;
 
 import it.uninsubria.climatemonitoring.parametriClimatici.ParametroClimatico;
 

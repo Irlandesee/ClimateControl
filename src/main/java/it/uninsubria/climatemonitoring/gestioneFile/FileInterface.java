@@ -1,8 +1,8 @@
 package it.uninsubria.climatemonitoring.gestioneFile;
 
-import it.uninsubria.climatemonitoring.AreaInteresse;
-import it.uninsubria.climatemonitoring.CentroMonitoraggio;
-import it.uninsubria.climatemonitoring.Operatore;
+import it.uninsubria.climatemonitoring.dati.AreaInteresse;
+import it.uninsubria.climatemonitoring.dati.CentroMonitoraggio;
+import it.uninsubria.climatemonitoring.dati.Operatore;
 
 import java.io.*;
 import java.util.LinkedList;
@@ -11,8 +11,8 @@ import java.util.LinkedList;
  * @author : Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
  * @author : Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it, VA
  **/
-@SuppressWarnings("ResultOfMethodCallIgnored")
-public class DBInterface {
+@SuppressWarnings({"ResultOfMethodCallIgnored", "unused"})
+public class FileInterface {
     File directory = new File(".data");
 
     private File geonamesCoordinatesFile;
@@ -23,16 +23,12 @@ public class DBInterface {
     private File parametriClimaticiFile;
     private File areeInteresseFile;
 
-    private final boolean DEBUG = true;
+    private FileReader readerREF;
+    private FileWriter writerREF;
 
-    private ReaderDB readerREF;
-    private WriterDB writerREF;
-
-    public DBInterface() throws IOException {
+    public FileInterface() throws IOException {
         initialize();
     }
-
-    public boolean isDEBUG(){ return DEBUG;}
 
     public LinkedList<String> readOperatoriAutorizzatiFile() throws IOException {
         return readerREF.readOperatoriAutorizzatiFile();
@@ -51,16 +47,16 @@ public class DBInterface {
         return  (LinkedList<AreaInteresse>) readerREF.serializeFileIn(areeInteresseFile.getPath());
     }
 
-    public LinkedList<AreaInteresse> readGeonamesAndCoordinatesFile() throws IOException {
-        return  readerREF.readGeonamesAndCoordinatesFile();
-    }
-
     public LinkedList<Operatore> readOperatoriRegistratiFile() throws IOException, ClassNotFoundException {
         return (LinkedList<Operatore>) readerREF.serializeFileIn(operatoriRegistratiFile.getPath());
     }
 
     public LinkedList<CentroMonitoraggio> readCentriMonitoraggioFile() throws IOException, ClassNotFoundException {
         return (LinkedList<CentroMonitoraggio>) readerREF.serializeFileIn(centriMonitoraggioFile.getPath());
+    }
+
+    public LinkedList<AreaInteresse> readGeonamesAndCoordinatesFile() throws IOException {
+        return  readerREF.readGeonamesAndCoordinatesFile();
     }
 
     public void writeCoordinateMonitoraggioFile(LinkedList<AreaInteresse> areeInteresseDisponibili) throws IOException {
@@ -111,8 +107,8 @@ public class DBInterface {
     private void initialize() throws IOException {
         if (!directory.exists())
             directory.mkdir();
-        readerREF = new ReaderDB(this);
-        writerREF = new WriterDB(this);
+        readerREF = new FileReader(this);
+        writerREF = new FileWriter(this);
 
         geonamesCoordinatesFile = new File(
                 ".data/geonames-and-coordinates.csv");
@@ -145,7 +141,7 @@ public class DBInterface {
     private void checkFileExistence(File file) throws IOException {
         if(!file.exists()) {
             boolean res = file.createNewFile();
-            if (res && DEBUG) System.out.println("Created new file at: " +
+            if (res) System.out.println("Created new file at: " +
                     file.getAbsolutePath());
         }
     }

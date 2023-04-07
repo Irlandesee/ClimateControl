@@ -1,22 +1,19 @@
 package it.uninsubria.climatemonitoring.gestioneFile;
 
-import it.uninsubria.climatemonitoring.AreaInteresse;
-
 import java.io.*;
-import java.util.HashMap;
 
 /**
  * @author : Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
  * @author : Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it, VA
  **/
-public class WriterDB {
-    private final DBInterface dbRef;
+public class FileWriter {
+    private final FileInterface dbRef;
 
     /**
      *
      * @param dbRef
      */
-    public WriterDB(DBInterface dbRef){
+    public FileWriter(FileInterface dbRef){
         this.dbRef = dbRef;
     }
 
@@ -27,7 +24,7 @@ public class WriterDB {
     public void writeGeonamesAndCoordinatesFile() throws IOException {
         File file = dbRef.getGeonamesCoordinatesFile();
         if(file.length() > 64) return;
-        PrintWriter fout = new PrintWriter(new BufferedWriter(new FileWriter(file)));
+        PrintWriter fout = new PrintWriter(new BufferedWriter(new java.io.FileWriter(file)));
         fout.println("Geoname ID;Name;ASCII Name;Country Code;Country Name;Coordinates");
         fout.flush();
         fout.println("4946136;Oakham;Oakham;US;United States;42.35287, -72.04535\n" +
@@ -88,7 +85,7 @@ public class WriterDB {
         String numero;
         File file = dbRef.getOperatoriAutorizzatiFile();
         if(file.length() != 0) return;
-        PrintWriter fout = new PrintWriter(new BufferedWriter(new FileWriter(file, true)));
+        PrintWriter fout = new PrintWriter(new BufferedWriter(new java.io.FileWriter(file, true)));
         for(int i = 0; i < NOPERATORIAUTORIZZATI; i++) {
             if(i < 10)
                 numero = "0" + i;

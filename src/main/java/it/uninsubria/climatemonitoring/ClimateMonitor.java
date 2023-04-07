@@ -1,6 +1,10 @@
 package it.uninsubria.climatemonitoring;
 
-import it.uninsubria.climatemonitoring.gestioneFile.DBInterface;
+import it.uninsubria.climatemonitoring.dati.AreaInteresse;
+import it.uninsubria.climatemonitoring.dati.CentroMonitoraggio;
+import it.uninsubria.climatemonitoring.dati.Indirizzo;
+import it.uninsubria.climatemonitoring.dati.Operatore;
+import it.uninsubria.climatemonitoring.gestioneFile.FileInterface;
 import it.uninsubria.climatemonitoring.parametriClimatici.*;
 
 import java.io.BufferedReader;
@@ -26,17 +30,17 @@ public class ClimateMonitor {
      * @throws IOException non è stato possibile creare uno dei file richiesti
      */
     public static void main(String[] args) throws IOException, ClassNotFoundException {
-        DBInterface dbRef = new DBInterface();
+        FileInterface fileInterface = new FileInterface();
 
-        dbRef.writeOperatoriAutorizzatiFile();
-        dbRef.writeGeonamesAndCoordinatesFile();
+        fileInterface.writeOperatoriAutorizzatiFile();
+        fileInterface.writeGeonamesAndCoordinatesFile();
 
-        dbRef.writeCoordinateMonitoraggioFile(dbRef.readGeonamesAndCoordinatesFile());
-        LinkedList<AreaInteresse> areeInteresseDisponibiliCache = dbRef.readCoordinateMonitoraggioFile();
-        LinkedList<AreaInteresse> areeInteresseAssociateCache = dbRef.readAreeInteresseFile();
-        LinkedList<String> operatoriAutorizzatiCache = dbRef.readOperatoriAutorizzatiFile();
-        LinkedList<Operatore> operatoriRegistratiCache = dbRef.readOperatoriRegistratiFile();
-        LinkedList<CentroMonitoraggio> centriMonitoraggioCache = dbRef.readCentriMonitoraggioFile();
+        fileInterface.writeCoordinateMonitoraggioFile(fileInterface.readGeonamesAndCoordinatesFile());
+        LinkedList<AreaInteresse> areeInteresseDisponibiliCache = fileInterface.readCoordinateMonitoraggioFile();
+        LinkedList<AreaInteresse> areeInteresseAssociateCache = fileInterface.readAreeInteresseFile();
+        LinkedList<String> operatoriAutorizzatiCache = fileInterface.readOperatoriAutorizzatiFile();
+        LinkedList<Operatore> operatoriRegistratiCache = fileInterface.readOperatoriRegistratiFile();
+        LinkedList<CentroMonitoraggio> centriMonitoraggioCache = fileInterface.readCentriMonitoraggioFile();
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         Operatore loggedOperator = null;
@@ -63,7 +67,7 @@ public class ClimateMonitor {
                         }
                     }
                     case "login" -> loggedOperator = login(operatoriRegistratiCache, reader);
-                    case "registrazione" -> loggedOperator = registrazione(dbRef, operatoriAutorizzatiCache,
+                    case "registrazione" -> loggedOperator = registrazione(fileInterface, operatoriAutorizzatiCache,
                             operatoriRegistratiCache, centriMonitoraggioCache, reader);
                     case "uscita" -> System.exit(0);
                 }
@@ -83,10 +87,10 @@ public class ClimateMonitor {
                 printCache(loggedOperator.getCentroAfferenza().getAreeInteresse());
 
                 switch (reader.readLine()) {
-                    case "aggiungi" -> aggiungiAreaInteresse(dbRef, areeInteresseDisponibiliCache,
+                    case "aggiungi" -> aggiungiAreaInteresse(fileInterface, areeInteresseDisponibiliCache,
                             areeInteresseAssociateCache, centriMonitoraggioCache, operatoriRegistratiCache, reader,
                             loggedOperator);
-                    case "inserisci" -> inserisciDatiParametri(reader, loggedOperator, dbRef, centriMonitoraggioCache,
+                    case "inserisci" -> inserisciDatiParametri(reader, loggedOperator, fileInterface, centriMonitoraggioCache,
                             areeInteresseAssociateCache);
                     case "cerca" -> {
                         AreaInteresse areaInteresse = cercaAreaGeografica(areeInteresseAssociateCache, reader);
@@ -105,7 +109,7 @@ public class ClimateMonitor {
     }
 
     private static void inserisciDatiParametri
-            (BufferedReader reader, Operatore loggedOperator, DBInterface dbRef,
+            (BufferedReader reader, Operatore loggedOperator, FileInterface dbRef,
              LinkedList<CentroMonitoraggio> centriMonitoraggioCache,
              LinkedList<AreaInteresse> areeInteresseAssociateCache) throws IOException {
         LinkedList<AreaInteresse> areeInteresse =
@@ -208,7 +212,7 @@ public class ClimateMonitor {
         System.out.println("Parametri climatici aggiunti con successo!");
     }
 
-    public static boolean isDateInvalid(String date) {
+    private static boolean isDateInvalid(String date) {
         final String DATE_FORMAT = "dd-MM-yyyy";
         try {
             DateFormat df = new SimpleDateFormat(DATE_FORMAT);
@@ -220,7 +224,7 @@ public class ClimateMonitor {
         }
     }
 
-    public static boolean isNotNumeric(String str) {
+    private static boolean isNotNumeric(String str) {
         try {
             Double.parseDouble(str);
             return false;
@@ -229,7 +233,7 @@ public class ClimateMonitor {
         }
     }
 
-    private static void aggiungiAreaInteresse(DBInterface dbRef, LinkedList<AreaInteresse>
+    private static void aggiungiAreaInteresse(FileInterface dbRef, LinkedList<AreaInteresse>
             areeInteresseDisponibiliCache, LinkedList<AreaInteresse> areeInteresseAssociateCache,
                                               LinkedList<CentroMonitoraggio> centriMonitoraggioCache,
                                               LinkedList<Operatore> operatoriRegistratiCache,
@@ -250,7 +254,7 @@ public class ClimateMonitor {
         System.out.println("Area di interesse aggiunta con successo!");
     }
 
-    private static Operatore registrazione(DBInterface dbRef, LinkedList<String> operatoriAutorizzatiCache,
+    private static Operatore registrazione(FileInterface dbRef, LinkedList<String> operatoriAutorizzatiCache,
                                            LinkedList<Operatore> operatoriRegistratiCache,
                                            LinkedList<CentroMonitoraggio> centriMonitoraggioCache,
                                            BufferedReader reader) throws IOException {
@@ -308,7 +312,7 @@ public class ClimateMonitor {
         return operatore;
     }
 
-    private static CentroMonitoraggio registraCentroAree(DBInterface dbRef, LinkedList<CentroMonitoraggio>
+    private static CentroMonitoraggio registraCentroAree(FileInterface dbRef, LinkedList<CentroMonitoraggio>
             centriMonitoraggioCache, BufferedReader reader, String nomeCentroAfferenza) throws IOException {
         String via, comune, provincia, numeroCivico, cap;
         int numeroCivicoNumerico, capNumerico;
@@ -404,14 +408,14 @@ public class ClimateMonitor {
         return areaInteresse;
     }
 
-    public static AreaInteresse cercaAreaGeografica(LinkedList<AreaInteresse> areeInteresseCache, String nome) {
+    private static AreaInteresse cercaAreaGeografica(LinkedList<AreaInteresse> areeInteresseCache, String nome) {
         for(AreaInteresse areaInteresse : areeInteresseCache)
             if(areaInteresse.getAsciiName().contains(nome))
                 return areaInteresse;
         return null;
     }
 
-    public static AreaInteresse cercaAreaGeografica(LinkedList<AreaInteresse> areeInteresseCache,
+    private static AreaInteresse cercaAreaGeografica(LinkedList<AreaInteresse> areeInteresseCache,
                                                     double latitude, double longitude) {
         if(areeInteresseCache.isEmpty())
             return null;
