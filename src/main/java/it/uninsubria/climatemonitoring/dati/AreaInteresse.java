@@ -3,6 +3,7 @@ package it.uninsubria.climatemonitoring.dati;
 import it.uninsubria.climatemonitoring.parametriClimatici.ParametroClimatico;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.LinkedList;
 
 /**
@@ -18,7 +19,7 @@ public class AreaInteresse implements Serializable {
     private String countryCode;
     private double latitude;
     private double longitude;
-    private LinkedList<LinkedList<ParametroClimatico>> parametriClimatici = new LinkedList<>();
+    private LinkedList<LinkedList<ParametroClimatico>> parametriClimatici;
 
     private final int NUMERO_PARAMETRI = 7;
 
@@ -40,6 +41,7 @@ public class AreaInteresse implements Serializable {
         this.latitude = latitude;
         this.longitude = longitude;
 
+        parametriClimatici = new LinkedList<>();
         for (int i = 0; i < NUMERO_PARAMETRI; i++)
             parametriClimatici.add(new LinkedList<>());
     }
@@ -70,7 +72,6 @@ public class AreaInteresse implements Serializable {
                 longitude;
     }
 
-    //TODO solo i dati aggregati della prima esecuzione vengono salvati e visualizzati
     public String getDatiAggregati() {
         StringBuilder datiAggregati = new StringBuilder();
         String categoria = "";
@@ -86,7 +87,11 @@ public class AreaInteresse implements Serializable {
                 categoria = parametroClimatico.getCategoria();
             }
             punteggioAggregato /= listaParametro.size();
-            datiAggregati.append(categoria).append(": ").append(punteggioAggregato).append("\nNote:\n").
+
+            DecimalFormat df = new DecimalFormat("#.##");
+            String tmp = df.format(punteggioAggregato);
+
+            datiAggregati.append(categoria).append(": ").append(tmp).append("\nNote:\n").
                     append(noteAggregate).append("\n");
             punteggioAggregato = 0;
             noteAggregate = new StringBuilder();

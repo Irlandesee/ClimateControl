@@ -3,6 +3,7 @@ package it.uninsubria.climatemonitoring.gestioneFile;
 import it.uninsubria.climatemonitoring.dati.AreaInteresse;
 import it.uninsubria.climatemonitoring.dati.CentroMonitoraggio;
 import it.uninsubria.climatemonitoring.dati.Operatore;
+import it.uninsubria.climatemonitoring.parametriClimatici.ParametroClimatico;
 
 import java.io.*;
 import java.util.LinkedList;
@@ -65,6 +66,10 @@ public class FileInterface {
 
     public void writeGeonamesAndCoordinatesFile() throws IOException {
         writerREF.writeGeonamesAndCoordinatesFile();
+    }
+
+    public void writeParametriClimaticiFile(LinkedList<ParametroClimatico> parametriClimatici) throws IOException {
+        writerREF.serializeFileOut(parametriClimatici, parametriClimaticiFile.getPath());
     }
 
     public void writeOperatoriRegistratiFile(LinkedList<Operatore> operatori) throws IOException {

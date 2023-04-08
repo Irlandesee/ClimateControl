@@ -18,7 +18,18 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.Locale;
 
+/*
+Files:
+AreeInteresse.dati              : Elenco delle aree d'interesse associate.
+CentriMonitoraggio.dati         : Elenco dei centri di monitoraggio creati.
+CoordinateMonitoraggio.dati     : Elenco delle aree d'interesse libere di essere associate ai centri di monitoraggio.
+geonames-and-coordinates.csv    : Elenco delle aree d'interesse libere in formato csv.
+OperatoriAutorizzati.dati       : Elenco delle email degli operatori che possono registrarsi.
+OperatoriRegistrati.dati        : Elenco degli operatori registrati.
+ParametriClimatici.dati         : Elenco degli inserimenti degli operatori. //TODO
+*/
 /**
  * @author : Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
  * @author : Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it, VA
@@ -34,13 +45,13 @@ public class ClimateMonitor {
 
         fileInterface.writeOperatoriAutorizzatiFile();
         fileInterface.writeGeonamesAndCoordinatesFile();
-
         fileInterface.writeCoordinateMonitoraggioFile(fileInterface.readGeonamesAndCoordinatesFile());
-        LinkedList<AreaInteresse> areeInteresseDisponibiliCache = fileInterface.readCoordinateMonitoraggioFile();
+
         LinkedList<AreaInteresse> areeInteresseAssociateCache = fileInterface.readAreeInteresseFile();
+        LinkedList<CentroMonitoraggio> centriMonitoraggioCache = fileInterface.readCentriMonitoraggioFile();
+        LinkedList<AreaInteresse> areeInteresseDisponibiliCache = fileInterface.readCoordinateMonitoraggioFile();
         LinkedList<String> operatoriAutorizzatiCache = fileInterface.readOperatoriAutorizzatiFile();
         LinkedList<Operatore> operatoriRegistratiCache = fileInterface.readOperatoriRegistratiFile();
-        LinkedList<CentroMonitoraggio> centriMonitoraggioCache = fileInterface.readCentriMonitoraggioFile();
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         Operatore loggedOperator = null;
@@ -59,15 +70,16 @@ public class ClimateMonitor {
                 switch (reader.readLine()) {
                     case "cerca", "c" -> cercaAreaGeografica(areeInteresseAssociateCache, reader);
                     case "login", "l" -> loggedOperator = login(operatoriRegistratiCache, reader);
-                    case "registrazione", "r" -> loggedOperator = registrazione(fileInterface, operatoriAutorizzatiCache,
-                            operatoriRegistratiCache, centriMonitoraggioCache, reader);
+                    case "registrazione", "r" -> loggedOperator = registrazione(fileInterface,
+                            operatoriAutorizzatiCache, operatoriRegistratiCache, centriMonitoraggioCache, reader);
                     case "uscita", "u" -> System.exit(0);
                 }
             }
 
             while (loggedOperator != null) {
                 CentroMonitoraggio centroAfferenza = loggedOperator.getCentroAfferenza();
-                System.out.println("\nArea riservata - Centro di monitoraggio " + centroAfferenza.getNomeCentro() + "\n");
+                System.out.println("\nArea riservata - Centro di monitoraggio " +
+                        centroAfferenza.getNomeCentro() + "\n");
                 System.out.println("""
                         Digitare 'aggiungi' per aggiungere un aree di interesse al centro di monitoraggio.
                         Digitare 'cerca' per visualizzare le aree di interesse disponibili.
@@ -82,7 +94,7 @@ public class ClimateMonitor {
                     case "aggiungi", "a" -> aggiungiAreaInteresse(fileInterface, areeInteresseDisponibiliCache,
                             areeInteresseAssociateCache, centriMonitoraggioCache, operatoriRegistratiCache, reader,
                             loggedOperator);
-                    case "inserisci", "i" -> inserisciDatiParametri(reader, loggedOperator, fileInterface, centriMonitoraggioCache,
+                    case "inserisci", "i" -> inserisciDatiParametri(reader, loggedOperator, fileInterface,
                             areeInteresseAssociateCache);
                     case "cerca", "c" -> cercaAreaGeografica(areeInteresseAssociateCache, reader);
                     case "logout", "l" -> loggedOperator = null;
@@ -92,7 +104,8 @@ public class ClimateMonitor {
         }
     }
 
-    private static void cercaAreaGeografica(LinkedList<AreaInteresse> areeInteresseAssociateCache, BufferedReader reader) throws IOException {
+    private static void cercaAreaGeografica(LinkedList<AreaInteresse> areeInteresseAssociateCache,
+                                            BufferedReader reader) throws IOException {
         AreaInteresse areaInteresse = cercaArea(areeInteresseAssociateCache, reader);
         if (areaInteresse == null)
             System.out.println("Area di interesse non trovata!\n");
@@ -104,8 +117,9 @@ public class ClimateMonitor {
 
     private static void inserisciDatiParametri
             (BufferedReader reader, Operatore loggedOperator, FileInterface fileInterface,
-             LinkedList<CentroMonitoraggio> centriMonitoraggioCache,
              LinkedList<AreaInteresse> areeInteresseAssociateCache) throws IOException {
+        //TODO l'area d'interesse associata all'operatore non e' aggiornata con i dati inseriti.
+        //TODO l'area d'interesse associata all'operatore e' diversa da quella nella cache.
         LinkedList<AreaInteresse> areeInteresse =
                 loggedOperator.getCentroAfferenza().getAreeInteresse();
         AreaInteresse areaInteresse = cercaArea(areeInteresse, reader);
@@ -113,6 +127,11 @@ public class ClimateMonitor {
             System.out.println("Area di interesse non trovata!");
             return;
         }
+        //soluzione al problema
+        for (AreaInteresse tmp : areeInteresseAssociateCache)
+            if (tmp.getAsciiName().equals(areaInteresse.getAsciiName()))
+                areaInteresse = tmp;
+
         System.out.println("Area di interesse scelta:\n" + areaInteresse + "\n");
         LinkedList<ParametroClimatico> parametriClimatici = new LinkedList<>();
         LinkedList<Integer> punteggi = new LinkedList<>();
@@ -151,7 +170,6 @@ public class ClimateMonitor {
         String meseRilevazione;
         String giornoRilevazione;
         String data;
-        final String DATE_FORMAT = "dd-MM-yyyy";
 
         do {
             System.out.println("Digitare la l'anno di rilevazione:");
@@ -172,9 +190,10 @@ public class ClimateMonitor {
 
             System.out.println("Digitare il mese di rilevazione:");
             meseRilevazione = reader.readLine();
-            while (isNotNumeric(meseRilevazione) || isNotaInt(meseRilevazione) || Integer.parseInt(meseRilevazione) < 1 ||
-                    Integer.parseInt(meseRilevazione) > 12) {
-                System.out.println("Mese inserito non valido! Il mese deve essere un numero intero compreso tra 1 e 12.");
+            while (isNotNumeric(meseRilevazione) || isNotaInt(meseRilevazione) ||
+                    Integer.parseInt(meseRilevazione) < 1 || Integer.parseInt(meseRilevazione) > 12) {
+                System.out.println("Mese inserito non valido! Il mese deve essere un numero" +
+                        " intero compreso tra 1 e 12.");
                 System.out.println("Digitare la il mese di rilevazione:");
                 meseRilevazione = reader.readLine();
             }
@@ -183,8 +202,8 @@ public class ClimateMonitor {
 
             System.out.println("Digitare il giorno di rilevazione:");
             giornoRilevazione = reader.readLine();
-            while (isNotNumeric(giornoRilevazione) || isNotaInt(giornoRilevazione) || Integer.parseInt(giornoRilevazione) < 1 ||
-                    Integer.parseInt(giornoRilevazione) > 31) {
+            while (isNotNumeric(giornoRilevazione) || isNotaInt(giornoRilevazione) ||
+                    Integer.parseInt(giornoRilevazione) < 1 || Integer.parseInt(giornoRilevazione) > 31) {
                 System.out.println("Giorno inserito non valido! Il giorno deve essere un " +
                         "numero intero compreso tra 1 e 31");
                 System.out.println("Digitare il giorno di rilevazione:");
@@ -193,12 +212,12 @@ public class ClimateMonitor {
             if (giornoRilevazione.length() == 1)
                 giornoRilevazione = "0" + giornoRilevazione;
 
-            //TODO data stampata al contrario? yyyy.MM.gg
             data = giornoRilevazione + "-" + meseRilevazione + "-" + annoRilevazione;
             if(isDateInvalid(data))
                 System.out.println("Data non valida! Riprova.");
         } while (isDateInvalid(data));
-        LocalDate date = LocalDate.parse(data, DateTimeFormatter.ofPattern(DATE_FORMAT));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ITALY);
+        LocalDate date = LocalDate.parse(data, formatter);
 
         parametriClimatici.add(0, new Vento(punteggi.get(0), note.get(0), date));
         parametriClimatici.add(1, new Umidita(punteggi.get(1), note.get(1), date));
@@ -209,8 +228,8 @@ public class ClimateMonitor {
         parametriClimatici.add(6, new MassaGhiacciai(punteggi.get(6), note.get(6), date));
 
         areaInteresse.addParametriClimatici(parametriClimatici);
-        fileInterface.writeCentriMonitoraggioFile(centriMonitoraggioCache);
         fileInterface.writeAreeInteresseFile(areeInteresseAssociateCache);
+
         System.out.println("Parametri climatici aggiunti con successo!");
     }
 
@@ -346,8 +365,8 @@ public class ClimateMonitor {
             for (Operatore operatore : operatoriRegistratiCache) {
                 if (userID.equals(operatore.getUserID())) {
                     password = operatore.getPassword();
-                    System.out.println("Digitare la password:");
                     while (loggedOperator == null) {
+                        System.out.println("Digitare la password:");
                         enteredPassword = reader.readLine();
                         if (enteredPassword.equals(""))
                             break;
