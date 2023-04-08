@@ -259,19 +259,23 @@ public class ClimateMonitor {
                                            LinkedList<CentroMonitoraggio> centriMonitoraggioCache,
                                            BufferedReader reader) throws IOException {
         String cognome, nome, codiceFiscale, email, userID, password, nomeCentroAfferenza;
+
         System.out.println("Digitare il cognome:");
         cognome = reader.readLine();
+
         System.out.println("Digitare il nome:");
         nome = reader.readLine();
+
         System.out.println("Digitare il codice fiscale:");
         codiceFiscale = reader.readLine();
+
+        boolean isEmailValid = false;
         System.out.println("Digitare l'email aziendale:");
         email = reader.readLine();
-        boolean isEmailValid = false;
         for (Operatore operatore : operatoriRegistratiCache) {
             if (operatore.getEmail().equals(email)) {
                 System.out.println("Utente gia' registrato!");
-                break;
+                return null;
             }
         }
         for (String tmp : operatoriAutorizzatiCache) {
@@ -284,12 +288,22 @@ public class ClimateMonitor {
             System.out.println("Email non valida!");
             return null;
         }
+
         System.out.println("Digitare l'userID:");
         userID = reader.readLine();
+        for (Operatore operatore : operatoriRegistratiCache) {
+            if (operatore.getUserID().equals(userID)) {
+                System.out.println("Utente gia' registrato!");
+                return null;
+            }
+        }
+
         System.out.println("Digitare la password:");
         password = reader.readLine();
+
         System.out.println("Digitare il nome del centro di afferenza:");
         nomeCentroAfferenza = reader.readLine();
+
         CentroMonitoraggio centroAfferenza = null;
         boolean centroTrovato = false;
         if(centriMonitoraggioCache.isEmpty()) {
@@ -382,7 +396,7 @@ public class ClimateMonitor {
                 }
             }
             if (loggedOperator == null)
-                System.out.println("userID errato!");
+                System.out.println("Login fallito!");
         }
         return loggedOperator;
     }
