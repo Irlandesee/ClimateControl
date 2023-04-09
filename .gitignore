@@ -1,6 +1,7 @@
 # Compiled class file
 *.class
 .data
+doc
 
 # Log file
 *.log
