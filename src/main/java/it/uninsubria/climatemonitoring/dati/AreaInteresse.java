@@ -8,19 +8,44 @@ import java.util.LinkedList;
 
 /**
  * Rappresenta un'area d'interesse.
- * @author : Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
- * @author : Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it, VA
+ * @author <pre> Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
+ * Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it, VA
+ * </pre>
  **/
-@SuppressWarnings("unused")
+@SuppressWarnings("FieldMayBeFinal")
 public class AreaInteresse implements Serializable {
+    /**
+     * Nome ufficiale.
+     */
     private String geonameID;
+    /**
+     * Nome in formato ASCII.
+     */
     private String asciiName;
+    /**
+     * Nome dello stato.
+     */
     private String country;
+    /**
+     * Codice dello stato.
+     */
     private String countryCode;
+    /**
+     * latitudine.
+     */
     private double latitude;
+    /**
+     * longitudine.
+     */
     private double longitude;
+    /**
+     * Lista contenente una lista per parametro climatico, ciascuna contiene tutti i dati inseriti dagli operatori
+     * relativi al proprio parametro climatico.
+     */
     private LinkedList<LinkedList<ParametroClimatico>> parametriClimatici;
-
+    /**
+     * Numero dei tipi di parametri climatici implementati.
+     */
     private final int NUMERO_PARAMETRI = 7;
 
     /**
@@ -72,6 +97,11 @@ public class AreaInteresse implements Serializable {
                 longitude;
     }
 
+    /**
+     * Restituisce i dati in forma aggregata calcolata come media dei punteggi inseriti dagli operatori. Le note vengono
+     * aggregate come concatenazione di data d'inserimento e nota.
+     * @return i dati in forma aggregata.
+     */
     public String getDatiAggregati() {
         StringBuilder datiAggregati = new StringBuilder();
         String categoria = "";
@@ -101,59 +131,27 @@ public class AreaInteresse implements Serializable {
 
     //getters and setters
 
-    public String getGeonameID() {
-        return geonameID;
-    }
-
-    public void setGeonameID(String geonameID) {
-        this.geonameID = geonameID;
-    }
-
+    /**
+     * Restituisci il nome ASCII;
+     * @return il nome ASCII;
+     */
     public String getAsciiName() {
         return asciiName;
     }
 
-    public void setAsciiName(String asciiName) {
-        this.asciiName = asciiName;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public String getCountryCode() {
-        return countryCode;
-    }
-
-    public void setCountryCode(String countryCode) {
-        this.countryCode = countryCode;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
+    /**
+     * Restituisce la longitudine.
+     * @return la longitudine.
+     */
     public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-
-    public LinkedList<LinkedList<ParametroClimatico>> getParametriClimatici() {
-        return parametriClimatici;
-    }
-
-    public void setParametriClimatici(LinkedList<LinkedList<ParametroClimatico>> parametriClimatici) {
-        this.parametriClimatici = parametriClimatici;
+    /**
+     * Restituisce la latitudine.
+     * @return la latitudine.
+     */
+    public double getLatitude() {
+        return latitude;
     }
 }

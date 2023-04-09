@@ -5,13 +5,23 @@ import java.util.LinkedList;
 
 /**
  * Rappresenta un centro di monitoraggio.
- * @author : Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
- * @author : Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it, VA
+ * @author <pre> Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
+ * Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it, VA
+ * </pre>
  **/
-@SuppressWarnings("unused")
+@SuppressWarnings("FieldMayBeFinal")
 public class CentroMonitoraggio implements Serializable {
+    /**
+     * Nome identificativo del centro di monitoraggio, deve essere unico.
+     */
     private String nomeCentro;
+    /**
+     * Indirizzo della sede del centro di monitoraggio.
+     */
     private Indirizzo indirizzo;
+    /**
+     * {@code LinkedList<AreaInteresse>} contenente le aree d'interesse associate con il centro di monitoraggio.
+     */
     private LinkedList<AreaInteresse> areeInteresse;
 
     /**
@@ -46,27 +56,19 @@ public class CentroMonitoraggio implements Serializable {
 
     //getters and setters
 
+    /**
+     * Restituisce il nome del centro.
+     * @return il nome del centro.
+     */
     public String getNomeCentro() {
         return nomeCentro;
     }
 
-    public void setNomeCentro(String nomeCentro) {
-        this.nomeCentro = nomeCentro;
-    }
-
-    public Indirizzo getIndirizzo() {
-        return indirizzo;
-    }
-
-    public void setIndirizzo(Indirizzo indirizzo) {
-        this.indirizzo = indirizzo;
-    }
-
+    /**
+     * Restituisce la lista contenente le aree d'interesse associate.
+     * @return la lista delle aree d'interesse associate.
+     */
     public LinkedList<AreaInteresse> getAreeInteresse() {
         return areeInteresse;
-    }
-
-    public void setAreeInteresse(LinkedList<AreaInteresse> areeInteresse) {
-        this.areeInteresse = areeInteresse;
     }
 }

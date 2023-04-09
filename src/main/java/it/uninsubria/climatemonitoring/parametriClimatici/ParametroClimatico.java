@@ -5,15 +5,31 @@ import java.time.LocalDate;
 
 /**
  * Rappresenta un parametro climatico.
- * @author : Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
- * @author : Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it, VA
+ * @author <pre> Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
+ * Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it, VA
+ * </pre>
  **/
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "FieldMayBeFinal"})
 public abstract class ParametroClimatico implements Serializable {
+    /**
+     * Categoria.
+     */
     protected String CATEGORIA;
+    /**
+     * Spiegazione contenente unita' di misura e metodo di suddivisione.
+     */
     protected String SPIEGAZIONE;
+    /**
+     * Punteggio relativo alla categoria. I valori ammessi sono da 1 (critico) a 5 (ottimale).
+     */
     private int punteggio;
+    /**
+     * Note testuali di dimensione massima 256 caratteri.
+     */
     private String note;
+    /**
+     * Data di rilevazione.
+     */
     private LocalDate dataRilevazione;
 
     /**
@@ -39,59 +55,35 @@ public abstract class ParametroClimatico implements Serializable {
 
     //getters and setters
 
-    public String getCategoria() {
-        return CATEGORIA;
-    }
-
-    public void setCategoria(String categoria) {
-        this.CATEGORIA = categoria;
-    }
-
-    public String getSpiegazione() {
-        return SPIEGAZIONE;
-    }
-
-    public void setSpiegazione(String spiegazione) {
-        this.SPIEGAZIONE = spiegazione;
-    }
-
+    /**
+     * Restituisce il punteggio.
+     * @return il punteggio compreso tra 1 (critico) e 5 (ottimale).
+     */
     public int getPunteggio() {
         return punteggio;
     }
 
-    public void setPunteggio(int punteggio) {
-        this.punteggio = punteggio;
-    }
-
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
-    }
-
+    /**
+     * Restituisce la data di rilevazione.
+     * @return la data di rilevazione come LocalDate.
+     */
     public LocalDate getDataRilevazione() {
         return dataRilevazione;
     }
 
-    public void setDataRilevazione(LocalDate dataRilevazione) {
-        this.dataRilevazione = dataRilevazione;
+    /**
+     * Restituisce una stringa contente la nota.
+     * @return la nota di massimo 256 caratteri.
+     */
+    public String getNote() {
+        return note;
     }
 
-    public String getCATEGORIA() {
+    /**
+     * Restituisce la categoria.
+     * @return una stringa contenente la categoria.
+     */
+    public String getCategoria() {
         return CATEGORIA;
-    }
-
-    public void setCATEGORIA(String CATEGORIA) {
-        this.CATEGORIA = CATEGORIA;
-    }
-
-    public String getSPIEGAZIONE() {
-        return SPIEGAZIONE;
-    }
-
-    public void setSPIEGAZIONE(String SPIEGAZIONE) {
-        this.SPIEGAZIONE = SPIEGAZIONE;
     }
 }

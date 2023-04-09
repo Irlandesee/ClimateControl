@@ -4,12 +4,39 @@ import java.io.Serializable;
 
 /**
  * Rappresenta un operatore registrato.
- * @author : Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
- * @author : Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it, VA
+ * @author <pre> Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
+ * Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it, VA
+ * </pre>
  **/
-@SuppressWarnings("unused")
+@SuppressWarnings("FieldMayBeFinal")
 public class Operatore implements Serializable {
-    private String cognome, nome, codiceFiscale, email, userID, password;
+    /**
+     * Cognome.
+     */
+    private String cognome;
+    /**
+     * Nome.
+     */
+    private String nome;
+    /**
+     * Codice fiscale.
+     */
+    private String codiceFiscale;
+    /**
+     * Email aziendale assegnata.
+     */
+    private String email;
+    /**
+     * UserID scelto dall'operatore al momento della registrazione.
+     */
+    private String userID;
+    /**
+     * Password scelta dall'operatore al momento della registrazione.
+     */
+    private String password;
+    /**
+     * Centro di monitoraggio scelto al momento della registrazione. L'operatore potra' inserire dati solo qui.
+     */
     private CentroMonitoraggio centroAfferenza;
 
     /**
@@ -51,59 +78,51 @@ public class Operatore implements Serializable {
 
     //getters and setters
 
+    /**
+     * Restituisce il cognome.
+     * @return il cognome.
+     */
     public String getCognome() {
         return cognome;
     }
 
-    public void setCognome(String cognome) {
-        this.cognome = cognome;
-    }
-
+    /**
+     * Restituisce il nome.
+     * @return il nome.
+     */
     public String getNome() {
         return nome;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getCodiceFiscale() {
-        return codiceFiscale;
-    }
-
-    public void setCodiceFiscale(String codiceFiscale) {
-        this.codiceFiscale = codiceFiscale;
-    }
-
+    /**
+     * Restituisce l'email.
+     * @return l'email.
+     */
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
+    /**
+     * Restituisce l'userID.
+     * @return l'userID.
+     */
     public String getUserID() {
         return userID;
     }
 
-    public void setUserID(String userID) {
-        this.userID = userID;
-    }
-
+    /**
+     * Restituisce la password.
+     * @return la password.
+     */
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
+    /**
+     * Restituisce il centro di afferenza.
+     * @return il centro di afferenza.
+     */
     public CentroMonitoraggio getCentroAfferenza() {
         return centroAfferenza;
-    }
-
-    public void setCentroAfferenza(CentroMonitoraggio centroAfferenza) {
-        this.centroAfferenza = centroAfferenza;
     }
 }

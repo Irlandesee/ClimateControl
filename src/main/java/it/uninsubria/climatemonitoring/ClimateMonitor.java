@@ -31,14 +31,19 @@ OperatoriRegistrati.dati        : Elenco degli operatori registrati.
 ParametriClimatici.dati         : Elenco degli inserimenti degli operatori. //TODO
 */
 /**
- * @author : Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
- * @author : Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it, VA
+ * Rappresenta l'applicazione ClimateMonitor che permette la memorizzazione di parametri climatici forniti da centri
+ * di monitoraggio sul territorio mondiale, in grado di rendere disponibili a operatori ambientali e comuni
+ * cittadini, i dati relativi alla propria zona d'interesse.
+ * @author <pre> Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
+ * Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it, VA
+ * </pre>
  **/
 public class ClimateMonitor {
     /**
-     *
+     * Rappresenta il main dell'applicazione contenente la logica per l'esecuzione.
      * @param args non usato
      * @throws IOException non è stato possibile creare uno dei file richiesti
+     * @throws ClassNotFoundException il file non contiene la classe richiesta.
      */
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         FileInterface fileInterface = new FileInterface();
@@ -47,7 +52,7 @@ public class ClimateMonitor {
         fileInterface.writeGeonamesAndCoordinatesFile();
         fileInterface.writeCoordinateMonitoraggioFile(fileInterface.readGeonamesAndCoordinatesFile());
 
-        LinkedList<AreaInteresse> areeInteresseAssociateCache = fileInterface.readAreeInteresseFile();
+        LinkedList<AreaInteresse> parametriClimaticiCache = fileInterface.readParametriClimaticiFile();
         LinkedList<CentroMonitoraggio> centriMonitoraggioCache = fileInterface.readCentriMonitoraggioFile();
         LinkedList<AreaInteresse> areeInteresseDisponibiliCache = fileInterface.readCoordinateMonitoraggioFile();
         LinkedList<String> operatoriAutorizzatiCache = fileInterface.readOperatoriAutorizzatiFile();
@@ -68,7 +73,7 @@ public class ClimateMonitor {
                         (solo operatori autorizzati).
                         Digitare 'uscita' per terminare il programma.""");
                 switch (reader.readLine()) {
-                    case "cerca", "c" -> cercaAreaGeografica(areeInteresseAssociateCache, reader);
+                    case "cerca", "c" -> cercaAreaGeografica(parametriClimaticiCache, reader);
                     case "login", "l" -> loggedOperator = login(operatoriRegistratiCache, reader);
                     case "registrazione", "r" -> loggedOperator = registrazione(fileInterface,
                             operatoriAutorizzatiCache, operatoriRegistratiCache, centriMonitoraggioCache, reader);
@@ -92,11 +97,11 @@ public class ClimateMonitor {
 
                 switch (reader.readLine()) {
                     case "aggiungi", "a" -> aggiungiAreaInteresse(fileInterface, areeInteresseDisponibiliCache,
-                            areeInteresseAssociateCache, centriMonitoraggioCache, operatoriRegistratiCache, reader,
+                            parametriClimaticiCache, centriMonitoraggioCache, operatoriRegistratiCache, reader,
                             loggedOperator);
                     case "inserisci", "i" -> inserisciDatiParametri(reader, loggedOperator, fileInterface,
-                            areeInteresseAssociateCache);
-                    case "cerca", "c" -> cercaAreaGeografica(areeInteresseAssociateCache, reader);
+                            parametriClimaticiCache);
+                    case "cerca", "c" -> cercaAreaGeografica(parametriClimaticiCache, reader);
                     case "logout", "l" -> loggedOperator = null;
                     case "uscita", "u" -> System.exit(0);
                 }
@@ -104,9 +109,9 @@ public class ClimateMonitor {
         }
     }
 
-    private static void cercaAreaGeografica(LinkedList<AreaInteresse> areeInteresseAssociateCache,
+    private static void cercaAreaGeografica(LinkedList<AreaInteresse> parametriClimaticiCache,
                                             BufferedReader reader) throws IOException {
-        AreaInteresse areaInteresse = cercaArea(areeInteresseAssociateCache, reader);
+        AreaInteresse areaInteresse = cercaArea(parametriClimaticiCache, reader);
         if (areaInteresse == null)
             System.out.println("Area di interesse non trovata!\n");
         else {
@@ -117,9 +122,9 @@ public class ClimateMonitor {
 
     private static void inserisciDatiParametri
             (BufferedReader reader, Operatore loggedOperator, FileInterface fileInterface,
-             LinkedList<AreaInteresse> areeInteresseAssociateCache) throws IOException {
+             LinkedList<AreaInteresse> parametriClimaticiCache) throws IOException {
         //TODO l'area d'interesse associata all'operatore non e' aggiornata con i dati inseriti.
-        //TODO l'area d'interesse associata all'operatore e' diversa da quella nella cache.
+        // L'area d'interesse associata all'operatore e' diversa da quella nella cache.
         LinkedList<AreaInteresse> areeInteresse =
                 loggedOperator.getCentroAfferenza().getAreeInteresse();
         AreaInteresse areaInteresse = cercaArea(areeInteresse, reader);
@@ -128,7 +133,7 @@ public class ClimateMonitor {
             return;
         }
         //soluzione al problema
-        for (AreaInteresse tmp : areeInteresseAssociateCache)
+        for (AreaInteresse tmp : parametriClimaticiCache)
             if (tmp.getAsciiName().equals(areaInteresse.getAsciiName()))
                 areaInteresse = tmp;
 
@@ -228,13 +233,13 @@ public class ClimateMonitor {
         parametriClimatici.add(6, new MassaGhiacciai(punteggi.get(6), note.get(6), date));
 
         areaInteresse.addParametriClimatici(parametriClimatici);
-        fileInterface.writeAreeInteresseFile(areeInteresseAssociateCache);
+        fileInterface.writeParametriClimaticiFile(parametriClimaticiCache);
 
         System.out.println("Parametri climatici aggiunti con successo!");
     }
 
     private static void aggiungiAreaInteresse(FileInterface fileInterface, LinkedList<AreaInteresse>
-            areeInteresseDisponibiliCache, LinkedList<AreaInteresse> areeInteresseAssociateCache,
+            areeInteresseDisponibiliCache, LinkedList<AreaInteresse> parametriClimaticiCache,
                                               LinkedList<CentroMonitoraggio> centriMonitoraggioCache,
                                               LinkedList<Operatore> operatoriRegistratiCache,
                                               BufferedReader reader, Operatore loggedOperator) throws IOException {
@@ -244,9 +249,9 @@ public class ClimateMonitor {
             return;
         } else {
             areeInteresseDisponibiliCache.remove(areaInteresse);
-            areeInteresseAssociateCache.add(areaInteresse);
+            parametriClimaticiCache.add(areaInteresse);
             loggedOperator.getCentroAfferenza().addAreaInteresse(areaInteresse);
-            fileInterface.writeAreeInteresseFile(areeInteresseAssociateCache);
+            fileInterface.writeParametriClimaticiFile(parametriClimaticiCache);
             fileInterface.writeCoordinateMonitoraggioFile(areeInteresseDisponibiliCache);
             fileInterface.writeCentriMonitoraggioFile(centriMonitoraggioCache);
             fileInterface.writeOperatoriRegistratiFile(operatoriRegistratiCache);

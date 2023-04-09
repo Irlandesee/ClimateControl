@@ -6,14 +6,20 @@ import java.util.LinkedList;
 import it.uninsubria.climatemonitoring.dati.AreaInteresse;
 
 /**
- * @author : Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
- * @author : Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it, VA
- **/
+ * Rappresenta l'interfaccia per leggere da file.
+
+ * @author <pre> Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
+ * Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it, VA
+ * </pre>
+ */
 public class FileReader {
+    /**
+     * Interfaccia che gestisce la lettura e scrittura su file.
+     */
     private final FileInterface fileInterface;
 
     /**
-     *
+     * Crea l'interfaccia per leggere da file.
      * @param fileInterface interfaccia che gestisce la lettura e la scrittura da file.
      */
     public FileReader(FileInterface fileInterface){
@@ -21,7 +27,8 @@ public class FileReader {
     }
 
     /**
-     *
+     * Crea una {@code LinkedList<AreaInteresse>} contenente il contenuto del file geonames-and-coordinates.csv
+     * che servira' come cache.
      * @return HashMap contenente l'elenco delle aree d'interesse salvate sul file geonames-and-coordinates.csv
      * @throws IOException non è stato trovato il file geonames-and-coordinates.csv
      */
@@ -37,8 +44,9 @@ public class FileReader {
     }
 
     /**
-     *
-     * @return HashMap contenente l'elenco degli operatori autorizzati salvati sul file OperatoriAutorizzati.dati
+     * Legge il file contenente le email degli operatori autorizzati a registrarsi.
+     * @return {@code LinkedList<String>} contenente l'elenco delle email degli operatori autorizzati a registrarsi salvati sul file
+     * OperatoriAutorizzati.dati
      * @throws IOException non è stato possibile creare il file OperatoriAutorizzati.dati
      */
     public LinkedList<String> readOperatoriAutorizzatiFile() throws IOException {
@@ -51,6 +59,20 @@ public class FileReader {
         return list;
     }
 
+    /**
+     * Deserializza un oggetto da un file.
+     * @param fileName il percorso del file da cui deserializzare.
+     * @return un Object contenente la {@code LinkedList<>} deserializzata dal file.
+     * @throws IOException il percorso del file passato come argomento e' errato.
+     * @throws ClassNotFoundException il contenuto del file non rappresenta una {@code LinkedList<>}.
+     */
+    public Object serializeFileIn(String fileName) throws IOException, ClassNotFoundException {
+        if(new File(fileName).length() == 0)
+            return new LinkedList<>();
+        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName));
+        return ois.readObject();
+    }
+
     private AreaInteresse parseGeoname(String line) {
         String generalRegex = ";";
         String coordinatesRegex = ",";
@@ -58,12 +80,5 @@ public class FileReader {
         String[] coordinatesTmp = res[5].split(coordinatesRegex);
         return new AreaInteresse(res[0], res[2], res[3], res[4],
                 Float.parseFloat(coordinatesTmp[0]), Float.parseFloat(coordinatesTmp[1]));
-    }
-
-    public Object serializeFileIn(String fileName) throws IOException, ClassNotFoundException {
-        if(new File(fileName).length() == 0)
-            return new LinkedList<>();
-        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName));
-        return ois.readObject();
     }
 }

@@ -4,15 +4,31 @@ import java.io.Serializable;
 
 /**
  * Rappresenta un indirizzo stradale.
- * @author : Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
- * @author : Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it, VA
+ * @author <pre> Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
+ * Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it, VA
+ * </pre>
  **/
-@SuppressWarnings("unused")
+@SuppressWarnings("FieldMayBeFinal")
 public class Indirizzo implements Serializable {
+    /**
+     * Via/piazza.
+     */
     private String via;
+    /**
+     * Numero civico.
+     */
     private int numeroCivico;
+    /**
+     * CAP.
+     */
     private int cap;
+    /**
+     * Comune.
+     */
     private String comune;
+    /**
+     * Provincia.
+     */
     private String provincia;
 
     /**
@@ -42,47 +58,5 @@ public class Indirizzo implements Serializable {
                 cap + " " +
                 comune + " " +
                 provincia;
-    }
-
-    //getters and setters
-
-    public String getVia() {
-        return via;
-    }
-
-    public void setVia(String via) {
-        this.via = via;
-    }
-
-    public int getNumeroCivico() {
-        return numeroCivico;
-    }
-
-    public void setNumeroCivico(int numeroCivico) {
-        this.numeroCivico = numeroCivico;
-    }
-
-    public int getCap() {
-        return cap;
-    }
-
-    public void setCap(int cap) {
-        this.cap = cap;
-    }
-
-    public String getComune() {
-        return comune;
-    }
-
-    public void setComune(String comune) {
-        this.comune = comune;
-    }
-
-    public String getProvincia() {
-        return provincia;
-    }
-
-    public void setProvincia(String provincia) {
-        this.provincia = provincia;
     }
 }
