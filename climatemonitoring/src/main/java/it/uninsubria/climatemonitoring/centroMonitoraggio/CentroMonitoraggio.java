@@ -19,12 +19,13 @@ public class CentroMonitoraggio {
     //key: String => areaID
     private HashMap<String, AreaInteresse> areeInteresse;
 
-    final String emptyAreeInteresse = "null";
+    final String emptyAreeInteresse = "empty";
     final String generalSeparator = ";";
     final String areeSeparator = ",";
 
     public CentroMonitoraggio(String centroID){
         this.centroID = centroID;
+        this.areeInteresse = new HashMap<String, AreaInteresse>();
     }
 
     public CentroMonitoraggio(String centroID, String nomeCentro,
@@ -37,6 +38,7 @@ public class CentroMonitoraggio {
         this.cap = cap;
         this.comune = comune;
         this.provincia = provincia;
+        this.areeInteresse = new HashMap<String, AreaInteresse>();
     }
 
     public String getCentroID() {
@@ -103,14 +105,11 @@ public class CentroMonitoraggio {
             builder.append("\n");
         }
         else
-            builder.append(emptyAreeInteresse).append("\n");
+            builder.append(emptyAreeInteresse);
         return builder.toString();
     }
 
 
-    //TODO: remove from file?
-    //if this method returns true, then it is surely present in
-    //the corresponding database file.
     public boolean rmAreaInteresse(String areaID){
         if(!areeInteresse.containsKey(areaID)) return false;
         areeInteresse.remove(areaID);
@@ -122,10 +121,6 @@ public class CentroMonitoraggio {
         return Objects.hash(centroID, nomeCentro);
     }
 
-    //If not already present, add it
-    //TODO: add to file?
-    //if this methods returns true, then it surely not present
-    //in the corresponding database file
     public boolean addAreaInteresse(AreaInteresse area){
         if(!this.areeInteresse.containsKey(area.getAreaID())) {
             this.areeInteresse.put(area.getAreaID(), area);
