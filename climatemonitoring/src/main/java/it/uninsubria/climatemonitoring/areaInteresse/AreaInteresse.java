@@ -76,7 +76,7 @@ public class AreaInteresse {
                 .append(denominazione).append(separatorArea)
                 .append(stato).append(separatorArea)
                 .append(latitude).append(separatorCoords)
-                .append(longitude).append("\n");
+                .append(longitude);
 
         return builder.toString();
     }
