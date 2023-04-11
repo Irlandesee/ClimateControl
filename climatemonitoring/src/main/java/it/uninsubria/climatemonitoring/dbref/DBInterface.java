@@ -201,7 +201,7 @@ public class DBInterface {
 
     public HashMap<String, ?> read(String objClass) {
         //TODO: in base alla stringa passata, chiama il metodo reader corrispondente }
-        HashMap<String, ?> res = switch (objClass) {
+        return switch (objClass) {
             case "AreaInteresse" -> this.readerREF.readAreeInteresseFile();
             case "GeoName" -> this.readerREF.readGeonamesAndCoordinatesFile();
             case "OperatoreRegistrato" -> this.readerREF.readOperatoriRegistratiFile();
@@ -210,7 +210,6 @@ public class DBInterface {
             case "CentroMonitoraggio" -> this.readerREF.readCentroMonitoraggiFile();
             default -> throw new IllegalArgumentException("invalid argument");
         };
-        return res;
     }
 
     public <T> Pair<String, T>readLast(T objClass){
