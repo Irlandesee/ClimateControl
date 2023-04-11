@@ -53,15 +53,22 @@ public class AreaInteresse {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(areaID, denominazione);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AreaInteresse that = (AreaInteresse) o;
+        return Float.compare(that.latitude, latitude) == 0
+                && Float.compare(that.longitude, longitude) == 0
+                && Objects.equals(areaID, that.areaID)
+                && Objects.equals(denominazione, that.denominazione)
+                && Objects.equals(stato, that.stato);
     }
 
-    public boolean equals(Object o){
-        if(o.getClass() == AreaInteresse.class)
-            return ((AreaInteresse) o).getAreaID().equals(this.getAreaID());
-        return false;
+    @Override
+    public int hashCode() {
+        return Objects.hash(areaID, denominazione, stato, latitude, longitude);
     }
+
     @Override
     public String toString(){
         StringBuilder builder = new StringBuilder();
