@@ -147,11 +147,10 @@ public class CentroMonitoraggio {
                 .append(cap).append(generalSeparator)
                 .append(provincia).append(generalSeparator);
 
-        if(areeInteresse.isEmpty()) builder.append(emptyAreeInteresse).append("\n");
+        if(areeInteresse.isEmpty()) builder.append(emptyAreeInteresse);
         else{
             for (String tmp : areeInteresse.keySet()) //append the keys
                 builder.append(tmp).append(areeSeparator);
-            builder.append("\n");
         }
         return builder.toString();
     }
