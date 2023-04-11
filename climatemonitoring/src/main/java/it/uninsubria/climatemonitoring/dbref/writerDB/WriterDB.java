@@ -26,7 +26,8 @@ public class WriterDB {
         //TODO:
         boolean res = false;
         try{
-            BufferedWriter bWriter = new BufferedWriter(new FileWriter(dbRef.getCentroMonitoraggioFile()));
+            BufferedWriter bWriter = new BufferedWriter(new FileWriter(
+                    dbRef.getCentroMonitoraggioFile(), true));
             bWriter.write(c.toString());
             bWriter.close();
             res = true;
@@ -38,7 +39,7 @@ public class WriterDB {
         boolean res = false;
         try{
             BufferedWriter bWriter = new BufferedWriter(
-                    new FileWriter(dbRef.getOperatoriRegistratiFile()));
+                    new FileWriter(dbRef.getOperatoriRegistratiFile(), true));
             bWriter.write(o.toString());
             bWriter.write("\n");
             bWriter.close();
@@ -51,7 +52,7 @@ public class WriterDB {
         boolean res = false;
         try{
             BufferedWriter bWriter = new BufferedWriter(
-                    new FileWriter(dbRef.getOperatoriAutorizzatiFile()));
+                    new FileWriter(dbRef.getOperatoriAutorizzatiFile(), true));
             bWriter.write(o.toString());
             bWriter.write("\n");
             bWriter.close();
@@ -64,7 +65,7 @@ public class WriterDB {
         boolean res = false;
         try{
             BufferedWriter bWriter = new BufferedWriter(
-                    new FileWriter(dbRef.getParametriClimaticiFile()));
+                    new FileWriter(dbRef.getParametriClimaticiFile(), true));
             bWriter.write(c.toString());
             bWriter.write("\n");
             bWriter.close();
@@ -77,7 +78,7 @@ public class WriterDB {
         boolean res = false;
         try{
             BufferedWriter bWriter = new BufferedWriter(
-                    new FileWriter(dbRef.getAreeInteresseFile()));
+                    new FileWriter(dbRef.getAreeInteresseFile(), true));
             bWriter.write(a.toString());
             bWriter.close();
             res = true;
@@ -89,7 +90,8 @@ public class WriterDB {
         StringBuilder builder = new StringBuilder();
         if(dbRef.isDEBUG()) System.out.println("Writing geoname cache to file");
         try{
-            BufferedWriter bWriter = new BufferedWriter(new FileWriter(dbRef.getCoordinateMonitoraggioFile()));
+            BufferedWriter bWriter = new BufferedWriter(
+                    new FileWriter(dbRef.getCoordinateMonitoraggioFile(), true));
             cache.forEach(
                     (key, value) -> {
                         builder.append(value.toString()).append("\n");
@@ -114,7 +116,8 @@ public class WriterDB {
         StringBuilder builder = new StringBuilder();
         if(dbRef.isDEBUG()) System.out.println("Writing coordinate monitoraggio cache to coordinateMonitoraggio.dati...");
         try{
-            BufferedWriter bWriter = new BufferedWriter(new FileWriter(dbRef.getCoordinateMonitoraggioFile()));
+            BufferedWriter bWriter = new BufferedWriter(
+                    new FileWriter(dbRef.getCoordinateMonitoraggioFile(), true));
             cache.forEach(
                     (key, value) -> {
                         builder.append(value);
