@@ -1,5 +1,7 @@
 package it.uninsubria.climatemonitoring.city;
 
+import java.util.Objects;
+
 public class City {
 
     private String geonameID;
@@ -65,6 +67,24 @@ public class City {
 
     public void setLongitude(float longitude) {
         this.longitude = longitude;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        City city = (City) o;
+        return Float.compare(city.latitude, latitude) == 0
+                && Float.compare(city.longitude, longitude) == 0
+                && Objects.equals(geonameID, city.geonameID)
+                && Objects.equals(asciiName, city.asciiName)
+                && Objects.equals(country, city.country)
+                && Objects.equals(countryCode, city.countryCode);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(geonameID, asciiName, country, countryCode, latitude, longitude);
     }
 
     public String toString(){
