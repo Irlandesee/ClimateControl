@@ -63,11 +63,17 @@ public class DBInterface {
         operatoriRegistratiFile = new File(DBInterface.operatoriRegistratiDati);
         areeInteresseFile = new File(DBInterface.areeInteresseDati);
 
+        //init caches
+        geonamesCache = new HashMap<String, City>();
+        centroMonitoraggioCache = new HashMap<String, CentroMonitoraggio>();
+        operatoreRegistratoCache = new HashMap<String, Operatore>();
+        operatoreAutorizzatoCache = new HashMap<String, Operatore>();
+        areeInteresseCache = new HashMap<String, AreaInteresse>();
+
         this.readerREF = new ReaderDB(this);
         this.writerREF = new WriterDB(this);
         BufferedWriter bWriter;
-
-        try {
+        try{
             if (!geonamesCoordinatesFile.exists()) {
                 boolean res = geonamesCoordinatesFile.createNewFile();
                 try{
