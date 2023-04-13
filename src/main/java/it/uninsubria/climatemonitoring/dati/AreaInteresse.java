@@ -1,6 +1,6 @@
 package it.uninsubria.climatemonitoring.dati;
 
-import it.uninsubria.climatemonitoring.parametriClimatici.ParametroClimatico;
+import it.uninsubria.climatemonitoring.dati.parametriClimatici.ParametroClimatico;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;

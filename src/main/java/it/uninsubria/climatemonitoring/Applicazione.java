@@ -5,7 +5,7 @@ import it.uninsubria.climatemonitoring.dati.CentroMonitoraggio;
 import it.uninsubria.climatemonitoring.dati.Indirizzo;
 import it.uninsubria.climatemonitoring.dati.Operatore;
 import it.uninsubria.climatemonitoring.gestioneFile.FileInterface;
-import it.uninsubria.climatemonitoring.parametriClimatici.*;
+import it.uninsubria.climatemonitoring.dati.parametriClimatici.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;

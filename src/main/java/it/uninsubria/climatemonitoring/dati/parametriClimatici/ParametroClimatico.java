@@ -1,4 +1,4 @@
-package it.uninsubria.climatemonitoring.parametriClimatici;
+package it.uninsubria.climatemonitoring.dati.parametriClimatici;
 
 import java.io.Serializable;
 import java.time.LocalDate;
