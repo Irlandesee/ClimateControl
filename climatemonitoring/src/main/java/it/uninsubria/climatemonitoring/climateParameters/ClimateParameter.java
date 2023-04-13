@@ -20,13 +20,13 @@ public class ClimateParameter {
     private static final String altiGhiacciaiExp = "In m, suddivisa in piogge";
     private static final String massaGhiacciaiExp = "In kg, suddivisa in fasce";
 
-    private static final String notaVento = "Vento note:";
-    private static final String notaUmidita = "Umidita note:";
-    private static final String notaPressione = "Pressione note:";
-    private static final String notaTemp = "Temp. note:";
-    private static final String notePrecipitazioni = "Precip. note:";
-    private static final String noteAltGhiacciai = "Alt ghiacciai note:";
-    private static final String noteMassaGhiacciai = "Massa ghiacciai note:";
+    private static final String notaVento = "Vento note";
+    private static final String notaUmidita = "Umidita note";
+    private static final String notaPressione = "Pressione note";
+    private static final String notaTemp = "Temp. note";
+    private static final String notePrecipitazioni = "Precip. note";
+    private static final String noteAltGhiacciai = "Alt ghiacciai note";
+    private static final String noteMassaGhiacciai = "Massa ghiacciai note";
 
     private static final short minVal = 1;
     private static final short maxVal = 5;
@@ -53,6 +53,7 @@ public class ClimateParameter {
     private String ventoNotes;
     private String umiditaNotes;
     private String pressioneNotes;
+    private String precipitazioniNotes;
     private String tempNotes;
     private String altGhicciaiNotes;
     private String massaGhiacciaiNotes;
@@ -150,11 +151,13 @@ public class ClimateParameter {
         else if(notes.length() > ClimateParameter.maxNoteLength) throw new IllegalArgumentException(ERROR_TOO_MANY_CHARS);
         else{
             switch(key){
-                case ClimateParameter.paramVento -> this.setVentoNotes(notes);
-                case ClimateParameter.paramUmidita -> this.setUmiditaNotes(notes);
-                case ClimateParameter.paramPressione -> this.setPressioneNotes(notes);
-                case ClimateParameter.paramAltGhiacciai -> this.setAltGhicciaiNotes(notes);
-                case ClimateParameter.paramMassaGhiacciai -> this.setMassaGhiacciaiNotes(notes);
+                case ClimateParameter.notaVento-> this.setVentoNotes(notes);
+                case ClimateParameter.notaUmidita-> this.setUmiditaNotes(notes);
+                case ClimateParameter.notaTemp -> this.setTempNotes(notes);
+                case ClimateParameter.notePrecipitazioni -> this.setPrecipitazioniNotes(notes);
+                case ClimateParameter.notaPressione-> this.setPressioneNotes(notes);
+                case ClimateParameter.noteAltGhiacciai-> this.setAltGhicciaiNotes(notes);
+                case ClimateParameter.noteMassaGhiacciai-> this.setMassaGhiacciaiNotes(notes);
                 default -> throw new IllegalArgumentException(ERROR_INVALID_KEY);
             }
         }
@@ -175,6 +178,9 @@ public class ClimateParameter {
     private void setUmiditaNotes(String umiditaNotes) {
         this.umiditaNotes = umiditaNotes;
     }
+
+    public String getPrecipitazioniNotes(){return this.precipitazioniNotes;}
+    private void setPrecipitazioniNotes(String notes){this.precipitazioniNotes = notes;}
 
     public String getPressioneNotes() {
         return pressioneNotes;

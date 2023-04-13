@@ -74,8 +74,9 @@ public class ReaderDB {
     public HashMap<String, ClimateParameter> readClimateParametersFile(){
         HashMap<String, ClimateParameter> res = new HashMap<String, ClimateParameter>();
         try{
-            String line;
             BufferedReader bReader = new BufferedReader(new FileReader(dbRef.getParametriClimaticiFile()));
+            String line = bReader.readLine(); //reading headers
+            System.out.println(line);
             while((line = bReader.readLine()) != null){
                 Pair<String, ClimateParameter> tmp = parseParametroClimatico(line);
                 res.put(tmp.getKey(), tmp.getValue());
@@ -184,8 +185,10 @@ public class ReaderDB {
     }
 
     private Pair<String, ClimateParameter> parseParametroClimatico(String line){
+        System.out.println("line: "+ line);
         String[] tmp = line.split(ClimateParameter.generalSeparator);
-        List<String> params= (LinkedList<String>) Arrays
+        List<String> params=
+                Arrays
                 .stream(tmp[4].split(ClimateParameter.generalParamSeparator))
                 .toList();
         List<Pair<String, Short>> keyWithParam = new LinkedList<Pair<String, Short>>();
@@ -210,7 +213,8 @@ public class ReaderDB {
     }
 
     private LinkedList<Pair<String, String>> parseNotes(String line){
-        LinkedList<String> notes = (LinkedList<String>) Arrays
+        List<String> notes =
+                Arrays
                 .stream(line.split(ClimateParameter.generalParamSeparator))
                 .toList();
         LinkedList<Pair<String, String>> res = new LinkedList<Pair<String, String>>();

@@ -4,6 +4,7 @@ import it.uninsubria.climatemonitoring.areaInteresse.AreaInteresse;
 import it.uninsubria.climatemonitoring.centroMonitoraggio.CentroMonitoraggio;
 import it.uninsubria.climatemonitoring.city.City;
 import it.uninsubria.climatemonitoring.climateParameters.ClimateParameter;
+import it.uninsubria.climatemonitoring.dbref.DBInterface;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -16,6 +17,7 @@ import java.security.MessageDigest;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
+import java.util.HashMap;
 import java.util.Locale;
 
 public class climateMonitoringApp extends Application {
@@ -223,5 +225,13 @@ public class climateMonitoringApp extends Application {
         cp.addParameter(ClimateParameter.paramPressione, (short) 2);
         System.out.println(cp);
         boolean res = cp.rmParameter(ClimateParameter.paramTemp);
+
+        System.out.println("----Reading from db...");
+        DBInterface dbref = new DBInterface();
+        HashMap<String, ?> map =  dbref.read(DBInterface.objClassParamClimatici);
+        map.forEach(
+                (key, r) -> System.out.println(key +":"+ r)
+        );
+
     }
 }

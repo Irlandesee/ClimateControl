@@ -168,6 +168,8 @@ public class DBInterface {
     public File getOperatoriRegistratiFile(){return this.operatoriRegistratiFile;}
     public File getAreeInteresseFile(){return this.areeInteresseFile;}
 
+    public static final String objClassParamClimatici = "ClimateParameter";
+
     private HashMap<String, City> getGeonamesCache(){return this.geonamesCache;}
     private HashMap<String, CentroMonitoraggio> getCentroMonitoraggioCache(){return this.centroMonitoraggioCache;}
     private HashMap<String, Operatore> getOperatoreRegistratoCache(){return this.operatoreRegistratoCache;}
