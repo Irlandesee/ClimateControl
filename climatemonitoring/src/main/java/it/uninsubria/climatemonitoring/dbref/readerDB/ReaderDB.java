@@ -201,11 +201,26 @@ public class ReaderDB {
             c.setIdCentro(tmp[1]);
             c.setAreaInteresse(tmp[2]);
             c.setPubDate(LocalDate.parse(tmp[3]));
-            keyWithParam.forEach((tuple) ->
-                    c.addParameter(tuple.getKey(), tuple.getValue()));
-            c.setNotes(tmp[5]);
+            keyWithParam.forEach((tuple) -> c.addParameter(tuple.getKey(), tuple.getValue()));
+            //c.setNotes(tmp[5]);
+            LinkedList<Pair<String, String>> parsedNotes = parseNotes(tmp[5]);
+            parsedNotes.forEach(tuple -> c.setNotes(tuple.getKey(), tuple.getValue()));
         }catch(NumberFormatException nfe){nfe.printStackTrace();}
         return new Pair<String, ClimateParameter>(parameterID, c);
+    }
+
+    private LinkedList<Pair<String, String>> parseNotes(String line){
+        LinkedList<String> notes = (LinkedList<String>) Arrays
+                .stream(line.split(ClimateParameter.generalParamSeparator))
+                .toList();
+        LinkedList<Pair<String, String>> res = new LinkedList<Pair<String, String>>();
+        notes.forEach(
+                note -> {
+                    String[] xs = note.split(ClimateParameter.paramKeySeparator);
+                    res.add(new Pair<String, String>(xs[0], xs[1]));
+                }
+        );
+        return res;
     }
 
     private Pair<String, City> parseGeoname(String line){
