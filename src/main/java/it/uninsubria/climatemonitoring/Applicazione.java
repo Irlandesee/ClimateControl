@@ -72,11 +72,13 @@ public class Applicazione {
                         Digitare 'login' per effettuare il login (solo operatori registrati).
                         Digitare 'registrazione' per effettuare la registrazione all'applicazione\s
                         (solo operatori autorizzati).
+                        Digitare 'salva' per salvare i dati su file.
                         Digitare 'uscita' per terminare il programma.""");
                 switch (reader.readLine()) {
                     case "cerca", "c" -> cercaAreaGeografica(parametriClimaticiCache);
                     case "login", "l" -> loggedOperator = login();
                     case "registrazione", "r" -> loggedOperator = registrazione();
+                    case "salva", "s" -> salvaSuFile();
                     case "uscita", "u" -> System.exit(0);
                 }
             }
@@ -91,6 +93,7 @@ public class Applicazione {
                         Digitare 'logout' per effettuare il logout e tornare al menu' principale.
                         Digitare 'uscita' per terminare il programma.
                         Digitare 'inserisci' per inserire i dati relativi ad una delle aree di interesse.
+                        Digitare 'salva' per salvare i dati su file.
                         
                         Aree di interesse registrate:""");
                 printCache(loggedOperator.getCentroAfferenza().getAreeInteresse());
@@ -99,6 +102,7 @@ public class Applicazione {
                     case "aggiungi", "a" -> aggiungiAreaInteresse();
                     case "inserisci", "i" -> inserisciDatiParametri();
                     case "cerca", "c" -> cercaAreaGeografica(parametriClimaticiCache);
+                    case "salva", "s" -> salvaSuFile();
                     case "logout", "l" -> loggedOperator = null;
                     case "uscita", "u" -> System.exit(0);
                 }
@@ -453,5 +457,13 @@ public class Applicazione {
 
     private void printCache(LinkedList<?> cache) {
         cache.forEach(System.out::println);
+    }
+
+    public void salvaSuFile() throws IOException {
+        fileInterface.writeOperatoriRegistratiFile();
+        fileInterface.writeCoordinateMonitoraggioFile();
+        fileInterface.writeCentriMonitoraggioFile();
+        fileInterface.writeParametriClimaticiFile();
+        System.out.println("Operazione completata!");
     }
 }

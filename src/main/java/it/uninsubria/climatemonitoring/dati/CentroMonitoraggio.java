@@ -52,9 +52,9 @@ public class CentroMonitoraggio implements Serializable {
      */
     @Override
     public String toString() {
-        return nomeCentro + "\n" +
-                indirizzo.toString() + "\n" +
-                areeInteresse.toString() + "\n";
+        return "Centro di monitoraggio: " + nomeCentro + "\n" +
+                "Indirizzo: " + indirizzo + "\n" +
+                "Elenco aree d'interesse associate:\n" + areeInteresse + "\n";
     }
 
     //getters and setters

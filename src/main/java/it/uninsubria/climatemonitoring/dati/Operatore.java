@@ -68,7 +68,7 @@ public class Operatore implements Serializable {
                 email + ";" +
                 userID + ";" +
                 password + ";" +
-                centroAfferenza;
+                centroAfferenza.getNomeCentro();
     }
 
     //getters and setters

@@ -1,6 +1,11 @@
 package it.uninsubria.climatemonitoring.gestioneFile;
 
+import it.uninsubria.climatemonitoring.dati.AreaInteresse;
+import it.uninsubria.climatemonitoring.dati.CentroMonitoraggio;
+import it.uninsubria.climatemonitoring.dati.Operatore;
+
 import java.io.*;
+import java.util.LinkedList;
 
 /**
  * Rappresenta l'interfaccia per scrivere su file.
@@ -122,5 +127,57 @@ public class FileWriter {
     public void serializeFileOut(Object object, String fileName) throws IOException {
         ObjectOutputStream write = new ObjectOutputStream(new FileOutputStream(fileName));
         write.writeObject(object);
+    }
+
+    public void writeOperatoriRegistratiFile() throws IOException {
+        File file = fileInterface.getOperatoriRegistratiFile();
+        LinkedList<Operatore> list = FileInterface.getOperatoriRegistratiCache();
+
+        PrintWriter fout = new PrintWriter(new BufferedWriter(new java.io.FileWriter(file)));
+        for(Operatore operatore : list)
+            fout.println(operatore);
+        fout.flush();
+        fout.close();
+    }
+
+    public void writeCoordinateMonitoraggioFile() throws IOException {
+        File file = fileInterface.getCoordinateMonitoraggioFile();
+        LinkedList<AreaInteresse> list = FileInterface.getAreeInteresseDisponibiliCache();
+
+        PrintWriter fout = new PrintWriter(new BufferedWriter(new java.io.FileWriter(file)));
+        for(AreaInteresse areaInteresse : list)
+            fout.println(areaInteresse);
+        fout.flush();
+        fout.close();
+    }
+
+    public void writeCentriMonitoraggioFile() throws IOException {
+        File file = fileInterface.getCentriMonitoraggioFile();
+        LinkedList<CentroMonitoraggio> list = FileInterface.getCentriMonitoraggioCache();
+
+        PrintWriter fout = new PrintWriter(new BufferedWriter(new java.io.FileWriter(file)));
+        for(CentroMonitoraggio centroMonitoraggio : list)
+            fout.println(centroMonitoraggio);
+        fout.flush();
+        fout.close();
+    }
+
+    public void writeParametriClimaticiFile() throws IOException {
+        File file = fileInterface.getParametriClimaticiFile();
+        LinkedList<CentroMonitoraggio> listaCentri = FileInterface.getCentriMonitoraggioCache();
+        LinkedList<AreaInteresse> listaAree = FileInterface.getParametriClimaticiCache();
+
+        PrintWriter fout = new PrintWriter(new BufferedWriter(new java.io.FileWriter(file)));
+        for(AreaInteresse areaInteresse : listaAree) {
+            fout.println("Centro di riferimento: ");
+            for(CentroMonitoraggio centroMonitoraggio : listaCentri)
+                for(AreaInteresse tmp : centroMonitoraggio.getAreeInteresse())
+                    if(areaInteresse.equals(tmp))
+                        fout.println(centroMonitoraggio.getNomeCentro());
+            fout.println(areaInteresse);
+            fout.println(areaInteresse.getDatiAggregati());
+        }
+        fout.flush();
+        fout.close();
     }
 }

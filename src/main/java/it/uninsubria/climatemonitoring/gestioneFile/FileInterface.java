@@ -30,6 +30,11 @@ public class FileInterface {
      */
     private File operatoriAutorizzatiFile;
 
+    private File coordinateMonitoraggioFile;
+    private File parametriClimaticiFile;
+    private File centriMonitoraggioFile;
+    private File operatoriRegistratiFile;
+
     /**
      * Interfaccia per la scrittura su file.
      */
@@ -81,9 +86,18 @@ public class FileInterface {
         geonamesCoordinatesFile = new File("data/geonames-and-coordinates.csv");
         operatoriAutorizzatiFile = new File("data/OperatoriAutorizzati.dati");
 
+        coordinateMonitoraggioFile = new File("data/CoordinateMonitoraggio.dati");
+        parametriClimaticiFile = new File("data/ParametriClimatici.dati");
+        centriMonitoraggioFile = new File("data/CentriMonitoraggio.dati");
+        operatoriRegistratiFile = new File("data/OperatoriRegistrati.dati");
+
         checkFileExistence(cacheFile);
         checkFileExistence(geonamesCoordinatesFile);
         checkFileExistence(operatoriAutorizzatiFile);
+        checkFileExistence(coordinateMonitoraggioFile);
+        checkFileExistence(parametriClimaticiFile);
+        checkFileExistence(centriMonitoraggioFile);
+        checkFileExistence(operatoriRegistratiFile);
     }
 
     private void creaFileDiEsempio() throws IOException {
@@ -102,16 +116,16 @@ public class FileInterface {
     }
 
     private void scriviCache() throws IOException {
+        if(areeInteresseDisponibiliCache.isEmpty())
+            areeInteresseDisponibiliCache = readGeonamesAndCoordinatesFile();
+        if(operatoriAutorizzatiCache.isEmpty())
+            operatoriAutorizzatiCache = readOperatoriAutorizzatiFile();
+
         cache.add(parametriClimaticiCache);
         cache.add(centriMonitoraggioCache);
         cache.add(areeInteresseDisponibiliCache);
         cache.add(operatoriAutorizzatiCache);
         cache.add(operatoriRegistratiCache);
-
-        if(areeInteresseDisponibiliCache.isEmpty())
-            areeInteresseDisponibiliCache = readGeonamesAndCoordinatesFile();
-        if(operatoriAutorizzatiCache.isEmpty())
-            operatoriAutorizzatiCache = readOperatoriAutorizzatiFile();
 
         writeCacheFile();
     }
@@ -163,6 +177,22 @@ public class FileInterface {
         fileWriter.writeOperatoriAutorizzatiFile();
     }
 
+    public void writeOperatoriRegistratiFile() throws IOException {
+        fileWriter.writeOperatoriRegistratiFile();
+    }
+
+    public void writeCoordinateMonitoraggioFile() throws IOException {
+        fileWriter.writeCoordinateMonitoraggioFile();
+    }
+
+    public void writeCentriMonitoraggioFile() throws IOException {
+        fileWriter.writeCentriMonitoraggioFile();
+    }
+
+    public void writeParametriClimaticiFile() throws IOException {
+        fileWriter.writeParametriClimaticiFile();
+    }
+
     public void writeCacheFile() throws IOException {
         fileWriter.serializeFileOut(cache, cacheFile.getPath());
     }
@@ -194,5 +224,21 @@ public class FileInterface {
 
     public static LinkedList<Operatore> getOperatoriRegistratiCache() {
         return operatoriRegistratiCache;
+    }
+
+    public File getCoordinateMonitoraggioFile() {
+        return coordinateMonitoraggioFile;
+    }
+
+    public File getParametriClimaticiFile() {
+        return parametriClimaticiFile;
+    }
+
+    public File getCentriMonitoraggioFile() {
+        return centriMonitoraggioFile;
+    }
+
+    public File getOperatoriRegistratiFile() {
+        return operatoriRegistratiFile;
     }
 }

@@ -38,14 +38,14 @@ public class Indirizzo implements Serializable {
      * Crea una stringa per la stampa dell'indirizzo.
      *
      * @return una {@code String} contenente {@link Indirizzo#via}, {@link Indirizzo#numeroCivico},
-     * {@link Indirizzo#cap}, {@link Indirizzo#comune} e {@link Indirizzo#provincia} separati da uno spazio.
+     * {@link Indirizzo#cap}, {@link Indirizzo#comune} e {@link Indirizzo#provincia} separati da una virgola.
      */
     @Override
     public String toString() {
-        return via + " " +
-                numeroCivico + " " +
-                cap + " " +
-                comune + " " +
-                provincia;
+        return "Via " + via + ", " +
+                "numero civico " + numeroCivico + ", " +
+                "CAP " + cap + ", " +
+                "comune " + comune + ", " +
+                "provincia " + provincia;
     }
 }
