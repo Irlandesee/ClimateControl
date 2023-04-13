@@ -16,11 +16,6 @@ import java.util.LinkedList;
 @SuppressWarnings("unchecked")
 public class FileInterface {
     /**
-     * Cartella contenete tutti i file.
-     */
-    File directory = new File(".data");
-
-    /**
      * File contenente tutte le aree d'interesse in formato .csv. Un esempio viene generato nel caso in cui nessun file
      * venga fornito dall'esterno.
      */
@@ -54,19 +49,30 @@ public class FileInterface {
     /**
      * Interfaccia per la scrittura su file.
      */
-    private FileReader fileReader;
+    private final FileReader fileReader;
     /**
      * Interfaccia per la lettura da file.
      */
-    private FileWriter fileWriter;
+    private final FileWriter fileWriter;
+
+    private static LinkedList<AreaInteresse> parametriClimaticiCache;
+    private static LinkedList<CentroMonitoraggio> centriMonitoraggioCache;
+    private static LinkedList<AreaInteresse> areeInteresseDisponibiliCache;
+    private static LinkedList<String> operatoriAutorizzatiCache;
+    private static LinkedList<Operatore> operatoriRegistratiCache;
 
     /**
      * Crea l'interfaccia per la lettura e scrittura su file.
      *
      * @throws IOException non e' stato possibile creare uno dei file o la cartella richiesta.
      */
-    public FileInterface() throws IOException {
-        initialize();
+    public FileInterface() throws IOException, ClassNotFoundException {
+        fileReader = new FileReader(this);
+        fileWriter = new FileWriter(this);
+
+        creaFile();
+        creaFileDiEsempio();
+        inizializzaCache();
     }
 
     /**
@@ -220,12 +226,12 @@ public class FileInterface {
         fileWriter.serializeFileOut(operatore, operatoriRegistratiFile.getPath());
     }
 
-    private void initialize() throws IOException {
+    private void creaFile() throws IOException {
+        File directory = new File("data");
+
         if (!directory.exists())
-            //noinspection ResultOfMethodCallIgnored
-            directory.mkdir();
-        fileReader = new FileReader(this);
-        fileWriter = new FileWriter(this);
+            if(directory.mkdir())
+                System.out.println("Nuova cartella creata in: " + directory.getPath());
 
         geonamesCoordinatesFile = new File(
                 "data/geonames-and-coordinates.csv");
@@ -242,6 +248,12 @@ public class FileInterface {
         checkFilesExistence();
     }
 
+    private void creaFileDiEsempio() throws IOException {
+        writeOperatoriAutorizzatiFile();
+        writeGeonamesAndCoordinatesFile();
+        writeCoordinateMonitoraggioFile(readGeonamesAndCoordinatesFile());
+    }
+
     private void checkFilesExistence() throws IOException {
         checkFileExistence(geonamesCoordinatesFile);
         checkFileExistence(centriMonitoraggioFile);
@@ -251,23 +263,46 @@ public class FileInterface {
         checkFileExistence(parametriClimaticiFile);
     }
 
+    private void inizializzaCache() throws IOException, ClassNotFoundException {
+        parametriClimaticiCache = readParametriClimaticiFile();
+        centriMonitoraggioCache = readCentriMonitoraggioFile();
+        areeInteresseDisponibiliCache = readCoordinateMonitoraggioFile();
+        operatoriAutorizzatiCache = readOperatoriAutorizzatiFile();
+        operatoriRegistratiCache = readOperatoriRegistratiFile();
+    }
+
     private void checkFileExistence(File file) throws IOException {
         if(file == null) return;
         if(!file.exists())
-            if (file.createNewFile()) System.out.println("Created new file at: " + file.getAbsolutePath());
+            if (file.createNewFile()) System.out.println("Nuovo file creato in: " + file.getAbsolutePath());
     }
 
     //getters and setters
-    /**
-     * @return {@link FileInterface#geonamesCoordinatesFile}
-     */
     public File getGeonamesCoordinatesFile() {
         return geonamesCoordinatesFile;
     }
-    /**
-     * @return {@link FileInterface#operatoriAutorizzatiFile}
-     */
+
     public File getOperatoriAutorizzatiFile() {
         return operatoriAutorizzatiFile;
+    }
+
+    public static LinkedList<AreaInteresse> getParametriClimaticiCache() {
+        return parametriClimaticiCache;
+    }
+
+    public static LinkedList<CentroMonitoraggio> getCentriMonitoraggioCache() {
+        return centriMonitoraggioCache;
+    }
+
+    public static LinkedList<AreaInteresse> getAreeInteresseDisponibiliCache() {
+        return areeInteresseDisponibiliCache;
+    }
+
+    public static LinkedList<String> getOperatoriAutorizzatiCache() {
+        return operatoriAutorizzatiCache;
+    }
+
+    public static LinkedList<Operatore> getOperatoriRegistratiCache() {
+        return operatoriRegistratiCache;
     }
 }
