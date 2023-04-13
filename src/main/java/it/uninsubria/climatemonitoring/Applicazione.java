@@ -42,6 +42,8 @@ public class Applicazione {
 
     private final FileInterface fileInterface;
 
+    BufferedReader reader;
+
     public Applicazione(FileInterface fileInterface) {
         this.fileInterface = fileInterface;
 
@@ -50,6 +52,8 @@ public class Applicazione {
         areeInteresseDisponibiliCache = FileInterface.getAreeInteresseDisponibiliCache();
         operatoriAutorizzatiCache = FileInterface.getOperatoriAutorizzatiCache();
         operatoriRegistratiCache = FileInterface.getOperatoriRegistratiCache();
+
+        reader = new BufferedReader(new InputStreamReader(System.in));
     }
 
     /**
@@ -58,7 +62,6 @@ public class Applicazione {
      * @throws IOException quando i file richiesti non esistono.
      */
     public void run() throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         while (true) {
             while (loggedOperator == null) {
                 System.out.println("""
@@ -71,10 +74,9 @@ public class Applicazione {
                         (solo operatori autorizzati).
                         Digitare 'uscita' per terminare il programma.""");
                 switch (reader.readLine()) {
-                    case "cerca", "c" -> cercaAreaGeografica(parametriClimaticiCache, reader);
-                    case "login", "l" -> loggedOperator = login(operatoriRegistratiCache, reader);
-                    case "registrazione", "r" -> loggedOperator = registrazione(fileInterface,
-                            operatoriAutorizzatiCache, operatoriRegistratiCache, centriMonitoraggioCache, reader);
+                    case "cerca", "c" -> cercaAreaGeografica(parametriClimaticiCache);
+                    case "login", "l" -> loggedOperator = login();
+                    case "registrazione", "r" -> loggedOperator = registrazione();
                     case "uscita", "u" -> System.exit(0);
                 }
             }
@@ -94,12 +96,9 @@ public class Applicazione {
                 printCache(loggedOperator.getCentroAfferenza().getAreeInteresse());
 
                 switch (reader.readLine()) {
-                    case "aggiungi", "a" -> aggiungiAreaInteresse(fileInterface, areeInteresseDisponibiliCache,
-                            parametriClimaticiCache, centriMonitoraggioCache, operatoriRegistratiCache, reader,
-                            loggedOperator);
-                    case "inserisci", "i" -> inserisciDatiParametri(reader, loggedOperator, fileInterface,
-                            parametriClimaticiCache);
-                    case "cerca", "c" -> cercaAreaGeografica(parametriClimaticiCache, reader);
+                    case "aggiungi", "a" -> aggiungiAreaInteresse();
+                    case "inserisci", "i" -> inserisciDatiParametri();
+                    case "cerca", "c" -> cercaAreaGeografica(parametriClimaticiCache);
                     case "logout", "l" -> loggedOperator = null;
                     case "uscita", "u" -> System.exit(0);
                 }
@@ -107,9 +106,8 @@ public class Applicazione {
         }
     }
 
-    private static void cercaAreaGeografica(LinkedList<AreaInteresse> parametriClimaticiCache,
-                                            BufferedReader reader) throws IOException {
-        AreaInteresse areaInteresse = cercaArea(parametriClimaticiCache, reader);
+    private void cercaAreaGeografica(LinkedList<AreaInteresse> areeInteresse) throws IOException {
+        AreaInteresse areaInteresse = cercaArea(areeInteresse);
         if (areaInteresse == null)
             System.out.println("Area di interesse non trovata!\n");
         else {
@@ -118,14 +116,11 @@ public class Applicazione {
         }
     }
 
-    private static void inserisciDatiParametri
-            (BufferedReader reader, Operatore loggedOperator, FileInterface fileInterface,
-             LinkedList<AreaInteresse> parametriClimaticiCache) throws IOException {
+    private void inserisciDatiParametri() throws IOException {
         //TODO l'area d'interesse associata all'operatore non e' aggiornata con i dati inseriti.
         // L'area d'interesse associata all'operatore e' diversa da quella nella cache.
-        LinkedList<AreaInteresse> areeInteresse =
-                loggedOperator.getCentroAfferenza().getAreeInteresse();
-        AreaInteresse areaInteresse = cercaArea(areeInteresse, reader);
+        LinkedList<AreaInteresse> areeInteresse = loggedOperator.getCentroAfferenza().getAreeInteresse();
+        AreaInteresse areaInteresse = cercaArea(areeInteresse);
         if(areaInteresse == null) {
             System.out.println("Area di interesse non trovata!");
             return;
@@ -236,12 +231,8 @@ public class Applicazione {
         System.out.println("Parametri climatici aggiunti con successo!");
     }
 
-    private static void aggiungiAreaInteresse(FileInterface fileInterface, LinkedList<AreaInteresse>
-            areeInteresseDisponibiliCache, LinkedList<AreaInteresse> parametriClimaticiCache,
-                                              LinkedList<CentroMonitoraggio> centriMonitoraggioCache,
-                                              LinkedList<Operatore> operatoriRegistratiCache,
-                                              BufferedReader reader, Operatore loggedOperator) throws IOException {
-        AreaInteresse areaInteresse = cercaArea(areeInteresseDisponibiliCache, reader);
+    private void aggiungiAreaInteresse() throws IOException {
+        AreaInteresse areaInteresse = cercaArea(areeInteresseDisponibiliCache);
         if (areaInteresse == null) {
             System.out.println("Area di interesse non trovata!");
             return;
@@ -257,10 +248,7 @@ public class Applicazione {
         System.out.println("Area di interesse aggiunta con successo!");
     }
 
-    private static Operatore registrazione(FileInterface fileInterface, LinkedList<String> operatoriAutorizzatiCache,
-                                           LinkedList<Operatore> operatoriRegistratiCache,
-                                           LinkedList<CentroMonitoraggio> centriMonitoraggioCache,
-                                           BufferedReader reader) throws IOException {
+    private Operatore registrazione() throws IOException {
         String cognome, nome, codiceFiscale, email, userID, password, nomeCentroAfferenza;
 
         System.out.println("Digitare il cognome:");
@@ -310,7 +298,7 @@ public class Applicazione {
         CentroMonitoraggio centroAfferenza = null;
         boolean centroTrovato = false;
         if(centriMonitoraggioCache.isEmpty()) {
-            centroAfferenza = registraCentroAree(fileInterface, centriMonitoraggioCache, reader, nomeCentroAfferenza);
+            centroAfferenza = registraCentroAree(nomeCentroAfferenza);
             centroTrovato = true;
         }
         if(!centroTrovato)
@@ -320,7 +308,7 @@ public class Applicazione {
                     centroTrovato = true;
                 }
         if(!centroTrovato)
-            centroAfferenza = registraCentroAree(fileInterface, centriMonitoraggioCache, reader, nomeCentroAfferenza);
+            centroAfferenza = registraCentroAree(nomeCentroAfferenza);
         Operatore operatore = new Operatore(cognome, nome, codiceFiscale, email, userID,
                 password, centroAfferenza);
         operatoriRegistratiCache.add(operatore);
@@ -329,8 +317,7 @@ public class Applicazione {
         return operatore;
     }
 
-    private static CentroMonitoraggio registraCentroAree(FileInterface fileInterface, LinkedList<CentroMonitoraggio>
-            centriMonitoraggioCache, BufferedReader reader, String nomeCentroAfferenza) throws IOException {
+    private CentroMonitoraggio registraCentroAree(String nomeCentroAfferenza) throws IOException {
         String via, comune, provincia, numeroCivico, cap;
         int numeroCivicoNumerico, capNumerico;
 
@@ -369,8 +356,7 @@ public class Applicazione {
         return centroMonitoraggio;
     }
 
-    private static Operatore login(LinkedList<Operatore> operatoriRegistratiCache,
-                                   BufferedReader reader) throws IOException {
+    private Operatore login() throws IOException {
         Operatore loggedOperator = null;
         while (loggedOperator == null) {
             System.out.println("Digitare l'userID:");
@@ -404,54 +390,52 @@ public class Applicazione {
         return loggedOperator;
     }
 
-    private static AreaInteresse cercaArea(LinkedList<AreaInteresse> areeInteresseCache,
-                                           BufferedReader reader) throws IOException {
+    private AreaInteresse cercaArea(LinkedList<AreaInteresse> areeInteresse) throws IOException {
         System.out.println("Digitare 'nome' per ricercare l'area di interesse per nome.\n" +
                 "Digitare 'coordinate' per cercare l'area di interesse per coordinate geografiche.");
         AreaInteresse areaInteresse = null;
         switch (reader.readLine()) {
             case "nome", "n" -> {
                 System.out.println("Digitare il nome dell'area di interesse:");
-                areaInteresse = cercaArea(areeInteresseCache, reader.readLine());
+                areaInteresse = cercaArea(areeInteresse, reader.readLine());
             }
             case "coordinate", "c" -> {
                 System.out.println("Digitare la latitudine dell'area di interesse:");
                 double latitudine = Double.parseDouble(reader.readLine());
                 System.out.println("Digitare la longitudine dell'area di interesse:");
                 double longitudine = Double.parseDouble(reader.readLine());
-                areaInteresse = cercaArea(areeInteresseCache, latitudine, longitudine);
+                areaInteresse = cercaArea(areeInteresse, latitudine, longitudine);
             }
         }
         return areaInteresse;
     }
 
-    private static AreaInteresse cercaArea(LinkedList<AreaInteresse> areeInteresseCache, String nome) {
-        for(AreaInteresse areaInteresse : areeInteresseCache)
-            if(areaInteresse.getNomeASCII().contains(nome))
-                return areaInteresse;
+    private AreaInteresse cercaArea(LinkedList<AreaInteresse> areeInteresse, String nome) {
+        for(AreaInteresse tmp : areeInteresse)
+            if(tmp.getNomeASCII().contains(nome))
+                return tmp;
         return null;
     }
 
-    private static AreaInteresse cercaArea(LinkedList<AreaInteresse> areeInteresseCache,
-                                           double latitude, double longitude) {
-        if(areeInteresseCache.isEmpty())
+    private AreaInteresse cercaArea(LinkedList<AreaInteresse> areeInteresse, double latitude, double longitude) {
+        if(areeInteresse.isEmpty())
             return null;
-        AreaInteresse primoElemento = areeInteresseCache.get(0);
+        AreaInteresse primoElemento = areeInteresse.get(0);
         double minimumDistance = Math.hypot(latitude - primoElemento.getLatitudine(),
                 longitude - primoElemento.getLongitudine());
         int minimumIndex = 0;
-        for(AreaInteresse areaInteresse : areeInteresseCache) {
+        for(AreaInteresse areaInteresse : areeInteresse) {
             double distance = Math.hypot(latitude - areaInteresse.getLatitudine(),
                     longitude - areaInteresse.getLongitudine());
             if (minimumDistance > distance) {
                 minimumDistance = distance;
-                minimumIndex = areeInteresseCache.indexOf(areaInteresse);
+                minimumIndex = areeInteresse.indexOf(areaInteresse);
             }
         }
-        return areeInteresseCache.get(minimumIndex);
+        return areeInteresse.get(minimumIndex);
     }
 
-    private static boolean isDateInvalid(String date) {
+    private boolean isDateInvalid(String date) {
         final String DATE_FORMAT = "dd-MM-yyyy";
         try {
             DateFormat df = new SimpleDateFormat(DATE_FORMAT);
@@ -463,7 +447,7 @@ public class Applicazione {
         }
     }
 
-    private static boolean isNotNumeric(String str) {
+    private boolean isNotNumeric(String str) {
         try {
             Double.parseDouble(str);
             return false;
@@ -472,11 +456,11 @@ public class Applicazione {
         }
     }
 
-    private static boolean isNotaInt(String number) {
+    private boolean isNotaInt(String number) {
         return Double.parseDouble(number) != (int) Double.parseDouble(number);
     }
 
-    private static void printCache(LinkedList<?> cache) {
+    private void printCache(LinkedList<?> cache) {
         cache.forEach(System.out::println);
     }
 }
