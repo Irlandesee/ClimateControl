@@ -1,6 +1,7 @@
 package it.uninsubria.climatemonitoring.gestioneFile;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import it.uninsubria.climatemonitoring.dati.AreaInteresse;
@@ -71,7 +72,7 @@ public class FileReader {
      */
     public Object serializeFileIn(String fileName) throws IOException, ClassNotFoundException {
         if(new File(fileName).length() == 0)
-            return new LinkedList<>();
+            return new ArrayList<>();
         ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName));
         return ois.readObject();
     }

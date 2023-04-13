@@ -117,18 +117,12 @@ public class Applicazione {
     }
 
     private void inserisciDatiParametri() throws IOException {
-        //TODO l'area d'interesse associata all'operatore non e' aggiornata con i dati inseriti.
-        // L'area d'interesse associata all'operatore e' diversa da quella nella cache.
         LinkedList<AreaInteresse> areeInteresse = loggedOperator.getCentroAfferenza().getAreeInteresse();
         AreaInteresse areaInteresse = cercaArea(areeInteresse);
         if(areaInteresse == null) {
             System.out.println("Area di interesse non trovata!");
             return;
         }
-        //soluzione al problema
-        for (AreaInteresse tmp : parametriClimaticiCache)
-            if (tmp.getNomeASCII().equals(areaInteresse.getNomeASCII()))
-                areaInteresse = tmp;
 
         System.out.println("Area di interesse scelta:\n" + areaInteresse + "\n");
         LinkedList<ParametroClimatico> parametriClimatici = new LinkedList<>();
@@ -226,7 +220,7 @@ public class Applicazione {
         parametriClimatici.add(6, new MassaGhiacciai(punteggi.get(6), note.get(6), date));
 
         areaInteresse.addParametriClimatici(parametriClimatici);
-        fileInterface.writeParametriClimaticiFile(parametriClimaticiCache);
+        fileInterface.writeCacheFile();
 
         System.out.println("Parametri climatici aggiunti con successo!");
     }
@@ -240,10 +234,7 @@ public class Applicazione {
             areeInteresseDisponibiliCache.remove(areaInteresse);
             parametriClimaticiCache.add(areaInteresse);
             loggedOperator.getCentroAfferenza().addAreaInteresse(areaInteresse);
-            fileInterface.writeParametriClimaticiFile(parametriClimaticiCache);
-            fileInterface.writeCoordinateMonitoraggioFile(areeInteresseDisponibiliCache);
-            fileInterface.writeCentriMonitoraggioFile(centriMonitoraggioCache);
-            fileInterface.writeOperatoriRegistratiFile(operatoriRegistratiCache);
+            fileInterface.writeCacheFile();
         }
         System.out.println("Area di interesse aggiunta con successo!");
     }
@@ -312,7 +303,7 @@ public class Applicazione {
         Operatore operatore = new Operatore(cognome, nome, codiceFiscale, email, userID,
                 password, centroAfferenza);
         operatoriRegistratiCache.add(operatore);
-        fileInterface.registraOperatore(operatoriRegistratiCache);
+        fileInterface.writeCacheFile();
         System.out.println("Accesso effettuato!\nBenvenuto " + cognome + " " + nome + "\n");
         return operatore;
     }
@@ -351,7 +342,7 @@ public class Applicazione {
         CentroMonitoraggio centroMonitoraggio = new CentroMonitoraggio(nomeCentroAfferenza,
                 new Indirizzo(via, comune, provincia, numeroCivicoNumerico, capNumerico));
         centriMonitoraggioCache.add(centroMonitoraggio);
-        fileInterface.writeCentriMonitoraggioFile(centriMonitoraggioCache);
+        fileInterface.writeCacheFile();
         System.out.println("Centro registrato con successo!");
         return centroMonitoraggio;
     }

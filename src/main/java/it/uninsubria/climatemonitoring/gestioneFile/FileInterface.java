@@ -5,6 +5,7 @@ import it.uninsubria.climatemonitoring.dati.CentroMonitoraggio;
 import it.uninsubria.climatemonitoring.dati.Operatore;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -15,36 +16,19 @@ import java.util.LinkedList;
  */
 @SuppressWarnings("unchecked")
 public class FileInterface {
+    private File cacheFile;
+
     /**
      * File contenente tutte le aree d'interesse in formato .csv. Un esempio viene generato nel caso in cui nessun file
      * venga fornito dall'esterno.
      */
     private File geonamesCoordinatesFile;
-    /**
-     * File contenente i centri di monitoraggio creati dagli operatori registrati.
-     */
-    private File centriMonitoraggioFile;
-    /**
-     * File in cui viene salvata la {@code LinkedList<AreaInteresse>} utilizzata come cache dopo aver letto i dati dal
-     * file geonames-and-coordinates.csv. Quando un'area d'interesse viene associata a un centro di monitoraggio, viene
-     * rimossa da questa lista e aggiunta alla lista salvata nel file ParametriClimatici.dati.
-     */
-    private File coordinateMonitoraggioFile;
+
     /**
      * File in cui e' possibile inserire le email che gli operatori utilizzeranno per registrarsi. Un esempio viene
      * generato nel caso in cui nessun file venga fornito dall'esterno.
      */
     private File operatoriAutorizzatiFile;
-    /**
-     * File in cui viene salvata la {@code LinkedList<OperatoriRegistrati>} utilizzata come cache degli operatori che
-     * hanno effettuato una registrazione.
-     */
-    private File operatoriRegistratiFile;
-    /**
-     * File in cui viene salvata la {@code LinkedList<OperatoriRegistrati>} utilizzata come cache delle aree d'interesse
-     * associate a un centro di monitoraggio. Viene utilizzata per la ricerca e il calcolo dei dati aggregati.
-     */
-    private File parametriClimaticiFile;
 
     /**
      * Interfaccia per la scrittura su file.
@@ -54,6 +38,8 @@ public class FileInterface {
      * Interfaccia per la lettura da file.
      */
     private final FileWriter fileWriter;
+
+    private ArrayList<Object> cache;
 
     private static LinkedList<AreaInteresse> parametriClimaticiCache;
     private static LinkedList<CentroMonitoraggio> centriMonitoraggioCache;
@@ -70,75 +56,70 @@ public class FileInterface {
         fileReader = new FileReader(this);
         fileWriter = new FileWriter(this);
 
+        parametriClimaticiCache = new LinkedList<>();
+        centriMonitoraggioCache = new LinkedList<>();
+        areeInteresseDisponibiliCache = new LinkedList<>();
+        operatoriAutorizzatiCache = new LinkedList<>();
+        operatoriRegistratiCache = new LinkedList<>();
+
+        cache = new ArrayList<>();
+
         creaFile();
         creaFileDiEsempio();
-        inizializzaCache();
+        if(cacheFile.length() == 0) scriviCache();
+        else leggiCache();
     }
 
-    /**
-     * Legge il file contenente le email degli operatori autorizzati.
-     *
-     * @return {@code LinkedList<String>} contenente le email degli operatori autorizzati.
-     * @throws IOException il file OperatoriAutorizzati.dati non esiste.
-     * @see it.uninsubria.climatemonitoring.ClimateMonitor
-     */
-    public LinkedList<String> readOperatoriAutorizzatiFile() throws IOException {
-        return fileReader.readOperatoriAutorizzatiFile();
+    private void creaFile() throws IOException {
+        File directory = new File("data");
+
+        if (!directory.exists())
+            if(directory.mkdir())
+                System.out.println("Nuova cartella creata in: " + directory.getPath());
+
+        cacheFile = new File("data/Cache.dati");
+        geonamesCoordinatesFile = new File("data/geonames-and-coordinates.csv");
+        operatoriAutorizzatiFile = new File("data/OperatoriAutorizzati.dati");
+
+        checkFileExistence(cacheFile);
+        checkFileExistence(geonamesCoordinatesFile);
+        checkFileExistence(operatoriAutorizzatiFile);
     }
 
-    /**
-     * Legge il file contenente la cache coordinateMonitoraggioCache.
-     *
-     * @return {@code LinkedList<String>} contenente la cache coordinateMonitoraggioCache.
-     * @throws IOException il file CoordinateMonitoraggio.dati non esiste.
-     * @throws ClassNotFoundException il file CoordinateMonitoraggio.dati non contiene una {@code LinkedList<String>}.
-     * @see it.uninsubria.climatemonitoring.ClimateMonitor
-     */
-    public LinkedList<AreaInteresse> readCoordinateMonitoraggioFile() throws IOException, ClassNotFoundException {
-        if(coordinateMonitoraggioFile.length() == 0) {
-            LinkedList<AreaInteresse> areeInteresse = fileReader.readGeonamesAndCoordinatesFile();
-            fileWriter.serializeFileOut(areeInteresse, coordinateMonitoraggioFile.getPath());
-            return areeInteresse;
-        }
-        return (LinkedList<AreaInteresse>) fileReader.serializeFileIn(coordinateMonitoraggioFile.getPath());
+    private void creaFileDiEsempio() throws IOException {
+        writeOperatoriAutorizzatiFile();
+        writeGeonamesAndCoordinatesFile();
     }
 
-    /**
-     * Legge il file ParametriClimatici.dati.
-     *
-     * @return {@code LinkedList<AreaInteresse>} contenente la cache parametriClimaticiCache.
-     * @throws IOException il file ParametriClimatici.dati non esiste.
-     * @throws ClassNotFoundException il file ParametriClimatici.dati non contiene una
-     *      {@code LinkedList<AreaInteresse>}.
-     * @see it.uninsubria.climatemonitoring.ClimateMonitor
-     */
-    public LinkedList<AreaInteresse> readParametriClimaticiFile() throws IOException, ClassNotFoundException {
-        return  (LinkedList<AreaInteresse>) fileReader.serializeFileIn(parametriClimaticiFile.getPath());
+    private void leggiCache() throws IOException, ClassNotFoundException {
+        cache = (ArrayList<Object>) fileReader.serializeFileIn(cacheFile.getPath());
+
+        parametriClimaticiCache = (LinkedList<AreaInteresse>) cache.get(0);
+        centriMonitoraggioCache = (LinkedList<CentroMonitoraggio>) cache.get(1);
+        areeInteresseDisponibiliCache = (LinkedList<AreaInteresse>) cache.get(2);
+        operatoriAutorizzatiCache = (LinkedList<String>) cache.get(3);
+        operatoriRegistratiCache = (LinkedList<Operatore>) cache.get(4);
     }
 
-    /**
-     * Legge il file OperatoriRegistrati.dati.
-     *
-     * @return {@code LinkedList<Operatore>} contenente la cache operatoriRegistratiCache.
-     * @throws IOException il file OperatoriRegistrati.dati non esiste.
-     * @throws ClassNotFoundException il file OperatoriRegistrati.dati non contiene una {@code LinkedList<Operatore>}.
-     * @see it.uninsubria.climatemonitoring.ClimateMonitor
-     */
-    public LinkedList<Operatore> readOperatoriRegistratiFile() throws IOException, ClassNotFoundException {
-        return (LinkedList<Operatore>) fileReader.serializeFileIn(operatoriRegistratiFile.getPath());
+    private void scriviCache() throws IOException {
+        cache.add(parametriClimaticiCache);
+        cache.add(centriMonitoraggioCache);
+        cache.add(areeInteresseDisponibiliCache);
+        cache.add(operatoriAutorizzatiCache);
+        cache.add(operatoriRegistratiCache);
+
+        if(areeInteresseDisponibiliCache.isEmpty())
+            areeInteresseDisponibiliCache = readGeonamesAndCoordinatesFile();
+        if(operatoriAutorizzatiCache.isEmpty())
+            operatoriAutorizzatiCache = readOperatoriAutorizzatiFile();
+
+        writeCacheFile();
     }
 
-    /**
-     * Legge il file CentroMonitoraggio.dati.
-     *
-     * @return {@code LinkedList<CentroMonitoraggio>} contenente la cache centroMonitoraggioCache.
-     * @throws IOException il file CentroMonitoraggio.dati non esiste.
-     * @throws ClassNotFoundException il file CentroMonitoraggio.dati non contiene una
-     *      {@code LinkedList<CentroMonitoraggio>}.
-     * @see it.uninsubria.climatemonitoring.ClimateMonitor
-     */
-    public LinkedList<CentroMonitoraggio> readCentriMonitoraggioFile() throws IOException, ClassNotFoundException {
-        return (LinkedList<CentroMonitoraggio>) fileReader.serializeFileIn(centriMonitoraggioFile.getPath());
+    private void checkFileExistence(File file) throws IOException {
+        if(file == null || file.exists()) return;
+
+        if(file.createNewFile()) System.out.println("Nuovo file creato in: " + file.getAbsolutePath());
     }
 
     /**
@@ -153,14 +134,14 @@ public class FileInterface {
     }
 
     /**
-     * Scrive sul file CoordinateMonitoraggio.dati.
+     * Legge il file contenente le email degli operatori autorizzati.
      *
-     * @param areeInteresseDisponibili {@code LinkedList<AreaInteresse>} contenente la cache coordinateMonitoraggioCache.
-     * @throws IOException il file CoordinateMonitoraggio.dati non esiste.
+     * @return {@code LinkedList<String>} contenente le email degli operatori autorizzati.
+     * @throws IOException il file OperatoriAutorizzati.dati non esiste.
      * @see it.uninsubria.climatemonitoring.ClimateMonitor
      */
-    public void writeCoordinateMonitoraggioFile(LinkedList<AreaInteresse> areeInteresseDisponibili) throws IOException {
-        fileWriter.serializeFileOut(areeInteresseDisponibili, coordinateMonitoraggioFile.getPath());
+    public LinkedList<String> readOperatoriAutorizzatiFile() throws IOException {
+        return fileReader.readOperatoriAutorizzatiFile();
     }
 
     /**
@@ -173,28 +154,6 @@ public class FileInterface {
     }
 
     /**
-     * Scrive sul file ParametriClimatici.dati.
-     *
-     * @param parametriClimatici {@code LinkedList<AreaInteresse>} contenente la cache parametriClimaticiCache.
-     * @throws IOException il file ParametriClimatici.dati non esiste.
-     * @see it.uninsubria.climatemonitoring.ClimateMonitor
-     */
-    public void writeParametriClimaticiFile(LinkedList<AreaInteresse> parametriClimatici) throws IOException {
-        fileWriter.serializeFileOut(parametriClimatici, parametriClimaticiFile.getPath());
-    }
-
-    /**
-     * Scrive sul file OperatoriRegistrati.dati.
-     *
-     * @param operatori {@code LinkedList<Operatore>} contenente la cache operatoriRegistratiCache.
-     * @throws IOException il file OperatoriRegistrati.dati non esiste.
-     * @see it.uninsubria.climatemonitoring.ClimateMonitor
-     */
-    public void writeOperatoriRegistratiFile(LinkedList<Operatore> operatori) throws IOException {
-        fileWriter.serializeFileOut(operatori, operatoriRegistratiFile.getAbsolutePath());
-    }
-
-    /**
      * Scrive sul file OperatoriAutorizzati.dati un esempio delle email autorizzate a effettuare una registrazione.
      *
      * @throws IOException il file OperatoriAutorizzati.dati non esiste.
@@ -204,77 +163,8 @@ public class FileInterface {
         fileWriter.writeOperatoriAutorizzatiFile();
     }
 
-    /**
-     * Scrive sul file CoordinateMonitoraggio.dati.
-     *
-     * @param centriMonitoraggio {@code LinkedList<CentroMonitoraggio>} contenente la cache centriMonitoraggioCache.
-     * @throws IOException il file CoordinateMonitoraggio.dati non esiste.
-     * @see it.uninsubria.climatemonitoring.ClimateMonitor
-     */
-    public void writeCentriMonitoraggioFile(LinkedList<CentroMonitoraggio> centriMonitoraggio) throws IOException {
-        fileWriter.serializeFileOut(centriMonitoraggio, centriMonitoraggioFile.getAbsolutePath());
-    }
-
-    /**
-     * Scrive sul file OperatoriRegistrati.dati.
-     *
-     * @param operatore {@code LinkedList<Operatore>} contenente la cache operatoriRegistratiCache.
-     * @throws IOException il file OperatoriRegistrati.dati non esiste.
-     * @see it.uninsubria.climatemonitoring.ClimateMonitor
-     */
-    public void registraOperatore(LinkedList<Operatore> operatore) throws IOException {
-        fileWriter.serializeFileOut(operatore, operatoriRegistratiFile.getPath());
-    }
-
-    private void creaFile() throws IOException {
-        File directory = new File("data");
-
-        if (!directory.exists())
-            if(directory.mkdir())
-                System.out.println("Nuova cartella creata in: " + directory.getPath());
-
-        geonamesCoordinatesFile = new File(
-                "data/geonames-and-coordinates.csv");
-        centriMonitoraggioFile = new File(
-                "data/CentriMonitoraggio.dati");
-        coordinateMonitoraggioFile = new File(
-                "data/CoordinateMonitoraggio.dati");
-        operatoriAutorizzatiFile = new File(
-                "data/OperatoriAutorizzati.dati");
-        operatoriRegistratiFile = new File(
-                "data/OperatoriRegistrati.dati");
-        parametriClimaticiFile = new File(
-                "data/ParametriClimatici.dati");
-        checkFilesExistence();
-    }
-
-    private void creaFileDiEsempio() throws IOException {
-        writeOperatoriAutorizzatiFile();
-        writeGeonamesAndCoordinatesFile();
-        writeCoordinateMonitoraggioFile(readGeonamesAndCoordinatesFile());
-    }
-
-    private void checkFilesExistence() throws IOException {
-        checkFileExistence(geonamesCoordinatesFile);
-        checkFileExistence(centriMonitoraggioFile);
-        checkFileExistence(coordinateMonitoraggioFile);
-        checkFileExistence(operatoriAutorizzatiFile);
-        checkFileExistence(operatoriRegistratiFile);
-        checkFileExistence(parametriClimaticiFile);
-    }
-
-    private void inizializzaCache() throws IOException, ClassNotFoundException {
-        parametriClimaticiCache = readParametriClimaticiFile();
-        centriMonitoraggioCache = readCentriMonitoraggioFile();
-        areeInteresseDisponibiliCache = readCoordinateMonitoraggioFile();
-        operatoriAutorizzatiCache = readOperatoriAutorizzatiFile();
-        operatoriRegistratiCache = readOperatoriRegistratiFile();
-    }
-
-    private void checkFileExistence(File file) throws IOException {
-        if(file == null) return;
-        if(!file.exists())
-            if (file.createNewFile()) System.out.println("Nuovo file creato in: " + file.getAbsolutePath());
+    public void writeCacheFile() throws IOException {
+        fileWriter.serializeFileOut(cache, cacheFile.getPath());
     }
 
     //getters and setters
