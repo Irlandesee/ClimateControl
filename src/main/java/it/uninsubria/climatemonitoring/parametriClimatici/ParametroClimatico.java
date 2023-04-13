@@ -5,15 +5,11 @@ import java.time.LocalDate;
 
 /**
  * Rappresenta un parametro climatico.
- * @author <pre> Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
- * Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it, VA
- * </pre>
- **/
-@SuppressWarnings({"unused", "FieldMayBeFinal"})
+ *
+ * @author Mattia Mauro Lunardi 736898 mmlunardi@studenti.uninsubria.it VA
+ * @author Andrea Quaglia 753166 aquaglia2@studenti.uninsubria.it VA
+ */
 public abstract class ParametroClimatico implements Serializable {
-    /**
-     * Categoria.
-     */
     protected String CATEGORIA;
     /**
      * Spiegazione contenente unita' di misura e metodo di suddivisione.
@@ -22,21 +18,20 @@ public abstract class ParametroClimatico implements Serializable {
     /**
      * Punteggio relativo alla categoria. I valori ammessi sono da 1 (critico) a 5 (ottimale).
      */
-    private int punteggio;
+    protected int punteggio;
     /**
      * Note testuali di dimensione massima 256 caratteri.
      */
-    private String note;
-    /**
-     * Data di rilevazione.
-     */
-    private LocalDate dataRilevazione;
+    protected String note;
+
+    protected LocalDate dataRilevazione;
 
     /**
      * Crea un parametro climatico.
-     * @param punteggio punteggio del parametro climatico da 1 (critico) a 5 (ottimale).
-     * @param note note del parametro climatico (massimo 256 caratteri).
-     * @param dataRilevazione data di rilevazione del parametro climatico.
+     *
+     * @param punteggio       {@link ParametroClimatico#punteggio} del parametro climatico da 1 (critico) a 5 (ottimale).
+     * @param note            {@link ParametroClimatico#note} del parametro climatico (massimo 256 caratteri).
+     * @param dataRilevazione {@link ParametroClimatico#dataRilevazione} del parametro climatico.
      */
     public ParametroClimatico(int punteggio, String note, LocalDate dataRilevazione) {
         this.punteggio = punteggio;
@@ -45,8 +40,10 @@ public abstract class ParametroClimatico implements Serializable {
     }
 
     /**
-     * Crea una stringa contenente tutti i dati del parametro climatico per la stampa.
-     * @return una stringa contenente tutti i dati del parametro climatico.
+     * @return una {@code String} contenente {@link ParametroClimatico#dataRilevazione},
+     * {@link ParametroClimatico#CATEGORIA}, {@link ParametroClimatico#SPIEGAZIONE},
+     * {@link ParametroClimatico#punteggio} e {@link ParametroClimatico#note} del {@link ParametroClimatico}
+     * separati da uno spazio e con un andata a capo finale.
      */
     @Override
     public String toString() {
@@ -54,35 +51,24 @@ public abstract class ParametroClimatico implements Serializable {
     }
 
     //getters and setters
-
     /**
-     * Restituisce il punteggio.
      * @return il punteggio compreso tra 1 (critico) e 5 (ottimale).
      */
     public int getPunteggio() {
         return punteggio;
     }
 
-    /**
-     * Restituisce la data di rilevazione.
-     * @return la data di rilevazione come LocalDate.
-     */
     public LocalDate getDataRilevazione() {
         return dataRilevazione;
     }
 
     /**
-     * Restituisce una stringa contente la nota.
      * @return la nota di massimo 256 caratteri.
      */
     public String getNote() {
         return note;
     }
 
-    /**
-     * Restituisce la categoria.
-     * @return una stringa contenente la categoria.
-     */
     public String getCategoria() {
         return CATEGORIA;
     }

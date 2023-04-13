@@ -4,10 +4,10 @@ import java.io.*;
 
 /**
  * Rappresenta l'interfaccia per scrivere su file.
- * @author <pre> Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
- * Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it, VA
- * </pre>
- **/
+ *
+ * @author Mattia Mauro Lunardi 736898 mmlunardi@studenti.uninsubria.it VA
+ * @author Andrea Quaglia 753166 aquaglia2@studenti.uninsubria.it VA
+ */
 public class FileWriter {
     /**
      * Interfaccia che gestisce la lettura e scrittura su file.
@@ -16,6 +16,7 @@ public class FileWriter {
 
     /**
      * Crea l'interfaccia per scrivere su file.
+     *
      * @param fileInterface interfaccia che gestisce la scrittura e lettura da file.
      */
     public FileWriter(FileInterface fileInterface){
@@ -24,6 +25,7 @@ public class FileWriter {
 
     /**
      * Popola il file geonames-and-coordinates.csv se vuoto con alcuni esempi.
+     *
      * @throws IOException il file geonames-and-coordinates.csv esiste.
      */
     public void writeGeonamesAndCoordinatesFile() throws IOException {
@@ -89,6 +91,7 @@ public class FileWriter {
 
     /**
      * Popola il file OperatoriAutorizzati.dai con alcuni esempi di email autorizzate a registrarsi.
+     *
      * @throws IOException il file OperatoriAutorizzati.dati non esiste.
      */
     public void writeOperatoriAutorizzatiFile() throws IOException {
@@ -111,6 +114,7 @@ public class FileWriter {
 
     /**
      * Serializza un oggetto su un file.
+     *
      * @param object oggetto da serializzare.
      * @param fileName percorso del file su cui serializzare l'oggetto.
      * @throws IOException il percorso del file passato come argomento non esiste.

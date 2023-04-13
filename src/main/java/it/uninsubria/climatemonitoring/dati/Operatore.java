@@ -4,23 +4,14 @@ import java.io.Serializable;
 
 /**
  * Rappresenta un operatore registrato.
- * @author <pre> Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
- * Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it, VA
- * </pre>
- **/
+ *
+ * @author Mattia Mauro Lunardi 736898 mmlunardi@studenti.uninsubria.it VA
+ * @author Andrea Quaglia 753166 aquaglia2@studenti.uninsubria.it VA
+ */
 @SuppressWarnings("FieldMayBeFinal")
 public class Operatore implements Serializable {
-    /**
-     * Cognome.
-     */
     private String cognome;
-    /**
-     * Nome.
-     */
     private String nome;
-    /**
-     * Codice fiscale.
-     */
     private String codiceFiscale;
     /**
      * Email aziendale assegnata.
@@ -41,6 +32,7 @@ public class Operatore implements Serializable {
 
     /**
      * Crea un operatore registrato.
+     *
      * @param cognome cognome dell'operatore.
      * @param nome nome dell'operatore.
      * @param codiceFiscale codice fiscale dell'operatore.
@@ -62,8 +54,11 @@ public class Operatore implements Serializable {
     }
 
     /**
-     * Crea una stringa per la stampa o per il salvataggio su file csv dell'operatore.
-     * @return una stringa csv con separatore ';' che descrive l'operatore.
+     * Crea una {@code String} per la stampa o per il salvataggio su file csv dell'operatore.
+     *
+     * @return una {@code String} contenente {@link Operatore#cognome}, {@link Operatore#nome},
+     * {@link Operatore#codiceFiscale}, {@link Operatore#email}, {@link Operatore#userID}, {@link Operatore#password} e
+     * {@link Operatore#centroAfferenza} separati dal carattere ';'.
      */
     @Override
     public String toString() {
@@ -77,50 +72,43 @@ public class Operatore implements Serializable {
     }
 
     //getters and setters
-
     /**
-     * Restituisce il cognome.
-     * @return il cognome.
+     * @return {@link Operatore#nome}.
      */
     public String getCognome() {
         return cognome;
     }
 
     /**
-     * Restituisce il nome.
-     * @return il nome.
+     * @return {@link Operatore#cognome}.
      */
     public String getNome() {
         return nome;
     }
 
     /**
-     * Restituisce l'email.
-     * @return l'email.
+     * @return {@link Operatore#email}.
      */
     public String getEmail() {
         return email;
     }
 
     /**
-     * Restituisce l'userID.
-     * @return l'userID.
+     * @return {@link Operatore#userID}.
      */
     public String getUserID() {
         return userID;
     }
 
     /**
-     * Restituisce la password.
-     * @return la password.
+     * @return {@link Operatore#password}.
      */
     public String getPassword() {
         return password;
     }
 
     /**
-     * Restituisce il centro di afferenza.
-     * @return il centro di afferenza.
+     * @return {@link Operatore#centroAfferenza}.
      */
     public CentroMonitoraggio getCentroAfferenza() {
         return centroAfferenza;

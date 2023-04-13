@@ -20,24 +20,14 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Locale;
 
-/*
-Files:
-AreeInteresse.dati              : Elenco delle aree d'interesse associate.
-CentriMonitoraggio.dati         : Elenco dei centri di monitoraggio creati.
-CoordinateMonitoraggio.dati     : Elenco delle aree d'interesse libere di essere associate ai centri di monitoraggio.
-geonames-and-coordinates.csv    : Elenco delle aree d'interesse libere in formato csv.
-OperatoriAutorizzati.dati       : Elenco delle email degli operatori che possono registrarsi.
-OperatoriRegistrati.dati        : Elenco degli operatori registrati.
-ParametriClimatici.dati         : Elenco degli inserimenti degli operatori. //TODO
-*/
 /**
  * Rappresenta l'applicazione ClimateMonitor che permette la memorizzazione di parametri climatici forniti da centri
  * di monitoraggio sul territorio mondiale, in grado di rendere disponibili a operatori ambientali e comuni
  * cittadini, i dati relativi alla propria zona d'interesse.
- * @author <pre> Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
- * Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it, VA
- * </pre>
- **/
+ *
+ * @author Mattia Mauro Lunardi 736898 mmlunardi@studenti.uninsubria.it VA
+ * @author Andrea Quaglia 753166 aquaglia2@studenti.uninsubria.it VA
+ */
 public class ClimateMonitor {
     /**
      * Rappresenta il main dell'applicazione contenente la logica per l'esecuzione.
@@ -134,7 +124,7 @@ public class ClimateMonitor {
         }
         //soluzione al problema
         for (AreaInteresse tmp : parametriClimaticiCache)
-            if (tmp.getAsciiName().equals(areaInteresse.getAsciiName()))
+            if (tmp.getNomeASCII().equals(areaInteresse.getNomeASCII()))
                 areaInteresse = tmp;
 
         System.out.println("Area di interesse scelta:\n" + areaInteresse + "\n");
@@ -429,7 +419,7 @@ public class ClimateMonitor {
 
     private static AreaInteresse cercaArea(LinkedList<AreaInteresse> areeInteresseCache, String nome) {
         for(AreaInteresse areaInteresse : areeInteresseCache)
-            if(areaInteresse.getAsciiName().contains(nome))
+            if(areaInteresse.getNomeASCII().contains(nome))
                 return areaInteresse;
         return null;
     }
@@ -439,12 +429,12 @@ public class ClimateMonitor {
         if(areeInteresseCache.isEmpty())
             return null;
         AreaInteresse primoElemento = areeInteresseCache.get(0);
-        double minimumDistance = Math.hypot(latitude - primoElemento.getLatitude(),
-                longitude - primoElemento.getLongitude());
+        double minimumDistance = Math.hypot(latitude - primoElemento.getLatitudine(),
+                longitude - primoElemento.getLongitudine());
         int minimumIndex = 0;
         for(AreaInteresse areaInteresse : areeInteresseCache) {
-            double distance = Math.hypot(latitude - areaInteresse.getLatitude(),
-                    longitude - areaInteresse.getLongitude());
+            double distance = Math.hypot(latitude - areaInteresse.getLatitudine(),
+                    longitude - areaInteresse.getLongitudine());
             if (minimumDistance > distance) {
                 minimumDistance = distance;
                 minimumIndex = areeInteresseCache.indexOf(areaInteresse);

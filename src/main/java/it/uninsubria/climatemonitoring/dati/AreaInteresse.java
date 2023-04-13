@@ -8,63 +8,49 @@ import java.util.LinkedList;
 
 /**
  * Rappresenta un'area d'interesse.
- * @author <pre> Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
- * Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it, VA
- * </pre>
- **/
+ *
+ * @author Mattia Mauro Lunardi 736898 mmlunardi@studenti.uninsubria.it VA
+ * @author Andrea Quaglia 753166 aquaglia2@studenti.uninsubria.it VA
+ */
 @SuppressWarnings("FieldMayBeFinal")
 public class AreaInteresse implements Serializable {
     /**
      * Nome ufficiale.
      */
     private String geonameID;
-    /**
-     * Nome in formato ASCII.
-     */
-    private String asciiName;
-    /**
-     * Nome dello stato.
-     */
-    private String country;
-    /**
-     * Codice dello stato.
-     */
-    private String countryCode;
-    /**
-     * latitudine.
-     */
-    private double latitude;
-    /**
-     * longitudine.
-     */
-    private double longitude;
+    private String nomeASCII;
+    private String nomeStato;
+    private String codiceStato;
+
+    private double latitudine;
+    private double longitudine;
+
     /**
      * Lista contenente una lista per parametro climatico, ciascuna contiene tutti i dati inseriti dagli operatori
      * relativi al proprio parametro climatico.
      */
     private LinkedList<LinkedList<ParametroClimatico>> parametriClimatici;
-    /**
-     * Numero dei tipi di parametri climatici implementati.
-     */
+
     private final int NUMERO_PARAMETRI = 7;
 
     /**
      * Crea un'area d'interesse.
+     *
      * @param geonameID geoname ufficiale dell'area d'interesse.
-     * @param asciiName nome dell'area d'interesse.
-     * @param countryCode codice dello stato dell'area d'interesse.
-     * @param country stato dell'area d'interesse.
-     * @param latitude latitudine dell'area d'interesse.
-     * @param longitude longitudine dell'area d'interesse.
+     * @param nomeASCII nome dell'area d'interesse.
+     * @param codiceStato codice dello stato dell'area d'interesse.
+     * @param nomeStato stato dell'area d'interesse.
+     * @param latitudine latitudine dell'area d'interesse.
+     * @param longitudine longitudine dell'area d'interesse.
      */
-    public AreaInteresse(String geonameID, String asciiName, String countryCode, String country, double latitude,
-                         double longitude) {
+    public AreaInteresse(String geonameID, String nomeASCII, String codiceStato, String nomeStato, double latitudine,
+                         double longitudine) {
         this.geonameID = geonameID;
-        this.asciiName = asciiName;
-        this.country = country;
-        this.countryCode = countryCode;
-        this.latitude = latitude;
-        this.longitude = longitude;
+        this.nomeASCII = nomeASCII;
+        this.nomeStato = nomeStato;
+        this.codiceStato = codiceStato;
+        this.latitudine = latitudine;
+        this.longitudine = longitudine;
 
         parametriClimatici = new LinkedList<>();
         for (int i = 0; i < NUMERO_PARAMETRI; i++)
@@ -73,6 +59,7 @@ public class AreaInteresse implements Serializable {
 
     /**
      * Salva un nuovo gruppo di parametri climatici nella cache.
+     *
      * @param parametriClimatici linkedList contenente i parametri climatici da aggiungere.
      */
     public void addParametriClimatici(LinkedList<ParametroClimatico> parametriClimatici) {
@@ -84,22 +71,24 @@ public class AreaInteresse implements Serializable {
     }
 
     /**
-     * Crea una stringa per la stampa o per il salvataggio su file csv dell'area d'interesse.
-     * @return una stringa csv con separatore ';' che descrive l'area d'interesse.
+     * @return una {@code String} contenente {@link AreaInteresse#geonameID}, {@link AreaInteresse#nomeASCII},
+     * {@link AreaInteresse#codiceStato} e {@link AreaInteresse#nomeStato} separati dal carattere ';', seguiti da
+     * {@link AreaInteresse#latitudine} e {@link AreaInteresse#longitudine} separati dal carattere ','.
      */
     @Override
     public String toString() {
         return geonameID + ";" +
-                asciiName + ";" +
-                countryCode + ";" +
-                country + ";" +
-                latitude + "," +
-                longitude;
+                nomeASCII + ";" +
+                codiceStato + ";" +
+                nomeStato + ";" +
+                latitudine + "," +
+                longitudine;
     }
 
     /**
-     * Restituisce i dati in forma aggregata calcolata come media dei punteggi inseriti dagli operatori. Le note vengono
-     * aggregate come concatenazione di data d'inserimento e nota.
+     * Restituisce i dati in forma aggregata calcolata come media dei punteggi inseriti dagli operatori.
+     * Le note vengono aggregate come concatenazione di data d'inserimento e nota.
+     *
      * @return i dati in forma aggregata.
      */
     public String getDatiAggregati() {
@@ -130,28 +119,22 @@ public class AreaInteresse implements Serializable {
     }
 
     //getters and setters
+    /**
+     * @return {@link AreaInteresse#nomeASCII};
+     */
+    public String getNomeASCII() { return nomeASCII; }
 
     /**
-     * Restituisci il nome ASCII;
-     * @return il nome ASCII;
+     * @return {@link AreaInteresse#longitudine}.
      */
-    public String getAsciiName() {
-        return asciiName;
+    public double getLongitudine() {
+        return longitudine;
     }
 
     /**
-     * Restituisce la longitudine.
-     * @return la longitudine.
+     * @return {@link AreaInteresse#latitudine}.
      */
-    public double getLongitude() {
-        return longitude;
-    }
-
-    /**
-     * Restituisce la latitudine.
-     * @return la latitudine.
-     */
-    public double getLatitude() {
-        return latitude;
+    public double getLatitudine() {
+        return latitudine;
     }
 }

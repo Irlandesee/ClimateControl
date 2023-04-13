@@ -5,10 +5,10 @@ import java.util.LinkedList;
 
 /**
  * Rappresenta un centro di monitoraggio.
- * @author <pre> Mattia Mauro Lunardi, 736898, mmlunardi@studenti.uninsubria.it, VA
- * Andrea Quaglia, 753166, aquaglia2@studenti.uninsubria.it, VA
- * </pre>
- **/
+ *
+ * @author Mattia Mauro Lunardi 736898 mmlunardi@studenti.uninsubria.it VA
+ * @author Andrea Quaglia 753166 aquaglia2@studenti.uninsubria.it VA
+ */
 @SuppressWarnings("FieldMayBeFinal")
 public class CentroMonitoraggio implements Serializable {
     /**
@@ -26,6 +26,7 @@ public class CentroMonitoraggio implements Serializable {
 
     /**
      * Crea un centro di monitoraggio.
+     *
      * @param nomeCentro nome del centro di monitoraggio.
      * @param indirizzo indirizzo stradale del centro di monitoraggio.
      */
@@ -37,6 +38,7 @@ public class CentroMonitoraggio implements Serializable {
 
     /**
      * Aggiunge un'area d'interesse al centro di monitoraggio.
+     *
      * @param areaInteresse area d'interesse da aggiungere.
      */
     public void addAreaInteresse(AreaInteresse areaInteresse) {
@@ -44,8 +46,9 @@ public class CentroMonitoraggio implements Serializable {
     }
 
     /**
-     * Crea una stringa per la stampa del centro di monitoraggio.
-     * @return una stringa che descrive il centro di monitoraggio.
+     * @return una {@code String} contenente {@link CentroMonitoraggio#nomeCentro},
+     * {@link CentroMonitoraggio#indirizzo} e il risultato del metodo {@link LinkedList#toString} di
+     * {@link CentroMonitoraggio#areeInteresse} separati da un'andata a capo.
      */
     @Override
     public String toString() {
@@ -55,18 +58,16 @@ public class CentroMonitoraggio implements Serializable {
     }
 
     //getters and setters
-
     /**
-     * Restituisce il nome del centro.
-     * @return il nome del centro.
+     * @return {@link CentroMonitoraggio#nomeCentro}.
      */
     public String getNomeCentro() {
         return nomeCentro;
     }
 
     /**
-     * Restituisce la lista contenente le aree d'interesse associate.
-     * @return la lista delle aree d'interesse associate.
+     * @return {@link CentroMonitoraggio#areeInteresse} che rappresenta la lista delle aree d'interesse associate al
+     * centro di monitoraggio.
      */
     public LinkedList<AreaInteresse> getAreeInteresse() {
         return areeInteresse;
