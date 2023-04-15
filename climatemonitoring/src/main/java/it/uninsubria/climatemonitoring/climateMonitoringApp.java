@@ -232,6 +232,7 @@ public class climateMonitoringApp extends Application {
         map.forEach(
                 (key, r) -> System.out.println(key +":"+ r)
         );
+        System.out.println("---- Writing to db...");
 
     }
 }
