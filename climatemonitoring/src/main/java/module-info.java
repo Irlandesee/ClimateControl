@@ -7,6 +7,6 @@ module com.climatemonitoring.climatemonitoring {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
 
-    opens com.climatemonitoring.climatemonitoring to javafx.fxml;
-    exports com.climatemonitoring.climatemonitoring;
+    opens it.uninsubria.climatemonitoring to javafx.fxml;
+    exports it.uninsubria.climatemonitoring;
 }
