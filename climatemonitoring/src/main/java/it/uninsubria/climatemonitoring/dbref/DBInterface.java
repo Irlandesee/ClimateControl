@@ -103,17 +103,6 @@ public class DBInterface {
                 if (res && DEBUG) System.out.println("Created new file at: " +
                         geonamesCoordinatesFile.getAbsolutePath());
             }
-            if (!centroMonitoraggioFile.exists()) {
-                boolean res = centroMonitoraggioFile.createNewFile();
-                try{
-                    bWriter = new BufferedWriter(new FileWriter(centroMonitoraggioFile));
-                    bWriter.write(centroMonitoraggioFileHeader);
-                    bWriter.write("\n");
-                    bWriter.close();
-                }catch(IOException ioe){ioe.printStackTrace();}
-                if (res && DEBUG) System.out.println("Created new file at: " +
-                        centroMonitoraggioFile.getAbsolutePath());
-            }
             if (!coordinateMonitoraggioFile.exists()) {
                 boolean res = coordinateMonitoraggioFile.createNewFile();
                 try {
@@ -127,6 +116,21 @@ public class DBInterface {
                 if (res && DEBUG) System.out.println("Created new file at: " +
                         coordinateMonitoraggioFile.getAbsolutePath());
             }
+            if (!centroMonitoraggioFile.exists()) {
+                boolean res = centroMonitoraggioFile.createNewFile();
+                try{
+                    bWriter = new BufferedWriter(new FileWriter(centroMonitoraggioFile));
+                    bWriter.write(centroMonitoraggioFileHeader);
+                    bWriter.write("\n");
+                    bWriter.close();
+                }catch(IOException ioe){ioe.printStackTrace();}
+                if (res && DEBUG) System.out.println("Created new file at: " +
+                        centroMonitoraggioFile.getAbsolutePath());
+            }else{
+                try {
+                    this.centroMonitoraggioCache = (HashMap<String, CentroMonitoraggio>) this.read(DBInterface.objClassCentroMonitoraggio);
+                }catch(ClassCastException cce){cce.printStackTrace();}
+            }
             if(!parametriClimaticiFile.exists()){
                 boolean res = parametriClimaticiFile.createNewFile();
                 try{
@@ -137,6 +141,10 @@ public class DBInterface {
                 }catch(IOException ioe){ioe.printStackTrace();}
                 if (res && DEBUG) System.out.println("Created new file at: " +
                         parametriClimaticiFile.getAbsolutePath());
+            }else{
+                try{
+                    this.climateParameterCache = (HashMap<String, ClimateParameter>) this.read(DBInterface.objClassParamClimatici);
+                }catch(ClassCastException cce){cce.printStackTrace();}
             }
             if(!operatoriAutorizzatiFile.exists()){
                 boolean res = operatoriAutorizzatiFile.createNewFile();
@@ -148,6 +156,10 @@ public class DBInterface {
                 }catch(IOException ioe){ioe.printStackTrace();}
                 if (res && DEBUG) System.out.println("Created new file at: " +
                         operatoriAutorizzatiFile.getAbsolutePath());
+            }else{
+                try{
+                    this.operatoreAutorizzatoCache = (HashMap<String, Operatore>) this.read(DBInterface.objClassOpAutorizzati);
+                }catch (ClassCastException cce){cce.printStackTrace();}
             }
             if(!operatoriRegistratiFile.exists()){
                 boolean res = operatoriRegistratiFile.createNewFile();
@@ -159,6 +171,10 @@ public class DBInterface {
                 }catch(IOException ioe){ioe.printStackTrace();}
                 if (res && DEBUG) System.out.println("Created new file at: " +
                         operatoriRegistratiFile.getAbsolutePath());
+            }else{
+                try{
+                    this.operatoreRegistratoCache = (HashMap<String, Operatore>) this.read(DBInterface.objClassOpRegistrati);
+                }catch(ClassCastException cce){cce.printStackTrace();}
             }
             if(!areeInteresseFile.exists()){
                 boolean res = areeInteresseFile.createNewFile();
@@ -169,6 +185,10 @@ public class DBInterface {
                 }catch(IOException ioe){ioe.printStackTrace();}
                 if (res && DEBUG) System.out.println("Created new file at: " +
                         areeInteresseFile.getAbsolutePath());
+            }else{
+                try{
+                    this.areeInteresseCache = (HashMap<String, AreaInteresse>) this.read(DBInterface.objClassAreaInteresse);
+                }catch(ClassCastException cce){cce.printStackTrace();}
             }
         }catch(IOException ioe){ioe.printStackTrace();}
 
