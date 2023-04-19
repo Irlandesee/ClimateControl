@@ -1,10 +1,14 @@
 package it.uninsubria.climatemonitoring;
 
 
+import it.uninsubria.climatemonitoring.centroMonitoraggio.CentroMonitoraggio;
+import it.uninsubria.climatemonitoring.dbref.DBInterface;
+
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.MessageDigest;
 import java.time.LocalDate;
+import java.util.HashMap;
 
 public class Main {
     public static String createMD5Hash(final String input){
@@ -82,6 +86,12 @@ public class Main {
 
     public static void main(String[] args) throws Exception{
        System.out.println("HelloWorld!");
+        DBInterface dbRef = new DBInterface();
+        HashMap<String, CentroMonitoraggio> cmMap =
+                (HashMap<String, CentroMonitoraggio>) dbRef.readCache(DBInterface.objClassCentroMonitoraggio);
+        cmMap.forEach(
+                (key, value) -> System.out.println(value)
+        );
 
     }
 }

@@ -243,11 +243,23 @@ public class DBInterface {
         return operatoreRegistratoCache.containsKey(o.getEmail()); //email? codFisc?
     }
 
+    public HashMap<String, ?> readCache(String objClass){
+        switch(objClass){
+            case DBInterface.objClassCentroMonitoraggio -> {
+                return this.centroMonitoraggioCache;
+            }
+            case DBInterface.objClassAreaInteresse -> {
+                return this.areeInteresseCache;
+            }
+            default -> throw new IllegalArgumentException(DBInterface.error_invalid_class);
+        }
+    }
+
     //objClass -> the class of the object to check
     //obj -> Object to check
     //returns false if the object has been written to the file
     //returns true if the object was present in the file
-    public boolean checkCache(String objClass, Object o) {
+    private boolean checkCache(String objClass, Object o) {
         switch (objClass) {
             case DBInterface.objClassCentroMonitoraggio -> {
                 //if not true -> write it
@@ -312,12 +324,12 @@ public class DBInterface {
     public HashMap<String, ?> read(String objClass) {
         //TODO: in base alla stringa passata, chiama il metodo reader corrispondente }
         return switch (objClass) {
-            case "AreaInteresse" -> this.readerREF.readAreeInteresseFile();
-            case "GeoName" -> this.readerREF.readGeonamesAndCoordinatesFile();
-            case "OperatoreRegistrato" -> this.readerREF.readOperatoriRegistratiFile();
-            case "OperatoreAutorizzato" -> this.readerREF.readOperatoriAutorizzatiFile();
-            case "ClimateParameter" -> this.readerREF.readClimateParametersFile();
-            case "CentroMonitoraggio" -> this.readerREF.readCentroMonitoraggiFile();
+            case DBInterface.objClassAreaInteresse -> this.readerREF.readAreeInteresseFile();
+            case DBInterface.geonamesAndCoordinatesDati -> this.readerREF.readGeonamesAndCoordinatesFile();
+            case DBInterface.objClassOpRegistrati -> this.readerREF.readOperatoriRegistratiFile();
+            case DBInterface.objClassOpAutorizzati-> this.readerREF.readOperatoriAutorizzatiFile();
+            case DBInterface.objClassParamClimatici-> this.readerREF.readClimateParametersFile();
+            case DBInterface.objClassCentroMonitoraggio -> this.readerREF.readCentroMonitoraggiFile();
             default -> throw new IllegalArgumentException("invalid argument");
         };
     }

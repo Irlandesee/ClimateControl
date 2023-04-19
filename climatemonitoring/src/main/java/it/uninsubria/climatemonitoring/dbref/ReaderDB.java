@@ -35,6 +35,7 @@ public class ReaderDB {
         try{
             String line;
             BufferedReader bReader = new BufferedReader(new FileReader(dbRef.getCentroMonitoraggioFile()));
+            bReader.readLine(); //headers
             while((line = bReader.readLine()) != null){
                 Pair<String, CentroMonitoraggio> tmp = parseCentroMonitoraggio(line);
                 res.put(tmp.getValue0(), tmp.getValue1());
@@ -48,6 +49,7 @@ public class ReaderDB {
         try{
             String line;
             BufferedReader bReader = new BufferedReader(new FileReader(dbRef.getOperatoriRegistratiFile()));
+            bReader.readLine(); //headers
             while((line = bReader.readLine()) != null){
                 Pair<String, Operatore> tmp = parseOperatoreRegistrato(line);
                 res.put(tmp.getValue0(), tmp.getValue1());
@@ -61,6 +63,7 @@ public class ReaderDB {
         try{
             String line;
             BufferedReader bReader = new BufferedReader(new FileReader(dbRef.getOperatoriAutorizzatiFile()));
+            bReader.readLine(); //headers
             while((line = bReader.readLine()) != null){
                 Pair<String, Operatore> tmp = parseOperatoreAutorizzato(line);
                 res.put(tmp.getValue0(), tmp.getValue1());
@@ -88,6 +91,7 @@ public class ReaderDB {
         try{
             String line;
             BufferedReader bReader = new BufferedReader(new FileReader(dbRef.getAreeInteresseFile()));
+            bReader.readLine(); //headers
             while((line = bReader.readLine()) != null){
                 Pair<String, AreaInteresse> tmp = parseAreaInteresse(line);
                 res.put(tmp.getValue0(), tmp.getValue1());
