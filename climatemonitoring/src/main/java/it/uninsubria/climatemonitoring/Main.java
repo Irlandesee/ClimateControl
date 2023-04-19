@@ -1,35 +1,20 @@
 package it.uninsubria.climatemonitoring;
 
-import it.uninsubria.climatemonitoring.areaInteresse.AreaInteresse;
+
 import it.uninsubria.climatemonitoring.centroMonitoraggio.CentroMonitoraggio;
-import it.uninsubria.climatemonitoring.city.City;
 import it.uninsubria.climatemonitoring.climateParameters.ClimateParameter;
 import it.uninsubria.climatemonitoring.dbref.DBInterface;
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+import it.uninsubria.climatemonitoring.operatore.Operatore;
+import it.uninsubria.climatemonitoring.operatore.opeatoreAutorizzato.OperatoreAutorizzato;
+import it.uninsubria.climatemonitoring.operatore.opeatoreRegistrato.OperatoreRegistrato;
 
-import java.io.IOException;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.MessageDigest;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.HashMap;
-import java.util.Locale;
 
-public class climateMonitoringApp extends Application {
-    @Override
-    public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(climateMonitoringApp.class.getResource("main-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Hello World!");
-        stage.setScene(scene);
-        stage.show();
-    }
-
+public class Main {
     public static String createMD5Hash(final String input){
         String hashText = null;
         try{
@@ -104,7 +89,28 @@ public class climateMonitoringApp extends Application {
     }
 
     public static void main(String[] args) throws Exception{
-        
+        DBInterface dbRef = new DBInterface();
+        HashMap<String, CentroMonitoraggio> cmMap =
+                (HashMap<String, CentroMonitoraggio>) dbRef.readCache(DBInterface.objClassCentroMonitoraggio);
+        cmMap.forEach(
+                (key, value) -> System.out.println(value)
+        );
 
+        HashMap<String, OperatoreRegistrato> opReg =
+                (HashMap<String, OperatoreRegistrato>) dbRef.readCache(DBInterface.objClassOpRegistrati);
+        opReg.forEach(
+                (key, value) -> System.out.println(value)
+        );
+
+        HashMap<String, OperatoreAutorizzato> opAutorizzato =
+                (HashMap<String, OperatoreAutorizzato>) dbRef.readCache(DBInterface.objClassOpAutorizzati);
+        opAutorizzato.forEach(
+                (key, value) -> System.out.println(value)
+        );
+        HashMap<String, ClimateParameter> parameterMap =
+                (HashMap<String, ClimateParameter>) dbRef.readCache(DBInterface.objClassParamClimatici);
+        parameterMap.forEach(
+                (key, value) -> System.out.println(value)
+        );
     }
 }

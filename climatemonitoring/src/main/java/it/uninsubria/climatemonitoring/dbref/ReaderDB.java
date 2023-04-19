@@ -1,9 +1,8 @@
-package it.uninsubria.climatemonitoring.dbref.readerDB;
+package it.uninsubria.climatemonitoring.dbref;
 
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.Reader;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -14,12 +13,11 @@ import it.uninsubria.climatemonitoring.areaInteresse.AreaInteresse;
 import it.uninsubria.climatemonitoring.centroMonitoraggio.CentroMonitoraggio;
 import it.uninsubria.climatemonitoring.city.City;
 import it.uninsubria.climatemonitoring.climateParameters.ClimateParameter;
-import it.uninsubria.climatemonitoring.dbref.DBInterface;
 import it.uninsubria.climatemonitoring.operatore.Operatore;
 import it.uninsubria.climatemonitoring.operatore.opeatoreAutorizzato.OperatoreAutorizzato;
 import it.uninsubria.climatemonitoring.operatore.opeatoreRegistrato.OperatoreRegistrato;
-import javafx.util.Pair;
 
+import org.javatuples.Pair;
 
 public class ReaderDB {
 
@@ -37,9 +35,10 @@ public class ReaderDB {
         try{
             String line;
             BufferedReader bReader = new BufferedReader(new FileReader(dbRef.getCentroMonitoraggioFile()));
+            bReader.readLine(); //headers
             while((line = bReader.readLine()) != null){
                 Pair<String, CentroMonitoraggio> tmp = parseCentroMonitoraggio(line);
-                res.put(tmp.getKey(), tmp.getValue());
+                res.put(tmp.getValue0(), tmp.getValue1());
             }
         }catch(IOException ioe){ioe.printStackTrace();}
         return res;
@@ -50,9 +49,10 @@ public class ReaderDB {
         try{
             String line;
             BufferedReader bReader = new BufferedReader(new FileReader(dbRef.getOperatoriRegistratiFile()));
+            bReader.readLine(); //headers
             while((line = bReader.readLine()) != null){
                 Pair<String, Operatore> tmp = parseOperatoreRegistrato(line);
-                res.put(tmp.getKey(), tmp.getValue());
+                res.put(tmp.getValue0(), tmp.getValue1());
             }
         }catch(IOException ioe){ioe.printStackTrace();}
         return res;
@@ -63,9 +63,10 @@ public class ReaderDB {
         try{
             String line;
             BufferedReader bReader = new BufferedReader(new FileReader(dbRef.getOperatoriAutorizzatiFile()));
+            bReader.readLine(); //headers
             while((line = bReader.readLine()) != null){
                 Pair<String, Operatore> tmp = parseOperatoreAutorizzato(line);
-                res.put(tmp.getKey(), tmp.getValue());
+                res.put(tmp.getValue0(), tmp.getValue1());
             }
         }catch(IOException ioe){ioe.printStackTrace();}
         return res;
@@ -76,10 +77,9 @@ public class ReaderDB {
         try{
             BufferedReader bReader = new BufferedReader(new FileReader(dbRef.getParametriClimaticiFile()));
             String line = bReader.readLine(); //reading headers
-            System.out.println(line);
             while((line = bReader.readLine()) != null){
                 Pair<String, ClimateParameter> tmp = parseParametroClimatico(line);
-                res.put(tmp.getKey(), tmp.getValue());
+                res.put(tmp.getValue0(), tmp.getValue1());
             }
         }catch(IOException ioe){ioe.printStackTrace();}
         return res;
@@ -90,9 +90,10 @@ public class ReaderDB {
         try{
             String line;
             BufferedReader bReader = new BufferedReader(new FileReader(dbRef.getAreeInteresseFile()));
+            bReader.readLine(); //headers
             while((line = bReader.readLine()) != null){
                 Pair<String, AreaInteresse> tmp = parseAreaInteresse(line);
-                res.put(tmp.getKey(), tmp.getValue());
+                res.put(tmp.getValue0(), tmp.getValue1());
             }
         }catch(IOException ioe){ioe.printStackTrace();}
         return res;
@@ -106,7 +107,7 @@ public class ReaderDB {
             String line = bReader.readLine(); //read first line
             while((line = bReader.readLine()) != null){
                 Pair<String, City> tmp = parseGeoname(line);
-                res.put(tmp.getKey(), tmp.getValue());
+                res.put(tmp.getValue0(), tmp.getValue1());
             }
             bReader.close();
         }catch(IOException ioe){ioe.printStackTrace();}
@@ -185,7 +186,6 @@ public class ReaderDB {
     }
 
     private Pair<String, ClimateParameter> parseParametroClimatico(String line){
-        System.out.println("line: "+ line);
         String[] tmp = line.split(ClimateParameter.generalSeparator);
         List<String> params=
                 Arrays
@@ -204,10 +204,10 @@ public class ReaderDB {
             c.setIdCentro(tmp[1]);
             c.setAreaInteresse(tmp[2]);
             c.setPubDate(LocalDate.parse(tmp[3]));
-            keyWithParam.forEach((tuple) -> c.addParameter(tuple.getKey(), tuple.getValue()));
+            keyWithParam.forEach((tuple) -> c.addParameter(tuple.getValue0(), tuple.getValue1()));
             //c.setNotes(tmp[5]);
             LinkedList<Pair<String, String>> parsedNotes = parseNotes(tmp[5]);
-            parsedNotes.forEach(tuple -> c.setNotes(tuple.getKey(), tuple.getValue()));
+            parsedNotes.forEach(tuple -> c.setNotes(tuple.getValue0(), tuple.getValue1()));
         }catch(NumberFormatException nfe){nfe.printStackTrace();}
         return new Pair<String, ClimateParameter>(parameterID, c);
     }

@@ -4,19 +4,16 @@ import it.uninsubria.climatemonitoring.areaInteresse.AreaInteresse;
 import it.uninsubria.climatemonitoring.centroMonitoraggio.CentroMonitoraggio;
 import it.uninsubria.climatemonitoring.city.City;
 import it.uninsubria.climatemonitoring.climateParameters.ClimateParameter;
-import it.uninsubria.climatemonitoring.dbref.readerDB.ReaderDB;
-import it.uninsubria.climatemonitoring.dbref.writerDB.WriterDB;
 import it.uninsubria.climatemonitoring.operatore.Operatore;
 import it.uninsubria.climatemonitoring.operatore.opeatoreAutorizzato.OperatoreAutorizzato;
 import it.uninsubria.climatemonitoring.operatore.opeatoreRegistrato.OperatoreRegistrato;
-import javafx.util.Pair;
 
 import java.io.*;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.javatuples.Pair;
 public class DBInterface {
 
     protected static final String geonamesAndCoordinatesDati = "data/geonames-and-coordinates.csv";
@@ -225,48 +222,69 @@ public class DBInterface {
         return false;
     }
 
-    //returns true if it already is present in the cache
-    private boolean readCentroMonitoraggioCache(CentroMonitoraggio cm){
+    //returns true if the cache contains the element specified as parameter
+    private boolean containsCentroMonitoraggio(CentroMonitoraggio cm){
         return centroMonitoraggioCache.containsKey(cm.getCentroID());
     }
 
-    private boolean readParamClimaticiCache(ClimateParameter cp){
+    private boolean containsParametroClimatico(ClimateParameter cp){
         return climateParameterCache.containsKey(cp.getParameterID());
     }
 
-    private boolean readAreaInteresseCache(AreaInteresse ai){
+    private boolean containsAreaInteresse(AreaInteresse ai){
         return areeInteresseCache.containsKey(ai.getAreaID());
     }
 
-    private boolean readOpAutorizzatiCache(Operatore o){
+    private boolean containsOpAutorizzato(Operatore o){
         return operatoreAutorizzatoCache.containsKey(o.getEmail()); //email? codFisc?
     }
 
-    private boolean readOpRegistratiCache(Operatore o){
+    private boolean containsOpRegistrato(Operatore o){
         return operatoreRegistratoCache.containsKey(o.getEmail()); //email? codFisc?
+    }
+
+    public HashMap<String, ?> readCache(String objClass){
+        switch(objClass){
+            case DBInterface.objClassCentroMonitoraggio -> {
+                return this.centroMonitoraggioCache;
+            }
+            case DBInterface.objClassAreaInteresse -> {
+                return this.areeInteresseCache;
+            }
+            case DBInterface.objClassOpRegistrati -> {
+                return this.operatoreRegistratoCache;
+            }
+            case DBInterface.objClassOpAutorizzati -> {
+                return this.operatoreAutorizzatoCache;
+            }
+            case DBInterface.objClassParamClimatici -> {
+                return this.climateParameterCache;
+            }
+            default -> throw new IllegalArgumentException(DBInterface.error_invalid_class);
+        }
     }
 
     //objClass -> the class of the object to check
     //obj -> Object to check
     //returns false if the object has been written to the file
     //returns true if the object was present in the file
-    public boolean checkCache(String objClass, Object o) {
+    private boolean checkCache(String objClass, Object o) {
         switch (objClass) {
             case DBInterface.objClassCentroMonitoraggio -> {
                 //if not true -> write it
-                return !readCentroMonitoraggioCache((CentroMonitoraggio) o);
+                return !containsCentroMonitoraggio((CentroMonitoraggio) o);
             }
             case DBInterface.objClassParamClimatici -> {
-                return !readParamClimaticiCache((ClimateParameter) o);
+                return !containsParametroClimatico((ClimateParameter) o);
             }
             case DBInterface.objClassAreaInteresse -> {
-                return !readAreaInteresseCache((AreaInteresse) o);
+                return !containsAreaInteresse((AreaInteresse) o);
             }
             case DBInterface.objClassOpAutorizzati -> {
-                return !readOpAutorizzatiCache((Operatore) o);
+                return !containsOpAutorizzato((Operatore) o);
             }
             case DBInterface.objClassOpRegistrati -> {
-                return !readOpRegistratiCache((Operatore) o);
+                return !containsOpRegistrato((Operatore) o);
             }
             default -> throw new IllegalArgumentException(error_invalid_class);
         }
@@ -280,29 +298,61 @@ public class DBInterface {
         return aree;
     }
 
+
+    private void writeCache(Object o){
+        if(o instanceof AreaInteresse a){
+            areeInteresseCache.put(a.getAreaID(), a);
+        }else if(o instanceof CentroMonitoraggio cm){
+            centroMonitoraggioCache.put(cm.getCentroID(), cm);
+        }else if(o instanceof ClimateParameter cp){
+            climateParameterCache.put(cp.getParameterID(), cp);
+        }else if(o instanceof Operatore){
+            if(o instanceof OperatoreAutorizzato op){
+                operatoreAutorizzatoCache.put(op.getCodFiscale(), op);
+            }else if(o instanceof OperatoreRegistrato or){
+                operatoreRegistratoCache.put(or.getCodFiscale(), or);
+            }
+        }
+    }
+
     public void write(Object o){
         //TODO: in base alla stringa passata, chiama il metodo writer corrispondente
         boolean res;
         if(o instanceof AreaInteresse){
             res = checkCache(DBInterface.objClassAreaInteresse, o);
-            if(res) this.writerREF.writeAreaInteresse((AreaInteresse) o);
+            if(res){
+                this.writeCache(o);
+                this.writerREF.writeAreaInteresse((AreaInteresse) o);
+            }
             else System.out.println("Cache already contains object");
         }else if(o instanceof CentroMonitoraggio){
             res = checkCache(DBInterface.objClassAreaInteresse, o);
-            if(res) this.writerREF.writeCentroMonitoraggio((CentroMonitoraggio) o);
+            if(res){
+                this.writeCache(o);
+                this.writerREF.writeCentroMonitoraggio((CentroMonitoraggio) o);
+            }
             else System.out.println("Cache already contains object");
         }else if(o instanceof ClimateParameter){
             res = checkCache(DBInterface.objClassParamClimatici, o);
-            if(res) this.writerREF.writeParametroClimatico((ClimateParameter) o);
+            if(res) {
+                this.writeCache(o);
+                this.writerREF.writeParametroClimatico((ClimateParameter) o);
+            }
             else System.out.println("Cache already contains object");
         }else if(o instanceof Operatore){
             if(o instanceof OperatoreAutorizzato){
                 res = checkCache(DBInterface.objClassOpAutorizzati, o);
-                if(res) this.writerREF.writeOperatoreAutorizzato((OperatoreAutorizzato) o);
+                if(res) {
+                    this.writeCache(o);
+                    this.writerREF.writeOperatoreAutorizzato((OperatoreAutorizzato) o);
+                }
                 else System.out.println("Cache already contains object");
             }else if(o instanceof  OperatoreRegistrato){
                 res = checkCache(DBInterface.objClassOpRegistrati, o);
-                if(res) this.writerREF.writeOperatoreRegistrato((OperatoreRegistrato) o);
+                if(res) {
+                    this.writeCache(o);
+                    this.writerREF.writeOperatoreRegistrato((OperatoreRegistrato) o);
+                }
                 else System.out.println("Cache already contains object");
             }
         }
@@ -315,12 +365,12 @@ public class DBInterface {
     public HashMap<String, ?> read(String objClass) {
         //TODO: in base alla stringa passata, chiama il metodo reader corrispondente }
         return switch (objClass) {
-            case "AreaInteresse" -> this.readerREF.readAreeInteresseFile();
-            case "GeoName" -> this.readerREF.readGeonamesAndCoordinatesFile();
-            case "OperatoreRegistrato" -> this.readerREF.readOperatoriRegistratiFile();
-            case "OperatoreAutorizzato" -> this.readerREF.readOperatoriAutorizzatiFile();
-            case "ClimateParameter" -> this.readerREF.readClimateParametersFile();
-            case "CentroMonitoraggio" -> this.readerREF.readCentroMonitoraggiFile();
+            case DBInterface.objClassAreaInteresse -> this.readerREF.readAreeInteresseFile();
+            case DBInterface.geonamesAndCoordinatesDati -> this.readerREF.readGeonamesAndCoordinatesFile();
+            case DBInterface.objClassOpRegistrati -> this.readerREF.readOperatoriRegistratiFile();
+            case DBInterface.objClassOpAutorizzati-> this.readerREF.readOperatoriAutorizzatiFile();
+            case DBInterface.objClassParamClimatici-> this.readerREF.readClimateParametersFile();
+            case DBInterface.objClassCentroMonitoraggio -> this.readerREF.readCentroMonitoraggiFile();
             default -> throw new IllegalArgumentException("invalid argument");
         };
     }
