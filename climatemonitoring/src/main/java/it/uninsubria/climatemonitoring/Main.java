@@ -2,7 +2,11 @@ package it.uninsubria.climatemonitoring;
 
 
 import it.uninsubria.climatemonitoring.centroMonitoraggio.CentroMonitoraggio;
+import it.uninsubria.climatemonitoring.climateParameters.ClimateParameter;
 import it.uninsubria.climatemonitoring.dbref.DBInterface;
+import it.uninsubria.climatemonitoring.operatore.Operatore;
+import it.uninsubria.climatemonitoring.operatore.opeatoreAutorizzato.OperatoreAutorizzato;
+import it.uninsubria.climatemonitoring.operatore.opeatoreRegistrato.OperatoreRegistrato;
 
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
@@ -85,7 +89,6 @@ public class Main {
     }
 
     public static void main(String[] args) throws Exception{
-       System.out.println("HelloWorld!");
         DBInterface dbRef = new DBInterface();
         HashMap<String, CentroMonitoraggio> cmMap =
                 (HashMap<String, CentroMonitoraggio>) dbRef.readCache(DBInterface.objClassCentroMonitoraggio);
@@ -93,5 +96,21 @@ public class Main {
                 (key, value) -> System.out.println(value)
         );
 
+        HashMap<String, OperatoreRegistrato> opReg =
+                (HashMap<String, OperatoreRegistrato>) dbRef.readCache(DBInterface.objClassOpRegistrati);
+        opReg.forEach(
+                (key, value) -> System.out.println(value)
+        );
+
+        HashMap<String, OperatoreAutorizzato> opAutorizzato =
+                (HashMap<String, OperatoreAutorizzato>) dbRef.readCache(DBInterface.objClassOpAutorizzati);
+        opAutorizzato.forEach(
+                (key, value) -> System.out.println(value)
+        );
+        HashMap<String, ClimateParameter> parameterMap =
+                (HashMap<String, ClimateParameter>) dbRef.readCache(DBInterface.objClassParamClimatici);
+        parameterMap.forEach(
+                (key, value) -> System.out.println(value)
+        );
     }
 }

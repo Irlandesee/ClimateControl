@@ -77,7 +77,6 @@ public class ReaderDB {
         try{
             BufferedReader bReader = new BufferedReader(new FileReader(dbRef.getParametriClimaticiFile()));
             String line = bReader.readLine(); //reading headers
-            System.out.println(line);
             while((line = bReader.readLine()) != null){
                 Pair<String, ClimateParameter> tmp = parseParametroClimatico(line);
                 res.put(tmp.getValue0(), tmp.getValue1());
@@ -187,7 +186,6 @@ public class ReaderDB {
     }
 
     private Pair<String, ClimateParameter> parseParametroClimatico(String line){
-        System.out.println("line: "+ line);
         String[] tmp = line.split(ClimateParameter.generalSeparator);
         List<String> params=
                 Arrays
