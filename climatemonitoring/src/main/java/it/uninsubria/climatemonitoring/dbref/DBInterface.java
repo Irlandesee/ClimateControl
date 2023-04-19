@@ -7,13 +7,13 @@ import it.uninsubria.climatemonitoring.climateParameters.ClimateParameter;
 import it.uninsubria.climatemonitoring.operatore.Operatore;
 import it.uninsubria.climatemonitoring.operatore.opeatoreAutorizzato.OperatoreAutorizzato;
 import it.uninsubria.climatemonitoring.operatore.opeatoreRegistrato.OperatoreRegistrato;
-import javafx.util.Pair;
 
 import java.io.*;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.javatuples.Pair;
 public class DBInterface {
 
     protected static final String geonamesAndCoordinatesDati = "data/geonames-and-coordinates.csv";

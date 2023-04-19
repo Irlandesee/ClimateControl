@@ -16,8 +16,8 @@ import it.uninsubria.climatemonitoring.climateParameters.ClimateParameter;
 import it.uninsubria.climatemonitoring.operatore.Operatore;
 import it.uninsubria.climatemonitoring.operatore.opeatoreAutorizzato.OperatoreAutorizzato;
 import it.uninsubria.climatemonitoring.operatore.opeatoreRegistrato.OperatoreRegistrato;
-import javafx.util.Pair;
 
+import org.javatuples.Pair;
 
 public class ReaderDB {
 
@@ -37,7 +37,7 @@ public class ReaderDB {
             BufferedReader bReader = new BufferedReader(new FileReader(dbRef.getCentroMonitoraggioFile()));
             while((line = bReader.readLine()) != null){
                 Pair<String, CentroMonitoraggio> tmp = parseCentroMonitoraggio(line);
-                res.put(tmp.getKey(), tmp.getValue());
+                res.put(tmp.getValue0(), tmp.getValue1());
             }
         }catch(IOException ioe){ioe.printStackTrace();}
         return res;
@@ -50,7 +50,7 @@ public class ReaderDB {
             BufferedReader bReader = new BufferedReader(new FileReader(dbRef.getOperatoriRegistratiFile()));
             while((line = bReader.readLine()) != null){
                 Pair<String, Operatore> tmp = parseOperatoreRegistrato(line);
-                res.put(tmp.getKey(), tmp.getValue());
+                res.put(tmp.getValue0(), tmp.getValue1());
             }
         }catch(IOException ioe){ioe.printStackTrace();}
         return res;
@@ -63,7 +63,7 @@ public class ReaderDB {
             BufferedReader bReader = new BufferedReader(new FileReader(dbRef.getOperatoriAutorizzatiFile()));
             while((line = bReader.readLine()) != null){
                 Pair<String, Operatore> tmp = parseOperatoreAutorizzato(line);
-                res.put(tmp.getKey(), tmp.getValue());
+                res.put(tmp.getValue0(), tmp.getValue1());
             }
         }catch(IOException ioe){ioe.printStackTrace();}
         return res;
@@ -77,7 +77,7 @@ public class ReaderDB {
             System.out.println(line);
             while((line = bReader.readLine()) != null){
                 Pair<String, ClimateParameter> tmp = parseParametroClimatico(line);
-                res.put(tmp.getKey(), tmp.getValue());
+                res.put(tmp.getValue0(), tmp.getValue1());
             }
         }catch(IOException ioe){ioe.printStackTrace();}
         return res;
@@ -90,7 +90,7 @@ public class ReaderDB {
             BufferedReader bReader = new BufferedReader(new FileReader(dbRef.getAreeInteresseFile()));
             while((line = bReader.readLine()) != null){
                 Pair<String, AreaInteresse> tmp = parseAreaInteresse(line);
-                res.put(tmp.getKey(), tmp.getValue());
+                res.put(tmp.getValue0(), tmp.getValue1());
             }
         }catch(IOException ioe){ioe.printStackTrace();}
         return res;
@@ -104,7 +104,7 @@ public class ReaderDB {
             String line = bReader.readLine(); //read first line
             while((line = bReader.readLine()) != null){
                 Pair<String, City> tmp = parseGeoname(line);
-                res.put(tmp.getKey(), tmp.getValue());
+                res.put(tmp.getValue0(), tmp.getValue1());
             }
             bReader.close();
         }catch(IOException ioe){ioe.printStackTrace();}
@@ -202,10 +202,10 @@ public class ReaderDB {
             c.setIdCentro(tmp[1]);
             c.setAreaInteresse(tmp[2]);
             c.setPubDate(LocalDate.parse(tmp[3]));
-            keyWithParam.forEach((tuple) -> c.addParameter(tuple.getKey(), tuple.getValue()));
+            keyWithParam.forEach((tuple) -> c.addParameter(tuple.getValue0(), tuple.getValue1()));
             //c.setNotes(tmp[5]);
             LinkedList<Pair<String, String>> parsedNotes = parseNotes(tmp[5]);
-            parsedNotes.forEach(tuple -> c.setNotes(tuple.getKey(), tuple.getValue()));
+            parsedNotes.forEach(tuple -> c.setNotes(tuple.getValue0(), tuple.getValue1()));
         }catch(NumberFormatException nfe){nfe.printStackTrace();}
         return new Pair<String, ClimateParameter>(parameterID, c);
     }
