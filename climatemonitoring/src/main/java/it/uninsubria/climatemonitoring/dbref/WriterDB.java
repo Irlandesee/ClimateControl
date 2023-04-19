@@ -1,4 +1,4 @@
-package it.uninsubria.climatemonitoring.dbref.writerDB;
+package it.uninsubria.climatemonitoring.dbref;
 
 import it.uninsubria.climatemonitoring.areaInteresse.AreaInteresse;
 import it.uninsubria.climatemonitoring.centroMonitoraggio.CentroMonitoraggio;

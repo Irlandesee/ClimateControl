@@ -4,15 +4,12 @@ import it.uninsubria.climatemonitoring.areaInteresse.AreaInteresse;
 import it.uninsubria.climatemonitoring.centroMonitoraggio.CentroMonitoraggio;
 import it.uninsubria.climatemonitoring.city.City;
 import it.uninsubria.climatemonitoring.climateParameters.ClimateParameter;
-import it.uninsubria.climatemonitoring.dbref.readerDB.ReaderDB;
-import it.uninsubria.climatemonitoring.dbref.writerDB.WriterDB;
 import it.uninsubria.climatemonitoring.operatore.Operatore;
 import it.uninsubria.climatemonitoring.operatore.opeatoreAutorizzato.OperatoreAutorizzato;
 import it.uninsubria.climatemonitoring.operatore.opeatoreRegistrato.OperatoreRegistrato;
 import javafx.util.Pair;
 
 import java.io.*;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;

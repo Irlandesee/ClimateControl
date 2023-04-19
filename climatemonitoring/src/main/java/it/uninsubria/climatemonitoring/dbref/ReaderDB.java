@@ -1,9 +1,8 @@
-package it.uninsubria.climatemonitoring.dbref.readerDB;
+package it.uninsubria.climatemonitoring.dbref;
 
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.Reader;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -14,7 +13,6 @@ import it.uninsubria.climatemonitoring.areaInteresse.AreaInteresse;
 import it.uninsubria.climatemonitoring.centroMonitoraggio.CentroMonitoraggio;
 import it.uninsubria.climatemonitoring.city.City;
 import it.uninsubria.climatemonitoring.climateParameters.ClimateParameter;
-import it.uninsubria.climatemonitoring.dbref.DBInterface;
 import it.uninsubria.climatemonitoring.operatore.Operatore;
 import it.uninsubria.climatemonitoring.operatore.opeatoreAutorizzato.OperatoreAutorizzato;
 import it.uninsubria.climatemonitoring.operatore.opeatoreRegistrato.OperatoreRegistrato;
