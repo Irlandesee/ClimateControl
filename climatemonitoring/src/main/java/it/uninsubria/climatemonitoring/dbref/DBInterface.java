@@ -9,10 +9,8 @@ import it.uninsubria.climatemonitoring.operatore.opeatoreAutorizzato.OperatoreAu
 import it.uninsubria.climatemonitoring.operatore.opeatoreRegistrato.OperatoreRegistrato;
 
 import java.io.*;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.javatuples.Pair;
 public class DBInterface {
@@ -274,6 +272,10 @@ public class DBInterface {
         return false;
     }
 
+    public boolean checkAreaInteresse(String areaInteresseKey){
+        return areeInteresseCache.containsKey(areaInteresseKey);
+    }
+
     //checks if a centroMonitoraggio with centroID exists in the cache
     public boolean checkCentroID(String centroID){
         return centroMonitoraggioCache.containsKey(centroID);
@@ -289,6 +291,34 @@ public class DBInterface {
     public OperatoreAutorizzato getOperatoreAutorizzato(String codFisc){
         return (OperatoreAutorizzato) operatoreAutorizzatoCache.get(codFisc);
     }
+
+    public AreaInteresse getAreaInteresse(String nomeArea){
+        HashMap<String, AreaInteresse> map = (HashMap<String, AreaInteresse>) areeInteresseCache.clone();
+        for(Map.Entry<String, AreaInteresse> entry : map.entrySet()){
+            if(entry.getValue()
+                    .getDenominazione()
+                    .equals(nomeArea))
+                return entry.getValue();
+        }
+        return null;
+    }
+
+    public AreaInteresse getAreaInteresseWithCoordinates(double latitude, double longitude){
+        LinkedList<AreaInteresse> map = (LinkedList<AreaInteresse>) areeInteresseCache.values();
+        double minDistance = Math.hypot(
+                latitude - map.get(0).getLatitude(), longitude - map.get(0).getLongitude());
+        int minIndex = 0;
+        for(AreaInteresse ai : map){
+            double distance = Math.hypot(latitude - ai.getLatitude(),
+                    longitude - ai.getLongitude());
+            if (minDistance> distance) {
+                minDistance= distance;
+                minIndex= map.indexOf(ai);
+            }
+        }
+        return map.get(minIndex);
+    }
+
 
     //objClass -> the class of the object to check
     //obj -> Object to check

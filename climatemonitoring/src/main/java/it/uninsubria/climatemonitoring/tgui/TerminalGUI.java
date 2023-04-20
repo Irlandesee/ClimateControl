@@ -1,5 +1,6 @@
 package it.uninsubria.climatemonitoring.tgui;
 
+import it.uninsubria.climatemonitoring.areaInteresse.AreaInteresse;
 import it.uninsubria.climatemonitoring.dbref.DBInterface;
 import it.uninsubria.climatemonitoring.operatore.Operatore;
 import it.uninsubria.climatemonitoring.operatore.opeatoreAutorizzato.OperatoreAutorizzato;
@@ -65,7 +66,31 @@ public class TerminalGUI {
     }
 
     private void cercaAreaGeografica(){
+        System.out.println("Digitare 'nome' per ricercare l'area di interesse per nome.\n" +
+                "Digitare 'coordinate' per cercare l'area di interesse per coordinate geografiche.");
 
+        try{
+           BufferedReader bReader = new BufferedReader(new InputStreamReader(System.in));
+           switch(bReader.readLine()){
+               case "nome" -> {
+                   System.out.println("Digitare il nome dell'area di interesse:");
+                   String nome = bReader.readLine();
+                   AreaInteresse cercata = dbInterface.getAreaInteresse(nome);
+                   if(cercata != null) System.out.println(cercata);
+               }
+               case "coordinate" -> {
+                   System.out.println("Digitare la latitudine dell'area di interesse:");
+                   double latitude = Double.parseDouble(bReader.readLine());
+                   System.out.println("Digitare la longitudine dell'area di interesse:");
+                   double longitudine = Double.parseDouble(bReader.readLine());
+                   AreaInteresse cercata = dbInterface.getAreaInteresseWithCoordinates(latitude, longitudine);
+                   if(cercata != null) System.out.println(cercata);
+               }
+               default -> cercaAreaGeografica();
+           }
+
+           bReader.close();
+        }catch(IOException ioe){ioe.printStackTrace();}
     }
 
     private void cercaAreaInteresse(){
@@ -160,18 +185,6 @@ public class TerminalGUI {
         }catch(IOException ioe){ioe.printStackTrace();}
     }
 
-    private void askLogin(){
-        BufferedReader terminalReader = new BufferedReader(new InputStreamReader(System.in));
-        try{
-            switch(terminalReader.readLine()){
-                case TerminalGUI.login -> isLogged = login();
-                case TerminalGUI.registrazione -> registrazione();
-                case TerminalGUI.continua -> {return;} //?
-                case TerminalGUI.uscita -> System.exit(0);
-            }
-            terminalReader.close();
-        }catch(IOException ioe){ioe.printStackTrace();}
-    }
     private void readUserInput(){
         BufferedReader terminalReader = new BufferedReader(new InputStreamReader(System.in));
         try{
