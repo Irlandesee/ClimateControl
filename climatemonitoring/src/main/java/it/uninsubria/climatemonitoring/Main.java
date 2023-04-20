@@ -7,6 +7,7 @@ import it.uninsubria.climatemonitoring.dbref.DBInterface;
 import it.uninsubria.climatemonitoring.operatore.Operatore;
 import it.uninsubria.climatemonitoring.operatore.opeatoreAutorizzato.OperatoreAutorizzato;
 import it.uninsubria.climatemonitoring.operatore.opeatoreRegistrato.OperatoreRegistrato;
+import it.uninsubria.climatemonitoring.tgui.TerminalGUI;
 
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
@@ -112,5 +113,8 @@ public class Main {
         parameterMap.forEach(
                 (key, value) -> System.out.println(value)
         );
+
+        TerminalGUI tGUI = new TerminalGUI(dbRef);
+        //tGUI.start();
     }
 }

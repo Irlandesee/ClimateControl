@@ -12,6 +12,7 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 import org.javatuples.Pair;
 public class DBInterface {
@@ -262,6 +263,24 @@ public class DBInterface {
             }
             default -> throw new IllegalArgumentException(DBInterface.error_invalid_class);
         }
+    }
+
+    public boolean checkCredentials(Pair<String, String> cred){
+        OperatoreRegistrato tmp = (OperatoreRegistrato) operatoreRegistratoCache.get(cred.getValue0());
+        if(tmp != null){
+            return Objects.equals(tmp.getPassword(), cred.getValue1());
+        }
+        return false;
+    }
+
+    public OperatoreRegistrato getOperatoreRegistrato(Pair<String, String> cred){
+        if(checkCredentials(cred)) return (OperatoreRegistrato) operatoreRegistratoCache.get(cred.getValue0());
+        return null;
+    }
+
+    public OperatoreAutorizzato getOperatoreAutorizzato(Pair<String, String> cred){
+        
+
     }
 
     //objClass -> the class of the object to check

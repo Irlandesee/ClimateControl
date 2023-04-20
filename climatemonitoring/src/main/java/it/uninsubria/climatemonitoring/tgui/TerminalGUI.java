@@ -3,6 +3,7 @@ package it.uninsubria.climatemonitoring.tgui;
 import it.uninsubria.climatemonitoring.dbref.DBInterface;
 import it.uninsubria.climatemonitoring.operatore.Operatore;
 import it.uninsubria.climatemonitoring.operatore.opeatoreRegistrato.OperatoreRegistrato;
+import org.javatuples.Pair;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -24,7 +25,6 @@ public class TerminalGUI {
             "                        Digitare 'login' per effettuare il login (solo operatori registrati).\n" +
             "                        Digitare 'registrazione' per effettuare la registrazione all'applicazione\\s\n" +
             "                        (solo operatori autorizzati).\n" +
-            "                        Digitare 'salva' per salvare i dati su file.\n" +
             "                        Digitare 'uscita' per terminare il programma.";
     private static final String cerca = "cerca";
     private static final String cercaAreaInteresse = "cerca area interesse";
@@ -37,6 +37,10 @@ public class TerminalGUI {
     private static final String salva = "salva";
     private static final String uscita = "uscita";
     private static final String continua = "continua";
+    private static final String quit = "quit";
+    private static final String y = "y";
+    private static final String n = "n";
+
     private static final String error_invalid_input = "Input non valido";
 
 
@@ -56,13 +60,6 @@ public class TerminalGUI {
      * Metodo dove girerà la gui fino al termine
      */
     private void run(){
-        while(this.run){
-            while(!this.isLogged){
-                System.out.println(TerminalGUI.welcomeText);
-
-            }
-
-        }
 
     }
 
@@ -98,12 +95,20 @@ public class TerminalGUI {
         try {
             System.out.println("Inserisci mail e password separate da spazio");
             terminalReader = new BufferedReader(new InputStreamReader(System.in));
-            String[] tmp = terminalReader.readLine().split(" ");
-            email = tmp[0];
-            password = tmp[1];
-            //query db interface
-            //set log status
-            //return
+            boolean cont = true;
+            while(cont){
+                String[] tmp = terminalReader.readLine().split(" ");
+                Pair<String, String> credentials = new Pair<String, String>(tmp[0], tmp[1]);
+                if(dbInterface.checkCredentials(credentials)){
+                    this.isLogged = true;
+                    this.loggedOperatore = dbInterface.getOperatoreRegistrato(credentials);
+                    cont = false;
+                }else{
+                    System.out.println("Vuoi continuare? y/n");
+                    String res = terminalReader.readLine();
+                    if(res.equals(TerminalGUI.n)) cont = false;
+                }
+            }
             terminalReader.close();
         }catch(IOException ioe){ioe.printStackTrace();}
         return false;
