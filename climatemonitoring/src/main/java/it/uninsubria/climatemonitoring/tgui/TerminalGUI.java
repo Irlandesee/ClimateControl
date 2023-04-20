@@ -184,7 +184,6 @@ public class TerminalGUI {
         BufferedReader terminalReader = new BufferedReader(new InputStreamReader(System.in));
         try{
             switch(terminalReader.readLine()){
-                case TerminalGUI.cerca -> cercaAreaInteresse();
                 case TerminalGUI.cercaAreaInteresse -> cercaAreaInteresse();
                 case TerminalGUI.cercaCentroMonitoraggio -> cercaCentroMonitoraggio();
                 case TerminalGUI.aggiungiAreaInteresse -> aggiungiAreaInteresse();
