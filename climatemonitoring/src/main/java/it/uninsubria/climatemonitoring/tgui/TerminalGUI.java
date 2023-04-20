@@ -97,6 +97,15 @@ public class TerminalGUI {
     }
 
     private void cercaCentroMonitoraggio(){
+        System.out.println("Inserisci nome del centro di monitoraggio: ");
+        try{
+           BufferedReader bReader = new BufferedReader(new InputStreamReader(System.in));
+           String line = "";
+           while(!((line = bReader.readLine()).isEmpty() || line.isBlank())){
+               //query db
+           }
+           bReader.close();
+        }catch(IOException ioe){ioe.printStackTrace();}
 
     }
 
