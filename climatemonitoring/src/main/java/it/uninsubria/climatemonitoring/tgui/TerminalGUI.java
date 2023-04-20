@@ -8,10 +8,8 @@ import it.uninsubria.climatemonitoring.operatore.opeatoreRegistrato.OperatoreReg
 import org.javatuples.Pair;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashMap;
 
 public class TerminalGUI {
 
@@ -65,7 +63,7 @@ public class TerminalGUI {
 
     }
 
-    private void cercaAreaGeografica(){
+    private void cercaAreaInteresse(){
         System.out.println("Digitare 'nome' per ricercare l'area di interesse per nome.\n" +
                 "Digitare 'coordinate' per cercare l'area di interesse per coordinate geografiche.");
 
@@ -86,16 +84,13 @@ public class TerminalGUI {
                    AreaInteresse cercata = dbInterface.getAreaInteresseWithCoordinates(latitude, longitudine);
                    if(cercata != null) System.out.println(cercata);
                }
-               default -> cercaAreaGeografica();
+               default -> cercaAreaInteresse();
            }
 
            bReader.close();
         }catch(IOException ioe){ioe.printStackTrace();}
     }
 
-    private void cercaAreaInteresse(){
-
-    }
 
     private void aggiungiAreaInteresse(){
 
@@ -189,7 +184,7 @@ public class TerminalGUI {
         BufferedReader terminalReader = new BufferedReader(new InputStreamReader(System.in));
         try{
             switch(terminalReader.readLine()){
-                case TerminalGUI.cerca -> cercaAreaGeografica();
+                case TerminalGUI.cerca -> cercaAreaInteresse();
                 case TerminalGUI.cercaAreaInteresse -> cercaAreaInteresse();
                 case TerminalGUI.cercaCentroMonitoraggio -> cercaCentroMonitoraggio();
                 case TerminalGUI.aggiungiAreaInteresse -> aggiungiAreaInteresse();
