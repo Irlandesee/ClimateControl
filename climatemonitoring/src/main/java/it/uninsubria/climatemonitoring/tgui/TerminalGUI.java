@@ -50,22 +50,17 @@ public class TerminalGUI {
 
     private static final String error_invalid_input = "Input non valido";
 
-    private BufferedReader reader;
 
     public TerminalGUI(){
         this.dbInterface = new DBInterface();
         this.run = true;
         this.isLogged = false;
-
-        reader = new BufferedReader(new InputStreamReader(System.in));
     }
 
     public TerminalGUI(final DBInterface dbInterface){
         this.dbInterface = dbInterface;
         this.run = true;
         this.isLogged = false;
-
-        reader = new BufferedReader(new InputStreamReader(System.in));
     }
 
     /**
@@ -74,6 +69,7 @@ public class TerminalGUI {
     public void run() throws IOException {
         while (true) {
             while (loggedOperatore == null) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
                 System.out.println(welcomeText);
                 switch (reader.readLine()) {
                     case "cerca", "c" -> cercaAreaInteresse();
@@ -81,9 +77,11 @@ public class TerminalGUI {
                     case "registrazione", "r" -> registrazione();
                     case "uscita", "u" -> System.exit(0);
                 }
+                reader.close();
             }
 
             while (loggedOperatore != null) {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
                 System.out.println("\nArea riservata - Centro di monitoraggio");
                 System.out.println(areaRiservataWelcomeText);
 
@@ -94,6 +92,7 @@ public class TerminalGUI {
                     case "logout", "l" -> loggedOperatore = null;
                     case "uscita", "u" -> System.exit(0);
                 }
+                reader.close();
             }
         }
     }
@@ -103,25 +102,28 @@ public class TerminalGUI {
                 "Digitare 'coordinate' per cercare l'area di interesse per coordinate geografiche.");
 
         try{
-           switch(reader.readLine()){
+           BufferedReader bReader = new BufferedReader(new InputStreamReader(System.in));
+           switch(bReader.readLine()){
                case "nome", "n" -> {
                    System.out.println("Digitare il nome dell'area di interesse:");
-                   String nome = reader.readLine();
+                   String nome = bReader.readLine();
                    AreaInteresse cercata = dbInterface.getAreaInteresse(nome);
                    if(cercata != null) System.out.println(cercata);
                    else System.out.println("Area non trovata!");
                }
                case "coordinate", "c" -> {
                    System.out.println("Digitare la latitudine dell'area di interesse:");
-                   double latitude = Double.parseDouble(reader.readLine());
+                   double latitude = Double.parseDouble(bReader.readLine());
                    System.out.println("Digitare la longitudine dell'area di interesse:");
-                   double longitudine = Double.parseDouble(reader.readLine());
+                   double longitudine = Double.parseDouble(bReader.readLine());
                    AreaInteresse cercata = dbInterface.getAreaInteresseWithCoordinates(latitude, longitudine);
                    if(cercata != null) System.out.println(cercata);
                    else System.out.println("Area non trovata!");
                }
                default -> cercaAreaInteresse();
            }
+
+           bReader.close();
         }catch(IOException ioe){ioe.printStackTrace();}
     }
 
@@ -164,28 +166,30 @@ public class TerminalGUI {
                     if(res.equals(TerminalGUI.n)) cont = false;
                 }
             }
+            terminalReader.close();
         }catch(IOException ioe){ioe.printStackTrace();}
         return false;
     }
 
     private void registrazione(){
         System.out.println("Registrazione");
+        BufferedReader terminalReader;
         try{
-            reader = new BufferedReader(new InputStreamReader(System.in));
+            terminalReader = new BufferedReader(new InputStreamReader(System.in));
             boolean cont = true;
             while(cont){
                 System.out.println("Inserisci codFisc operatore da registrare");
-                String codFisc = reader.readLine();
+                String codFisc = terminalReader.readLine();
                 OperatoreAutorizzato op = dbInterface.getOperatoreAutorizzato(codFisc);
                 if(op != null){
                     //Check fields
                     System.out.println("Codice fiscale corrispondente a persona autorizzata");
                     System.out.println("Inserisci userID: ");
-                    String userID = reader.readLine();
+                    String userID = terminalReader.readLine();
                     System.out.println("Inserisci password: ");
-                    String password = reader.readLine();
+                    String password = terminalReader.readLine();
                     System.out.println("Inserisci centro di afferenza per l'operatore: ");
-                    String centroID = reader.readLine();
+                    String centroID = terminalReader.readLine();
                     if(dbInterface.checkCentroID(centroID)){
                         OperatoreRegistrato opReg = new OperatoreRegistrato(
                                 op.getNome(), op.getCognome()
@@ -199,7 +203,7 @@ public class TerminalGUI {
                 else{
                     System.out.println("Codice fiscale errato o inesistente");
                     System.out.println("Vuoi continuare? y/n");
-                    String res =reader.readLine();
+                    String res =terminalReader.readLine();
                     if(res.equals(TerminalGUI.n))
                         cont = false;
                 }
@@ -208,6 +212,7 @@ public class TerminalGUI {
             //If true -> log as op, save new op to file
             //if false -> error, start process from scratch
             //return
+            terminalReader.close();
         }catch(IOException ioe){ioe.printStackTrace();}
     }
 
