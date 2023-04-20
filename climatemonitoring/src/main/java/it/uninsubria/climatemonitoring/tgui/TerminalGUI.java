@@ -26,6 +26,13 @@ public class TerminalGUI {
             "                        Digitare 'registrazione' per effettuare la registrazione all'applicazione\\s\n" +
             "                        (solo operatori autorizzati).\n" +
             "                        Digitare 'uscita' per terminare il programma.";
+    private static final String areaRiservataWelcomeText = "Area Riservata\n" +
+            "                        \n" +
+            "                        Digitare 'aggiungi' per aggiungere un aree di interesse al centro di monitoraggio.\n" +
+            "                        Digitare 'cerca' per visualizzare le aree di interesse disponibili.\n" +
+            "                        Digitare 'logout' per effettuare il logout e tornare al menu' principale.\n" +
+            "                        Digitare 'inserisci' per inserire i dati relativi ad una delle aree di interesse.\n" +
+            "                        Digitare 'uscita' per terminare il programma.";
     private static final String cerca = "cerca";
     private static final String cercaAreaInteresse = "cerca area interesse";
     private static final String cercaCentroMonitoraggio = "cerca centro monitoraggio";
@@ -43,24 +50,52 @@ public class TerminalGUI {
 
     private static final String error_invalid_input = "Input non valido";
 
+    private BufferedReader reader;
 
     public TerminalGUI(){
         this.dbInterface = new DBInterface();
         this.run = true;
         this.isLogged = false;
+
+        reader = new BufferedReader(new InputStreamReader(System.in));
     }
 
     public TerminalGUI(final DBInterface dbInterface){
         this.dbInterface = dbInterface;
         this.run = true;
         this.isLogged = false;
+
+        reader = new BufferedReader(new InputStreamReader(System.in));
     }
 
     /**
      * Metodo dove girerà la gui fino al termine
      */
-    private void run(){
+    public void run() throws IOException {
+        while (true) {
+            while (loggedOperatore == null) {
+                System.out.println(welcomeText);
+                switch (reader.readLine()) {
+                    case "cerca", "c" -> cercaAreaInteresse();
+                    case "login", "l" -> login();
+                    case "registrazione", "r" -> registrazione();
+                    case "uscita", "u" -> System.exit(0);
+                }
+            }
 
+            while (loggedOperatore != null) {
+                System.out.println("\nArea riservata - Centro di monitoraggio");
+                System.out.println(areaRiservataWelcomeText);
+
+                switch (reader.readLine()) {
+                    case "aggiungi", "a" -> aggiungiAreaInteresse();
+//                case "inserisci", "i" -> inserisciDatiParametri();
+                    case "cerca", "c" -> cercaAreaInteresse();
+                    case "logout", "l" -> loggedOperatore = null;
+                    case "uscita", "u" -> System.exit(0);
+                }
+            }
+        }
     }
 
     private void cercaAreaInteresse(){
@@ -68,26 +103,25 @@ public class TerminalGUI {
                 "Digitare 'coordinate' per cercare l'area di interesse per coordinate geografiche.");
 
         try{
-           BufferedReader bReader = new BufferedReader(new InputStreamReader(System.in));
-           switch(bReader.readLine()){
-               case "nome" -> {
+           switch(reader.readLine()){
+               case "nome", "n" -> {
                    System.out.println("Digitare il nome dell'area di interesse:");
-                   String nome = bReader.readLine();
+                   String nome = reader.readLine();
                    AreaInteresse cercata = dbInterface.getAreaInteresse(nome);
                    if(cercata != null) System.out.println(cercata);
+                   else System.out.println("Area non trovata!");
                }
-               case "coordinate" -> {
+               case "coordinate", "c" -> {
                    System.out.println("Digitare la latitudine dell'area di interesse:");
-                   double latitude = Double.parseDouble(bReader.readLine());
+                   double latitude = Double.parseDouble(reader.readLine());
                    System.out.println("Digitare la longitudine dell'area di interesse:");
-                   double longitudine = Double.parseDouble(bReader.readLine());
+                   double longitudine = Double.parseDouble(reader.readLine());
                    AreaInteresse cercata = dbInterface.getAreaInteresseWithCoordinates(latitude, longitudine);
                    if(cercata != null) System.out.println(cercata);
+                   else System.out.println("Area non trovata!");
                }
                default -> cercaAreaInteresse();
            }
-
-           bReader.close();
         }catch(IOException ioe){ioe.printStackTrace();}
     }
 
@@ -130,30 +164,28 @@ public class TerminalGUI {
                     if(res.equals(TerminalGUI.n)) cont = false;
                 }
             }
-            terminalReader.close();
         }catch(IOException ioe){ioe.printStackTrace();}
         return false;
     }
 
     private void registrazione(){
         System.out.println("Registrazione");
-        BufferedReader terminalReader;
         try{
-            terminalReader = new BufferedReader(new InputStreamReader(System.in));
+            reader = new BufferedReader(new InputStreamReader(System.in));
             boolean cont = true;
             while(cont){
                 System.out.println("Inserisci codFisc operatore da registrare");
-                String codFisc = terminalReader.readLine();
+                String codFisc = reader.readLine();
                 OperatoreAutorizzato op = dbInterface.getOperatoreAutorizzato(codFisc);
                 if(op != null){
                     //Check fields
                     System.out.println("Codice fiscale corrispondente a persona autorizzata");
                     System.out.println("Inserisci userID: ");
-                    String userID = terminalReader.readLine();
+                    String userID = reader.readLine();
                     System.out.println("Inserisci password: ");
-                    String password = terminalReader.readLine();
+                    String password = reader.readLine();
                     System.out.println("Inserisci centro di afferenza per l'operatore: ");
-                    String centroID = terminalReader.readLine();
+                    String centroID = reader.readLine();
                     if(dbInterface.checkCentroID(centroID)){
                         OperatoreRegistrato opReg = new OperatoreRegistrato(
                                 op.getNome(), op.getCognome()
@@ -167,7 +199,7 @@ public class TerminalGUI {
                 else{
                     System.out.println("Codice fiscale errato o inesistente");
                     System.out.println("Vuoi continuare? y/n");
-                    String res =terminalReader.readLine();
+                    String res =reader.readLine();
                     if(res.equals(TerminalGUI.n))
                         cont = false;
                 }
@@ -176,7 +208,6 @@ public class TerminalGUI {
             //If true -> log as op, save new op to file
             //if false -> error, start process from scratch
             //return
-            terminalReader.close();
         }catch(IOException ioe){ioe.printStackTrace();}
     }
 

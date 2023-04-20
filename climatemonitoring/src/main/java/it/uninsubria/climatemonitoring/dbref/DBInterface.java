@@ -87,6 +87,13 @@ public class DBInterface {
         this.readerREF = new ReaderDB(this);
         this.writerREF = new WriterDB(this);
         BufferedWriter bWriter;
+
+        File directory = new File("data");
+
+        if (!directory.exists())
+            if(directory.mkdir())
+                System.out.println("Nuova cartella creata in: " + directory.getPath());
+
         try{
             if (!geonamesCoordinatesFile.exists()) {
                 boolean res = geonamesCoordinatesFile.createNewFile();

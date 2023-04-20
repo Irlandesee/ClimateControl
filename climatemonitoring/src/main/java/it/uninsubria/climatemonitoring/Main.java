@@ -115,6 +115,6 @@ public class Main {
         );
 
         TerminalGUI tGUI = new TerminalGUI(dbRef);
-        //tGUI.start();
+        tGUI.run();
     }
 }
