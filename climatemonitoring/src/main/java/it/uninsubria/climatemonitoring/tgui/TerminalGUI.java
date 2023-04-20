@@ -123,10 +123,26 @@ public class TerminalGUI {
             boolean cont = true;
             while(cont){
                 System.out.println("Inserisci codFisc operatore da registrare");
-                String line = terminalReader.readLine();
-                OperatoreAutorizzato op = dbInterface.getOperatoreAutorizzato(line);
+                String codFisc = terminalReader.readLine();
+                OperatoreAutorizzato op = dbInterface.getOperatoreAutorizzato(codFisc);
                 if(op != null){
+                    //Check fields
                     System.out.println("Codice fiscale corrispondente a persona autorizzata");
+                    System.out.println("Inserisci userID: ");
+                    String userID = terminalReader.readLine();
+                    System.out.println("Inserisci password: ");
+                    String password = terminalReader.readLine();
+                    System.out.println("Inserisci centro di afferenza per l'operatore: ");
+                    String centroID = terminalReader.readLine();
+                    if(dbInterface.checkCentroID(centroID)){
+                        OperatoreRegistrato opReg = new OperatoreRegistrato(
+                                op.getNome(), op.getCognome()
+                                ,codFisc, op.getEmail(),
+                                userID, password, centroID);
+                        dbInterface.write(opReg);
+                    }else{
+                        System.out.println("Centro di monitoraggio inesistente!");
+                    }
                 }
                 else{
                     System.out.println("Codice fiscale errato o inesistente");

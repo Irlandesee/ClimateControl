@@ -274,6 +274,11 @@ public class DBInterface {
         return false;
     }
 
+    //checks if a centroMonitoraggio with centroID exists in the cache
+    public boolean checkCentroID(String centroID){
+        return centroMonitoraggioCache.containsKey(centroID);
+    }
+
     //cred: userid & password
     public OperatoreRegistrato getOperatoreRegistrato(Pair<String, String> cred){
         if(checkCredentials(cred)) return (OperatoreRegistrato) operatoreRegistratoCache.get(cred.getValue0());
