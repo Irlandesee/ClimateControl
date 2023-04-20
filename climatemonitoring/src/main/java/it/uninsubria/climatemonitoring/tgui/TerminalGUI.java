@@ -2,6 +2,7 @@ package it.uninsubria.climatemonitoring.tgui;
 
 import it.uninsubria.climatemonitoring.dbref.DBInterface;
 import it.uninsubria.climatemonitoring.operatore.Operatore;
+import it.uninsubria.climatemonitoring.operatore.opeatoreAutorizzato.OperatoreAutorizzato;
 import it.uninsubria.climatemonitoring.operatore.opeatoreRegistrato.OperatoreRegistrato;
 import org.javatuples.Pair;
 
@@ -118,8 +119,23 @@ public class TerminalGUI {
         System.out.println("Registrazione");
         BufferedReader terminalReader;
         try{
-            System.out.println("Inserisci dati operatore da registrare");
             terminalReader = new BufferedReader(new InputStreamReader(System.in));
+            boolean cont = true;
+            while(cont){
+                System.out.println("Inserisci codFisc operatore da registrare");
+                String line = terminalReader.readLine();
+                OperatoreAutorizzato op = dbInterface.getOperatoreAutorizzato(line);
+                if(op != null){
+                    System.out.println("Codice fiscale corrispondente a persona autorizzata");
+                }
+                else{
+                    System.out.println("Codice fiscale errato o inesistente");
+                    System.out.println("Vuoi continuare? y/n");
+                    String res =terminalReader.readLine();
+                    if(res.equals(TerminalGUI.n))
+                        cont = false;
+                }
+            }
             //query db
             //If true -> log as op, save new op to file
             //if false -> error, start process from scratch

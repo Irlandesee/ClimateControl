@@ -265,6 +265,7 @@ public class DBInterface {
         }
     }
 
+    //cred: userid & password
     public boolean checkCredentials(Pair<String, String> cred){
         OperatoreRegistrato tmp = (OperatoreRegistrato) operatoreRegistratoCache.get(cred.getValue0());
         if(tmp != null){
@@ -273,14 +274,15 @@ public class DBInterface {
         return false;
     }
 
+    //cred: userid & password
     public OperatoreRegistrato getOperatoreRegistrato(Pair<String, String> cred){
         if(checkCredentials(cred)) return (OperatoreRegistrato) operatoreRegistratoCache.get(cred.getValue0());
         return null;
     }
 
-    public OperatoreAutorizzato getOperatoreAutorizzato(Pair<String, String> cred){
-        
-
+    //returns null if op is not found
+    public OperatoreAutorizzato getOperatoreAutorizzato(String codFisc){
+        return (OperatoreAutorizzato) operatoreAutorizzatoCache.get(codFisc);
     }
 
     //objClass -> the class of the object to check
