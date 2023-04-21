@@ -272,10 +272,13 @@ public class DBInterface {
 
     //cred: userid & password
     public boolean checkCredentials(Pair<String, String> cred){
+        System.out.println("DBInterface checking credentials: " + cred.toString());
         OperatoreRegistrato tmp = (OperatoreRegistrato) operatoreRegistratoCache.get(cred.getValue0());
         if(tmp != null){
+            System.out.println("Object found: " +tmp.toString());
             return Objects.equals(tmp.getPassword(), cred.getValue1());
         }
+        System.out.println("No person found with credentials: " +cred.toString());
         return false;
     }
 
@@ -373,7 +376,7 @@ public class DBInterface {
             if(o instanceof OperatoreAutorizzato op){
                 operatoreAutorizzatoCache.put(op.getCodFiscale(), op);
             }else if(o instanceof OperatoreRegistrato or){
-                operatoreRegistratoCache.put(or.getCodFiscale(), or);
+                operatoreRegistratoCache.put(or.getEmail(), or);
             }
         }
     }

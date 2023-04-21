@@ -100,13 +100,13 @@ public class Main {
         HashMap<String, OperatoreRegistrato> opReg =
                 (HashMap<String, OperatoreRegistrato>) dbRef.readCache(DBInterface.objClassOpRegistrati);
         opReg.forEach(
-                (key, value) -> System.out.println(value)
+                (key, value) -> System.out.println(key + ":" + value)
         );
 
         HashMap<String, OperatoreAutorizzato> opAutorizzato =
                 (HashMap<String, OperatoreAutorizzato>) dbRef.readCache(DBInterface.objClassOpAutorizzati);
         opAutorizzato.forEach(
-                (key, value) -> System.out.println(value)
+                (key, value) -> System.out.println(key + ":" +value)
         );
         HashMap<String, ClimateParameter> parameterMap =
                 (HashMap<String, ClimateParameter>) dbRef.readCache(DBInterface.objClassParamClimatici);

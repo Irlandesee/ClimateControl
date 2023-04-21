@@ -10,6 +10,10 @@ import org.javatuples.Pair;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.regex.PatternSyntaxException;
 
 public class TerminalGUI {
 
@@ -153,21 +157,27 @@ public class TerminalGUI {
         String password = "";
         BufferedReader terminalReader;
         try {
-            System.out.println("Inserisci mail e password separate da spazio");
             terminalReader = new BufferedReader(new InputStreamReader(System.in));
             boolean cont = true;
+            List<String> tmp = new LinkedList<String>();
+            Pair<String, String> credentials;
             while(cont){
-                String[] tmp = terminalReader.readLine().split(" ");
-                Pair<String, String> credentials = new Pair<String, String>(tmp[0], tmp[1]);
-                if(dbInterface.checkCredentials(credentials)){
-                    this.isLogged = true;
-                    this.loggedOperatore = dbInterface.getOperatoreRegistrato(credentials);
-                    cont = false;
-                }else{
-                    System.out.println("Vuoi continuare? y/n");
-                    String res = terminalReader.readLine();
-                    if(res.equals(TerminalGUI.n)) cont = false;
-                }
+                System.out.println("Inserisci userID e password separate da spazio");
+                try {
+                    tmp = Arrays.stream(terminalReader.readLine().split(" ")).toList();
+                }catch(PatternSyntaxException pse){pse.printStackTrace();}
+                try {
+                    credentials = new Pair<String, String>(tmp.get(0), tmp.get(1));
+                    if(dbInterface.checkCredentials(credentials)){
+                        this.isLogged = true;
+                        this.loggedOperatore = dbInterface.getOperatoreRegistrato(credentials);
+                        cont = false;
+                    }else{
+                        System.out.println("Vuoi continuare? y/n");
+                        String res = terminalReader.readLine();
+                        if(res.equals(TerminalGUI.n)) cont = false;
+                    }
+                }catch(NullPointerException npe){npe.printStackTrace();}
             }
             terminalReader.close();
         }catch(IOException ioe){ioe.printStackTrace();}
