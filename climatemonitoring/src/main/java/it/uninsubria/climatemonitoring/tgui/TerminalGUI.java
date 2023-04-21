@@ -66,35 +66,38 @@ public class TerminalGUI {
     /**
      * Metodo dove girerà la gui fino al termine
      */
-    public void run() throws IOException {
-        while (true) {
-            while (loggedOperatore == null) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-                System.out.println(welcomeText);
-                switch (reader.readLine()) {
-                    case "cerca", "c" -> cercaAreaInteresse();
-                    case "login", "l" -> login();
-                    case "registrazione", "r" -> registrazione();
-                    case "uscita", "u" -> System.exit(0);
-                }
-                reader.close();
-            }
+    public void run(){
+        boolean runCondition = true;
+        try{
 
-            while (loggedOperatore != null) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-                System.out.println("\nArea riservata - Centro di monitoraggio");
-                System.out.println(areaRiservataWelcomeText);
-
-                switch (reader.readLine()) {
-                    case "aggiungi", "a" -> aggiungiAreaInteresse();
-//                case "inserisci", "i" -> inserisciDatiParametri();
-                    case "cerca", "c" -> cercaAreaInteresse();
-                    case "logout", "l" -> loggedOperatore = null;
-                    case "uscita", "u" -> System.exit(0);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+            while (runCondition) {
+                while (loggedOperatore == null) {
+                    System.out.println(welcomeText);
+                    switch (reader.readLine()) {
+                        case "cerca", "c" -> cercaAreaInteresse();
+                        case "login", "l" -> login();
+                        case "registrazione", "r" -> registrazione();
+                        case "uscita", "u" -> runCondition = false;
+                    }
                 }
-                reader.close();
+
+                while (loggedOperatore != null) {
+                    System.out.println("\nArea riservata - Centro di monitoraggio");
+                    System.out.println(areaRiservataWelcomeText);
+
+                    switch (reader.readLine()) {
+                        case "aggiungi", "a" -> aggiungiAreaInteresse();
+                        //case "inserisci", "i" -> inserisciDatiParametri();
+                        case "cerca", "c" -> cercaAreaInteresse();
+                        case "logout", "l" -> loggedOperatore = null;
+                        case "uscita", "u" -> runCondition = false;
+                    }
+                }
             }
-        }
+            reader.close();
+        }catch(IOException ioe){ioe.printStackTrace();}
+        if(!runCondition) System.exit(0);
     }
 
     private void cercaAreaInteresse(){
