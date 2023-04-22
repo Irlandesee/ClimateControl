@@ -131,7 +131,8 @@ public class DBInterface {
                         centroMonitoraggioFile.getAbsolutePath());
             }else{
                 try {
-                    this.centroMonitoraggioCache = (HashMap<String, CentroMonitoraggio>) this.read(DBInterface.objClassCentroMonitoraggio);
+                    this.centroMonitoraggioCache =
+                            (HashMap<String, CentroMonitoraggio>) this.read(DBInterface.objClassCentroMonitoraggio);
                 }catch(ClassCastException cce){cce.printStackTrace();}
             }
             if(!parametriClimaticiFile.exists()){
@@ -146,7 +147,8 @@ public class DBInterface {
                         parametriClimaticiFile.getAbsolutePath());
             }else{
                 try{
-                    this.climateParameterCache = (HashMap<String, ClimateParameter>) this.read(DBInterface.objClassParamClimatici);
+                    this.climateParameterCache =
+                            (HashMap<String, ClimateParameter>) this.read(DBInterface.objClassParamClimatici);
                 }catch(ClassCastException cce){cce.printStackTrace();}
             }
             if(!operatoriAutorizzatiFile.exists()){
@@ -161,7 +163,8 @@ public class DBInterface {
                         operatoriAutorizzatiFile.getAbsolutePath());
             }else{
                 try{
-                    this.operatoreAutorizzatoCache = (HashMap<String, Operatore>) this.read(DBInterface.objClassOpAutorizzati);
+                    this.operatoreAutorizzatoCache =
+                            (HashMap<String, Operatore>) this.read(DBInterface.objClassOpAutorizzati);
                 }catch (ClassCastException cce){cce.printStackTrace();}
             }
             if(!operatoriRegistratiFile.exists()){
@@ -176,7 +179,8 @@ public class DBInterface {
                         operatoriRegistratiFile.getAbsolutePath());
             }else{
                 try{
-                    this.operatoreRegistratoCache = (HashMap<String, Operatore>) this.read(DBInterface.objClassOpRegistrati);
+                    this.operatoreRegistratoCache =
+                            (HashMap<String, Operatore>) this.read(DBInterface.objClassOpRegistrati);
                 }catch(ClassCastException cce){cce.printStackTrace();}
             }
             if(!areeInteresseFile.exists()){
@@ -190,7 +194,8 @@ public class DBInterface {
                         areeInteresseFile.getAbsolutePath());
             }else{
                 try{
-                    this.areeInteresseCache = (HashMap<String, AreaInteresse>) this.read(DBInterface.objClassAreaInteresse);
+                    this.areeInteresseCache =
+                            (HashMap<String, AreaInteresse>) this.read(DBInterface.objClassAreaInteresse);
                 }catch(ClassCastException cce){cce.printStackTrace();}
             }
         }catch(IOException ioe){ioe.printStackTrace();}

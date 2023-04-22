@@ -1,6 +1,7 @@
 package it.uninsubria.climatemonitoring;
 
 
+import it.uninsubria.climatemonitoring.areaInteresse.AreaInteresse;
 import it.uninsubria.climatemonitoring.centroMonitoraggio.CentroMonitoraggio;
 import it.uninsubria.climatemonitoring.climateParameters.ClimateParameter;
 import it.uninsubria.climatemonitoring.dbref.DBInterface;
@@ -91,28 +92,41 @@ public class Main {
 
     public static void main(String[] args) throws Exception{
         DBInterface dbRef = new DBInterface();
+        System.out.println("Centri monitoraggio");
         HashMap<String, CentroMonitoraggio> cmMap =
                 (HashMap<String, CentroMonitoraggio>) dbRef.readCache(DBInterface.objClassCentroMonitoraggio);
         cmMap.forEach(
-                (key, value) -> System.out.println(value)
+                (key, value) -> System.out.println(key + " -> " + value)
         );
-
+        System.out.println("------------");
+        System.out.println("Operatori Registrati");
         HashMap<String, OperatoreRegistrato> opReg =
                 (HashMap<String, OperatoreRegistrato>) dbRef.readCache(DBInterface.objClassOpRegistrati);
         opReg.forEach(
-                (key, value) -> System.out.println(key + ":" + value)
+                (key, value) -> System.out.println(key + " -> " + value)
         );
-
+        System.out.println("------------");
+        System.out.println("Operatori Autorizzati");
         HashMap<String, OperatoreAutorizzato> opAutorizzato =
                 (HashMap<String, OperatoreAutorizzato>) dbRef.readCache(DBInterface.objClassOpAutorizzati);
         opAutorizzato.forEach(
-                (key, value) -> System.out.println(key + ":" +value)
+                (key, value) -> System.out.println(key + " -> " +value)
         );
+        System.out.println("------------");
+        System.out.println("Parametri climatici");
         HashMap<String, ClimateParameter> parameterMap =
                 (HashMap<String, ClimateParameter>) dbRef.readCache(DBInterface.objClassParamClimatici);
         parameterMap.forEach(
-                (key, value) -> System.out.println(value)
+                (key, value) -> System.out.println(key + " -> " +value)
         );
+        System.out.println("------------");
+        System.out.println("Aree interesse");
+        HashMap<String, AreaInteresse> areeInteresse =
+                (HashMap<String, AreaInteresse>) dbRef.readCache(DBInterface.objClassAreaInteresse);
+        areeInteresse.forEach(
+                (key, value) -> System.out.println(key + " -> " + value.toString())
+        );
+        System.out.println("------------");
 
         TerminalGUI tGUI = new TerminalGUI(dbRef);
         tGUI.run();

@@ -82,7 +82,10 @@ public class TerminalGUI {
                         case "cerca", "c" -> cercaAreaInteresse();
                         case "login", "l" -> login();
                         case "registrazione", "r" -> registrazione();
-                        case "uscita", "u" -> runCondition = false;
+                        case "uscita", "u" -> {
+                            System.out.println("Arrivederci");
+                            System.exit(0);
+                        }
                     }
                 }
 
@@ -95,7 +98,10 @@ public class TerminalGUI {
                         //case "inserisci", "i" -> inserisciDatiParametri();
                         case "cerca", "c" -> cercaAreaInteresse();
                         case "logout", "l" -> loggedOperatore = null;
-                        case "uscita", "u" -> runCondition = false;
+                        case "uscita", "u" -> {
+                            System.out.println("Arrivederci");
+                            System.exit(0);
+                        }
                     }
                 }
             }
