@@ -53,12 +53,12 @@ public class OperatoreRegistrato extends Operatore {
 
     public String toString(){
         StringBuilder builder = new StringBuilder();
-        builder.append(super.getNome()).append(Operatore.generalSep)
+        builder.append(this.userID).append(Operatore.generalSep)
+                .append(this.password).append(Operatore.generalSep)
+                .append(super.getNome()).append(Operatore.generalSep)
                 .append(super.getCognome()).append(Operatore.generalSep)
                 .append(super.getCodFiscale()).append(Operatore.generalSep)
                 .append(super.getEmail()).append(Operatore.generalSep)
-                .append(this.userID).append(Operatore.generalSep)
-                .append(this.password).append(Operatore.generalSep)
                 .append(this.centroID).append(Operatore.terminatingChar);
         return builder.toString();
     }
