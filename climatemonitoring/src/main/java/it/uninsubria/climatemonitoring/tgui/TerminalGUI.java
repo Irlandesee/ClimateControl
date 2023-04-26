@@ -1,6 +1,7 @@
 package it.uninsubria.climatemonitoring.tgui;
 
 import it.uninsubria.climatemonitoring.areaInteresse.AreaInteresse;
+import it.uninsubria.climatemonitoring.centroMonitoraggio.CentroMonitoraggio;
 import it.uninsubria.climatemonitoring.dbref.DBInterface;
 import it.uninsubria.climatemonitoring.operatore.Operatore;
 import it.uninsubria.climatemonitoring.operatore.opeatoreAutorizzato.OperatoreAutorizzato;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.Buffer;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.PatternSyntaxException;
@@ -109,10 +111,18 @@ public class TerminalGUI {
         if(!runCondition) System.exit(0);
     }
 
+    private void printAreeInteresse(){
+        System.out.println("Aree interesse: ");
+        HashMap<String, AreaInteresse> areeInteresse = (HashMap<String, AreaInteresse>) dbInterface.readCache(DBInterface.objClassAreaInteresse);
+        areeInteresse.forEach(
+                (key, value) -> System.out.println(key + "->" + value)
+        );
+    }
+
     private void cercaAreaInteresse(){
         System.out.println("Digitare 'nome' per ricercare l'area di interesse per nome.\n" +
                 "Digitare 'coordinate' per cercare l'area di interesse per coordinate geografiche.");
-
+        printAreeInteresse();
         try{
            switch(readInput()){
                case "nome", "n" -> {
@@ -147,14 +157,45 @@ public class TerminalGUI {
            BufferedReader bReader = new BufferedReader(new InputStreamReader(System.in));
            String line = "";
            while(!((line = bReader.readLine()).isEmpty() || line.isBlank())){
-               //query db
+               String res = dbInterface.checkCentroMonitoraggio(line);
+               if(!res.equals(DBInterface.object_not_found)) {
+                   CentroMonitoraggio cm = dbInterface.getCentroMonitoraggioWithID(res);
+                   System.out.println(cm);
+               }
            }
            bReader.close();
         }catch(IOException ioe){ioe.printStackTrace();}
+    }
 
+    private void printCentriMonitoraggioDisponibili(){
+        HashMap<String, CentroMonitoraggio> centriDisp =
+                (HashMap<String, CentroMonitoraggio>) dbInterface.readCache(DBInterface.objClassCentroMonitoraggio);
+        centriDisp.forEach((key, value) -> System.out.println(value));
     }
 
     private void aggiungiCentroMonitoraggio(){
+        String centroID, nomeCentro, via, comune;
+        int numCivico;
+        LinkedList<String> areeInteresseIDs = new LinkedList<String>();
+        try {
+            System.out.println("Inserisci centroID: ");
+            centroID = readInput();
+            System.out.println("Inserisci nomeCentro: ");
+            nomeCentro = readInput();
+            System.out.println("Inserisci via/piazza: ");
+            via = readInput();
+            System.out.println("Inserisci numero civico: ");
+            numCivico = Integer.parseInt(readInput());
+            System.out.println("Inserisci comune: ");
+            comune = readInput();
+            System.out.println("Inserire le aree interesse per il centro, digitare end per terminare il processo.");
+            String areaInteresse = "";
+            while(!(areaInteresse = readInput()).equalsIgnoreCase("end")){
+                if(!((areaInteresse.isBlank() || areaInteresse.isEmpty()))) areeInteresseIDs.add(areaInteresse);
+            }
+            
+        }catch(IOException ioe){ioe.printStackTrace();}
+
 
     }
 
@@ -208,6 +249,7 @@ public class TerminalGUI {
                     System.out.println("Inserisci password: ");
                     String password = readInput();
                     System.out.println("Inserisci centro di afferenza per l'operatore: ");
+                    printCentriMonitoraggioDisponibili();
                     String centroID = readInput();
                     if(dbInterface.checkCentroID(centroID)){
                         OperatoreRegistrato opReg = new OperatoreRegistrato(

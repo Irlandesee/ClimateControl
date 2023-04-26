@@ -120,6 +120,7 @@ public class Main {
                 (key, value) -> System.out.println(key + " -> " +value)
         );
         System.out.println("------------");
+        /**
         System.out.println("Aree interesse");
         HashMap<String, AreaInteresse> areeInteresse =
                 (HashMap<String, AreaInteresse>) dbRef.readCache(DBInterface.objClassAreaInteresse);
@@ -127,7 +128,7 @@ public class Main {
                 (key, value) -> System.out.println(key + " -> " + value.toString())
         );
         System.out.println("------------");
-
+        **/
         TerminalGUI tGUI = new TerminalGUI(dbRef);
         tGUI.run();
     }

@@ -31,8 +31,9 @@ public class DBInterface {
     protected static final String parametriClimaticiHeader = "centroID;areaInteresse;data;params1,paramN;note";
     protected static final String areeInteresseHeader = "areaID:denominazione:stato:latitude:longitude";
 
-    private static final String error_invalid_op = "Invalid op";
-    private static final String error_invalid_class = "Invalid class";
+    private static final String error_invalid_op = "InvalidOp";
+    private static final String error_invalid_class = "InvalidClass";
+    public static final String object_not_found = "ObjectNotFound";
 
     public static final String objClassGeoname = "geoname";
     public static final String objClassCoordinateMonitoraggio = "coordinateMonitoraggio";
@@ -291,6 +292,16 @@ public class DBInterface {
         return areeInteresseCache.containsKey(areaInteresseKey);
     }
 
+    //Returns centroID if the cache contains a cm with name passed as
+    //parameter
+    public String checkCentroMonitoraggio(String nomeCentroMonitoraggio){
+        for(Map.Entry<String, CentroMonitoraggio> entry : centroMonitoraggioCache.entrySet()){
+            if(entry.getValue().getNomeCentro().equalsIgnoreCase(nomeCentroMonitoraggio))
+                return entry.getKey();
+        }
+        return DBInterface.object_not_found;
+    }
+
     //checks if a centroMonitoraggio with centroID exists in the cache
     public boolean checkCentroID(String centroID){
         return centroMonitoraggioCache.containsKey(centroID);
@@ -332,6 +343,12 @@ public class DBInterface {
             }
         }
         return map.get(minIndex);
+    }
+
+    public CentroMonitoraggio getCentroMonitoraggioWithID(String centroID){
+        if(centroMonitoraggioCache.containsKey(centroID))
+            return centroMonitoraggioCache.get(centroID);
+        return null;
     }
 
 
