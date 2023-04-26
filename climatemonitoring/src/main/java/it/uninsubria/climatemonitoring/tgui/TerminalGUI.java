@@ -2,6 +2,7 @@ package it.uninsubria.climatemonitoring.tgui;
 
 import it.uninsubria.climatemonitoring.areaInteresse.AreaInteresse;
 import it.uninsubria.climatemonitoring.centroMonitoraggio.CentroMonitoraggio;
+import it.uninsubria.climatemonitoring.climateParameters.ClimateParameter;
 import it.uninsubria.climatemonitoring.dbref.DBInterface;
 import it.uninsubria.climatemonitoring.operatore.Operatore;
 import it.uninsubria.climatemonitoring.operatore.opeatoreAutorizzato.OperatoreAutorizzato;
@@ -12,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.Buffer;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -168,15 +170,20 @@ public class TerminalGUI {
     }
 
     private void printCentriMonitoraggioDisponibili(){
-        HashMap<String, CentroMonitoraggio> centriDisp =
-                (HashMap<String, CentroMonitoraggio>) dbInterface.readCache(DBInterface.objClassCentroMonitoraggio);
-        centriDisp.forEach((key, value) -> System.out.println(value));
+        dbInterface
+                .readCache(DBInterface.objClassCentroMonitoraggio)
+                .forEach((key, value) -> {
+                    System.out.println("--------------");
+                    System.out.println(value);
+                });
     }
 
     private void aggiungiCentroMonitoraggio(){
-        String centroID, nomeCentro, via, comune;
-        int numCivico;
+        String centroID, nomeCentro, via, comune, provincia;
+        short numCivico;
+        int cap;
         LinkedList<String> areeInteresseIDs = new LinkedList<String>();
+        //TODO: add check fields validity
         try {
             System.out.println("Inserisci centroID: ");
             centroID = readInput();
@@ -185,22 +192,82 @@ public class TerminalGUI {
             System.out.println("Inserisci via/piazza: ");
             via = readInput();
             System.out.println("Inserisci numero civico: ");
-            numCivico = Integer.parseInt(readInput());
+            numCivico = Short.parseShort(readInput());
+            System.out.println("Inserisci il cap: ");
+            cap = Integer.parseInt(readInput());
             System.out.println("Inserisci comune: ");
             comune = readInput();
+            System.out.println("Inserisci provincia: ");
+            provincia = readInput();
             System.out.println("Inserire le aree interesse per il centro, digitare end per terminare il processo.");
-            String areaInteresse = "";
-            while(!(areaInteresse = readInput()).equalsIgnoreCase("end")){
-                if(!((areaInteresse.isBlank() || areaInteresse.isEmpty()))) areeInteresseIDs.add(areaInteresse);
+            String areaID = "";
+            while(!(areaID = readInput()).equalsIgnoreCase("end")){
+                if(!((areaID.isBlank() || areaID.isEmpty()))) {
+                    areeInteresseIDs.add(areaID);
+                    if(dbInterface.checkAreaInteresse(areaID)) areeInteresseIDs.add(areaID);
+                    else System.out.println("Area inesistente");
+                }
             }
-            
+            CentroMonitoraggio cm = new CentroMonitoraggio(
+                    centroID,
+                    nomeCentro,
+                    via,
+                    numCivico,
+                    cap,
+                    comune,
+                    provincia
+            );
+            dbInterface.getAreeInteresseWithKey(areeInteresseIDs)
+                    .forEach(cm::addAreaInteresse);
+
         }catch(IOException ioe){ioe.printStackTrace();}
-
-
     }
 
-    private void inserisciDatiParametroClimatico(){
+    private LocalDate parseDate(String line){
+        //TODO
+    }
 
+    private void printParameterKeys(){
+        System.out.println(ClimateParameter.paramVento+":"+ClimateParameter.defaultValue);
+        System.out.println(ClimateParameter.paramUmidita+":"+ClimateParameter.defaultValue);
+        System.out.println(ClimateParameter.paramPressione+":"+ClimateParameter.defaultValue);
+        System.out.println(ClimateParameter.paramTemp+":"+ClimateParameter.defaultValue);
+        System.out.println(ClimateParameter.paramAltGhiacciai+":"+ClimateParameter.defaultValue);
+        System.out.println(ClimateParameter.paramMassaGhiacciai+":"+ClimateParameter.defaultValue);
+    }
+
+    //TODO: aggiungere check sulla data inserita, non deve
+    //essere possibile mettere parametri climatici futuri?
+    private void inserisciDatiParametroClimatico(){
+        System.out.println("Inserimento dati parametro climatico");
+        LocalDate today = LocalDate.now();
+        try{
+            System.out.println("Inserisci id centro: ");
+            String centroID = readInput();
+            System.out.println("Inserisci id area: ");
+            String areaID = readInput();
+            System.out.println("Inserisci data rilevamento: ");
+            String data = readInput();
+            LocalDate correctDate = parseDate(data);
+            ClimateParameter cp = new ClimateParameter(
+                    ClimateParameter.generateParameterID(),
+                    centroID, areaID, correctDate);
+            String parameter = "";
+            System.out.println("Inserire i parametri desiderati, terminando con end");
+            System.out.println("->");
+            printParameterKeys();
+            while(!(parameter = readInput()).equalsIgnoreCase("end")){
+                //TODO: Check key
+                String key = parameter.split(":")[0];
+                short param = Short.parseShort(parameter.split(":")[1]);
+                try{
+                    cp.addParameter(key, param);
+                }catch(IllegalArgumentException iae){iae.printStackTrace();}
+            }
+            System.out.println(cp);
+            //writing to db
+            dbInterface.write(cp);
+        }catch(IOException ioe){ioe.printStackTrace();}
     }
 
     private boolean login(){
