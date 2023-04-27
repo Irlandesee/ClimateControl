@@ -7,12 +7,12 @@ import it.uninsubria.climatemonitoring.dbref.DBInterface;
 import it.uninsubria.climatemonitoring.operatore.Operatore;
 import it.uninsubria.climatemonitoring.operatore.opeatoreAutorizzato.OperatoreAutorizzato;
 import it.uninsubria.climatemonitoring.operatore.opeatoreRegistrato.OperatoreRegistrato;
+import it.uninsubria.climatemonitoring.util.IDGenerator;
 import org.javatuples.Pair;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.Buffer;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -58,6 +58,7 @@ public class TerminalGUI {
     private static final String n = "n";
 
     private static final String error_invalid_input = "Input non valido";
+    private static final String error_invalid_date_format = "Formato data non valido";
 
 
     public TerminalGUI(){
@@ -150,6 +151,32 @@ public class TerminalGUI {
 
 
     private void aggiungiAreaInteresse(){
+        System.out.println("Aggiunta area interesse");
+        String areaID = IDGenerator.generateID();
+        try{
+            System.out.println("Denominazione area: ");
+            String denominazione = readInput();
+            if(denominazione.isEmpty() || denominazione.isBlank()){
+                System.out.println("Denominazione non valida.");
+                aggiungiAreaInteresse();
+            }
+            System.out.println("Stato: ");
+            String stato = readInput();
+            if(stato.isEmpty() || stato.isBlank()){
+                System.out.println("Stato non valido.");
+                aggiungiAreaInteresse();
+            }
+            System.out.println("Latitudine: ");
+            float latitude = Float.parseFloat(readInput());
+            System.out.println("Longitudine: ");
+            float longitude = Float.parseFloat(readInput());
+
+            AreaInteresse ai = new AreaInteresse(
+                    IDGenerator.generateID(), denominazione, stato,
+                    latitude, longitude);
+
+            dbInterface.write(ai);
+        }catch(IOException ioe){ioe.printStackTrace();}
 
     }
 
@@ -225,6 +252,8 @@ public class TerminalGUI {
 
     private LocalDate parseDate(String line){
         //TODO
+        if(line.isBlank() || line.isEmpty()) throw new IllegalArgumentException(error_invalid_date_format);
+        return LocalDate.parse(line);
     }
 
     private void printParameterKeys(){
@@ -244,13 +273,21 @@ public class TerminalGUI {
         try{
             System.out.println("Inserisci id centro: ");
             String centroID = readInput();
+            if(centroID.isBlank() || centroID.isEmpty()){
+                System.out.println("Input centro non valido");
+                inserisciDatiParametroClimatico();
+            }
             System.out.println("Inserisci id area: ");
             String areaID = readInput();
-            System.out.println("Inserisci data rilevamento: ");
+            if(areaID.isBlank() || areaID.isEmpty()){
+                System.out.println("input area non valida");
+                inserisciDatiParametroClimatico();
+            }
+            System.out.println("Inserisci data rilevamento, nel formato: yyyy-mm-dd");
             String data = readInput();
-            LocalDate correctDate = parseDate(data);
+            LocalDate correctDate = parseDate(data); //throws DateTimeException
             ClimateParameter cp = new ClimateParameter(
-                    ClimateParameter.generateParameterID(),
+                    IDGenerator.generateID(),
                     centroID, areaID, correctDate);
             String parameter = "";
             System.out.println("Inserire i parametri desiderati, terminando con end");
