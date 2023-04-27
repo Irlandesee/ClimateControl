@@ -114,6 +114,28 @@ public class ReaderDB {
         return res;
     }
 
+    public HashMap<String, City> readCitiesFile(){
+        HashMap<String, City> res = new HashMap<String, City>();
+        try{
+            BufferedReader bReader = new BufferedReader(new FileReader(dbRef.getCoordinateMonitoraggioFile()));
+            String line = bReader.readLine();
+            while((line = bReader.readLine()) != null){
+                Pair<String, City> r = parseCity(line);
+                res.put(r.getValue0(), r.getValue1());
+            }
+        }catch(IOException ioe){ioe.printStackTrace();}
+        return res;
+    }
+
+    private Pair<String, City> parseCity(String line){
+        String[] tmp = line.split(";");
+        float latitude = Float.parseFloat(tmp[4].split(",")[0]);
+        float longitude = Float.parseFloat(tmp[4].split(",")[1]);
+
+        City c = new City(tmp[0], tmp[1], tmp[2], tmp[3], latitude, longitude);
+        return new Pair<String, City>(tmp[0], c);
+    }
+
     private Pair<String, ?> parseLine(String line, String filename){
         return switch (filename) {
             case "centroMonitoraggio.dati" -> parseCentroMonitoraggio(line);

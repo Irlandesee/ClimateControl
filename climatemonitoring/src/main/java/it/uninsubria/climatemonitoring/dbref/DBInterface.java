@@ -43,6 +43,7 @@ public class DBInterface {
     public static final String objClassOpAutorizzati = "opAutorizzati";
     public static final String objClassOpRegistrati = "opRegistrati";
     public static final String objClassAreaInteresse = "areeInteresse";
+    public static final String objCities = "cities";
 
 
     public static final String opRead = "read";
@@ -455,6 +456,7 @@ public class DBInterface {
         return switch (objClass) {
             case DBInterface.objClassAreaInteresse -> this.readerREF.readAreeInteresseFile();
             case DBInterface.geonamesAndCoordinatesDati -> this.readerREF.readGeonamesAndCoordinatesFile();
+            case DBInterface.objCities -> this.readerREF.readCitiesFile();
             case DBInterface.objClassOpRegistrati -> this.readerREF.readOperatoriRegistratiFile();
             case DBInterface.objClassOpAutorizzati-> this.readerREF.readOperatoriAutorizzatiFile();
             case DBInterface.objClassParamClimatici-> this.readerREF.readClimateParametersFile();

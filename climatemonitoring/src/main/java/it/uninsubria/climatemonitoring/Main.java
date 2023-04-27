@@ -9,12 +9,14 @@ import it.uninsubria.climatemonitoring.operatore.Operatore;
 import it.uninsubria.climatemonitoring.operatore.opeatoreAutorizzato.OperatoreAutorizzato;
 import it.uninsubria.climatemonitoring.operatore.opeatoreRegistrato.OperatoreRegistrato;
 import it.uninsubria.climatemonitoring.tgui.TerminalGUI;
+import it.uninsubria.climatemonitoring.util.FakeDataGenerator;
 
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.MessageDigest;
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.LinkedList;
 
 public class Main {
     public static String createMD5Hash(final String input){
@@ -130,6 +132,9 @@ public class Main {
         System.out.println("------------");
         **/
         TerminalGUI tGUI = new TerminalGUI(dbRef);
-        tGUI.run();
+        //tGUI.run();
+        FakeDataGenerator dataGenerator = new FakeDataGenerator(dbRef);
+        LinkedList<AreaInteresse> aree = (LinkedList<AreaInteresse>) dataGenerator.generateAreeInteresse(10);
+        aree.forEach(System.out::println);
     }
 }
