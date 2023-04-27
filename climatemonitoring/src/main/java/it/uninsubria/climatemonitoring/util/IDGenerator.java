@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class IDGenerator {
 
-    public static String generateParameterID(){
+    public static String generateID(){
         //generates random alphanumeric string
         int leftLimit = 48; //0
         int rightLimit = 122; //z
