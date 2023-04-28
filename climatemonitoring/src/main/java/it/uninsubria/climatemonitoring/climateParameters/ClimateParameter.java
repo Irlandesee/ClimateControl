@@ -23,13 +23,13 @@ public class ClimateParameter {
     private static final String altiGhiacciaiExp = "In m, suddivisa in piogge";
     private static final String massaGhiacciaiExp = "In kg, suddivisa in fasce";
 
-    private static final String notaVento = "Vento note";
-    private static final String notaUmidita = "Umidita note";
-    private static final String notaPressione = "Pressione note";
-    private static final String notaTemp = "Temp. note";
-    private static final String notePrecipitazioni = "Precip. note";
-    private static final String noteAltGhiacciai = "Alt ghiacciai note";
-    private static final String noteMassaGhiacciai = "Massa ghiacciai note";
+    public static final String notaVento = "Vento note";
+    public static final String notaUmidita = "Umidita note";
+    public static final String notaPressione = "Pressione note";
+    public static final String notaTemp = "Temp note";
+    public static final String notePrecipitazioni = "Precip note";
+    public static final String noteAltGhiacciai = "Alt ghiacciai note";
+    public static final String noteMassaGhiacciai = "Massa ghiacciai note";
 
     private static final short minVal = 1;
     private static final short maxVal = 5;
@@ -62,6 +62,7 @@ public class ClimateParameter {
     private String massaGhiacciaiNotes;
 
     private HashMap<String, Short> paramValues;
+    private HashMap<String, String> paramNotes;
 
     public ClimateParameter(String parameterID){
         this.parameterID = parameterID;
@@ -103,6 +104,7 @@ public class ClimateParameter {
         }
         return false;
     }
+
 
     public boolean rmParameter(String param){
         if(param == null || param.isBlank())
@@ -161,7 +163,7 @@ public class ClimateParameter {
                 case ClimateParameter.notaPressione-> this.setPressioneNotes(notes);
                 case ClimateParameter.noteAltGhiacciai-> this.setAltGhicciaiNotes(notes);
                 case ClimateParameter.noteMassaGhiacciai-> this.setMassaGhiacciaiNotes(notes);
-                default -> throw new IllegalArgumentException(ERROR_INVALID_KEY);
+                default -> throw new IllegalArgumentException(ERROR_INVALID_KEY + "-> "+key);
             }
         }
     }
@@ -268,7 +270,13 @@ public class ClimateParameter {
                 .append(this.areaInteresse).append(ClimateParameter.generalSeparator)
                 .append(this.pubDate).append(ClimateParameter.generalSeparator)
                 .append(this.getParamValues()).append(ClimateParameter.generalSeparator)
-                .append(this.notes).append(ClimateParameter.generalSeparator);
+                .append(ClimateParameter.notaVento).append(": ").append(this.getVentoNotes()).append(ClimateParameter.generalSeparator)
+                .append(ClimateParameter.notaUmidita).append(": ").append(this.getUmiditaNotes()).append(ClimateParameter.generalSeparator)
+                .append(ClimateParameter.notaPressione).append(": ").append(this.getPressioneNotes()).append(ClimateParameter.generalSeparator)
+                .append(ClimateParameter.notaTemp).append(": ").append(this.getTempNotes()).append(ClimateParameter.generalSeparator)
+                .append(ClimateParameter.notePrecipitazioni).append(": ").append(this.getPrecipitazioniNotes()).append(ClimateParameter.generalSeparator)
+                .append(ClimateParameter.noteAltGhiacciai).append(": ").append(this.getAltGhicciaiNotes()).append(ClimateParameter.generalSeparator)
+                .append(ClimateParameter.noteMassaGhiacciai).append(": ").append(this.getMassaGhiacciaiNotes()).append(ClimateParameter.generalSeparator);
         return builder.toString();
     }
 }

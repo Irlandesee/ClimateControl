@@ -156,7 +156,7 @@ public class ReaderDB {
     private Pair<String, CentroMonitoraggio> parseCentroMonitoraggio(String line){
         String[] tmp = line.split(ReaderDB.generalSeparator);
         String[] areeInteresseArray = tmp[4].split(ReaderDB.secondarySeparator);
-        Arrays.stream(areeInteresseArray).toList().forEach(System.out::println);
+        //Arrays.stream(areeInteresseArray).toList().forEach(System.out::println);
         List<String> keys = Arrays.stream(areeInteresseArray).toList();
         List<AreaInteresse> aree = dbRef.getAreeInteresseWithKey(keys);
         String centroID = tmp[0];
