@@ -40,9 +40,28 @@ public class FakeDataGenerator {
         return v;
     }
 
-    public List<CentroMonitoraggio> generateCentroMonitorgaggio(final int limit){
+    public List<CentroMonitoraggio> generateCentroMonitoraggio(final int limit){
         //TODO
-        return null;
+        HashMap<String, City> citiesMap = (HashMap<String, City>) dbRef.read(DBInterface.objCities);
+        HashMap<String, AreaInteresse> areeInteresseMap = (HashMap<String, AreaInteresse>) dbRef.read(DBInterface.objClassAreaInteresse);
+        List<AreaInteresse> areeInteresse = new LinkedList<AreaInteresse>(areeInteresseMap.values());
+        List<City> cities = new LinkedList<City>(citiesMap.values());
+        Random rand = new Random();
+        List<CentroMonitoraggio> res = new LinkedList<CentroMonitoraggio>();
+        for(int i = 0; i < limit; i++){
+            String centroID = IDGenerator.generateID();
+            City c = cities.get(rand.nextInt(cities.size()));
+            String comune = c.getAsciiName();
+            String nomeCentro = comune + "Centro";
+            String country = c.getCountry();
+            int numAree = rand.nextInt(1, 6);
+            CentroMonitoraggio cm = new CentroMonitoraggio(centroID, nomeCentro, comune, country);
+            for(int j = 0; j < numAree; j++){
+                cm.addAreaInteresse(areeInteresse.get(rand.nextInt(areeInteresse.size())));
+            }
+            res.add(cm);
+        }
+        return res;
     }
 
     public List<OperatoreAutorizzato> generatoreOpAutorizzati(final int limit){

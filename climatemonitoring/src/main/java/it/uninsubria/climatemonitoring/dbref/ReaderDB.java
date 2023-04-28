@@ -155,18 +155,16 @@ public class ReaderDB {
     //aree interesse -> keys for already existing AreaInteresse
     private Pair<String, CentroMonitoraggio> parseCentroMonitoraggio(String line){
         String[] tmp = line.split(ReaderDB.generalSeparator);
-        String[] areeInteresseArray = tmp[7].split(ReaderDB.secondarySeparator);
+        String[] areeInteresseArray = tmp[4].split(ReaderDB.secondarySeparator);
+        Arrays.stream(areeInteresseArray).toList().forEach(System.out::println);
         List<String> keys = Arrays.stream(areeInteresseArray).toList();
         List<AreaInteresse> aree = dbRef.getAreeInteresseWithKey(keys);
         String centroID = tmp[0];
         CentroMonitoraggio c = new CentroMonitoraggio(centroID);
         try{
             c.setNomeCentro(tmp[1]);
-            c.setVia(tmp[2]);
-            c.setNumCivico(Short.parseShort(tmp[3]));
-            c.setCap(Integer.parseInt(tmp[4]));
-            c.setComune(tmp[5]);
-            c.setProvincia(tmp[6]);
+            c.setComune(tmp[2]);
+            c.setCountry(tmp[3]);
             aree.forEach(c::addAreaInteresse);
         }catch(NumberFormatException nfe){nfe.printStackTrace();}
         return new Pair<String, CentroMonitoraggio>(centroID, c);

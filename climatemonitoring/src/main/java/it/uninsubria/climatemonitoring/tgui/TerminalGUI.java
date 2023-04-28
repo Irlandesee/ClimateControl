@@ -206,9 +206,7 @@ public class TerminalGUI {
     }
 
     private void aggiungiCentroMonitoraggio(){
-        String centroID, nomeCentro, via, comune, provincia;
-        short numCivico;
-        int cap;
+        String centroID, nomeCentro, comune, country;
         LinkedList<String> areeInteresseIDs = new LinkedList<String>();
         //TODO: add check fields validity
         try {
@@ -216,17 +214,11 @@ public class TerminalGUI {
             centroID = readInput();
             System.out.println("Inserisci nomeCentro: ");
             nomeCentro = readInput();
-            System.out.println("Inserisci via/piazza: ");
-            via = readInput();
-            System.out.println("Inserisci numero civico: ");
-            numCivico = Short.parseShort(readInput());
-            System.out.println("Inserisci il cap: ");
-            cap = Integer.parseInt(readInput());
             System.out.println("Inserisci comune: ");
             comune = readInput();
-            System.out.println("Inserisci provincia: ");
-            provincia = readInput();
             System.out.println("Inserire le aree interesse per il centro, digitare end per terminare il processo.");
+            System.out.println("Inserisci il paese: ");
+            country = readInput();
             String areaID = "";
             while(!(areaID = readInput()).equalsIgnoreCase("end")){
                 if(!((areaID.isBlank() || areaID.isEmpty()))) {
@@ -238,11 +230,8 @@ public class TerminalGUI {
             CentroMonitoraggio cm = new CentroMonitoraggio(
                     centroID,
                     nomeCentro,
-                    via,
-                    numCivico,
-                    cap,
                     comune,
-                    provincia
+                    country
             );
             dbInterface.getAreeInteresseWithKey(areeInteresseIDs)
                     .forEach(cm::addAreaInteresse);

@@ -121,6 +121,21 @@ public class DBInterface {
                 if (res && DEBUG) System.out.println("Created new file at: " +
                         coordinateMonitoraggioFile.getAbsolutePath());
             }
+            if(!areeInteresseFile.exists()){
+                boolean res = areeInteresseFile.createNewFile();
+                try{
+                    bWriter = new BufferedWriter(new FileWriter(areeInteresseFile));
+                    bWriter.write(areeInteresseHeader);
+                    bWriter.close();
+                }catch(IOException ioe){ioe.printStackTrace();}
+                if (res && DEBUG) System.out.println("Created new file at: " +
+                        areeInteresseFile.getAbsolutePath());
+            }else{
+                try{
+                    this.areeInteresseCache =
+                            (HashMap<String, AreaInteresse>) this.read(DBInterface.objClassAreaInteresse);
+                }catch(ClassCastException cce){cce.printStackTrace();}
+            }
             if (!centroMonitoraggioFile.exists()) {
                 boolean res = centroMonitoraggioFile.createNewFile();
                 try{
@@ -183,21 +198,6 @@ public class DBInterface {
                 try{
                     this.operatoreRegistratoCache =
                             (HashMap<String, Operatore>) this.read(DBInterface.objClassOpRegistrati);
-                }catch(ClassCastException cce){cce.printStackTrace();}
-            }
-            if(!areeInteresseFile.exists()){
-                boolean res = areeInteresseFile.createNewFile();
-                try{
-                    bWriter = new BufferedWriter(new FileWriter(areeInteresseFile));
-                    bWriter.write(areeInteresseHeader);
-                    bWriter.close();
-                }catch(IOException ioe){ioe.printStackTrace();}
-                if (res && DEBUG) System.out.println("Created new file at: " +
-                        areeInteresseFile.getAbsolutePath());
-            }else{
-                try{
-                    this.areeInteresseCache =
-                            (HashMap<String, AreaInteresse>) this.read(DBInterface.objClassAreaInteresse);
                 }catch(ClassCastException cce){cce.printStackTrace();}
             }
         }catch(IOException ioe){ioe.printStackTrace();}

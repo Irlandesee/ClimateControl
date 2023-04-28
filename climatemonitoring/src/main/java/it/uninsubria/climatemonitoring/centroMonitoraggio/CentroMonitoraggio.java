@@ -10,11 +10,8 @@ public class CentroMonitoraggio {
 
     private String centroID;
     private String nomeCentro;
-    private String via; //via-piazza
-    private short numCivico;
-    private int cap;
     private String comune;
-    private String provincia;
+    private String country;
 
     //key: String => areaID
     private HashMap<String, AreaInteresse> areeInteresse;
@@ -29,15 +26,11 @@ public class CentroMonitoraggio {
     }
 
     public CentroMonitoraggio(String centroID, String nomeCentro,
-                              String via, short numCivico, int cap,
-                              String comune, String provincia){
+                              String comune, String country){
         this.centroID = centroID;
         this.nomeCentro = nomeCentro;
-        this.via = via;
-        this.numCivico = numCivico;
-        this.cap = cap;
         this.comune = comune;
-        this.provincia = provincia;
+        this.country = country;
         this.areeInteresse = new HashMap<String, AreaInteresse>();
     }
 
@@ -57,44 +50,12 @@ public class CentroMonitoraggio {
         this.nomeCentro = nomeCentro;
     }
 
-    public String getVia() {
-        return via;
-    }
-
-    public void setVia(String via) {
-        this.via = via;
-    }
-
-    public short getNumCivico() {
-        return numCivico;
-    }
-
-    public void setNumCivico(short numCivico) {
-        this.numCivico = numCivico;
-    }
-
-    public int getCap() {
-        return cap;
-    }
-
-    public void setCap(int cap) {
-        this.cap = cap;
-    }
-
     public String getComune() {
         return comune;
     }
 
     public void setComune(String comune) {
         this.comune = comune;
-    }
-
-    public String getProvincia() {
-        return provincia;
-    }
-
-    public void setProvincia(String provincia) {
-        this.provincia = provincia;
     }
 
     public String getAreeInteresse(){
@@ -141,11 +102,8 @@ public class CentroMonitoraggio {
         StringBuilder builder = new StringBuilder();
         builder.append(centroID).append(generalSeparator)
                 .append(nomeCentro).append(generalSeparator)
-                .append(via).append(generalSeparator)
-                .append(numCivico).append(generalSeparator)
                 .append(comune).append(generalSeparator)
-                .append(cap).append(generalSeparator)
-                .append(provincia).append(generalSeparator);
+                .append(country).append(generalSeparator);
 
         if(areeInteresse.isEmpty()) builder.append(emptyAreeInteresse);
         else{
@@ -155,4 +113,7 @@ public class CentroMonitoraggio {
         return builder.toString();
     }
 
+    public void setCountry(String s) {
+        this.country = s;
+    }
 }
