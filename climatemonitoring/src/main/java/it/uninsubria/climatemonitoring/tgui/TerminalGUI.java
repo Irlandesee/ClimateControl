@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -242,7 +243,8 @@ public class TerminalGUI {
     private LocalDate parseDate(String line){
         //TODO
         if(line.isBlank() || line.isEmpty()) throw new IllegalArgumentException(error_invalid_date_format);
-        return LocalDate.parse(line);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy mm dd");
+        return LocalDate.parse(line, formatter);
     }
 
     private void printParameterKeys(){
@@ -293,6 +295,31 @@ public class TerminalGUI {
             System.out.println(cp);
             //writing to db
             dbInterface.write(cp);
+        }catch(IOException ioe){ioe.printStackTrace();}
+    }
+
+    private void visualizzaParametriClimatici(){
+        String nomeCentroMonitoraggio = "";
+        String nomeAreaInteresse = "";
+        try {
+            System.out.println("Inserisci nome centro monitoraggio");
+            while(dbInterface.checkCentroMonitoraggio(nomeCentroMonitoraggio).equals(DBInterface.object_not_found)){
+                nomeCentroMonitoraggio = readInput();
+            }
+            System.out.println("Inserisci nome area interesse");
+            while(!dbInterface.checkAreaInteresse(nomeAreaInteresse)){
+                nomeAreaInteresse = readInput();
+            }
+            //add check for valid dates
+            System.out.println("Inserisci data o arco temporale");
+            System.out.println("Data inizio: ");
+            String date = readInput();
+            LocalDate dataInizio = parseDate(date);
+            System.out.println("Data fine: ");
+            date = readInput();
+            LocalDate dataFine = parseDate(date);
+
+            //dbRef.getParameters(nomeCentroMonitoraggio, nomeAreaInteresse, dataInizio, dataFine)...
         }catch(IOException ioe){ioe.printStackTrace();}
     }
 
