@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -301,6 +302,7 @@ public class TerminalGUI {
     private void visualizzaParametriClimatici(){
         String nomeCentroMonitoraggio = "";
         String nomeAreaInteresse = "";
+        LocalDate startDate = null, endDate = null;
         try {
             System.out.println("Inserisci nome centro monitoraggio");
             while(dbInterface.checkCentroMonitoraggio(nomeCentroMonitoraggio).equals(DBInterface.object_not_found)){
@@ -310,16 +312,35 @@ public class TerminalGUI {
             while(!dbInterface.checkAreaInteresse(nomeAreaInteresse)){
                 nomeAreaInteresse = readInput();
             }
-            //add check for valid dates
-            System.out.println("Inserisci data o arco temporale");
-            System.out.println("Data inizio: ");
-            String date = readInput();
-            LocalDate dataInizio = parseDate(date);
-            System.out.println("Data fine: ");
-            date = readInput();
-            LocalDate dataFine = parseDate(date);
+
+            while(startDate == null){
+                System.out.println("Inserisci data inizio: ");
+                String line = readInput();
+                try {
+                    startDate = parseDate(line);
+                }catch(DateTimeParseException dtpe){
+                    dtpe.printStackTrace();
+                    System.out.println("Invalid date format. Please enter in yyyy-mm-dd format.");
+                }
+            }
+            while(endDate == null){
+                System.out.println("Inserisci data fine: ");
+                String line = readInput();
+                try{
+                    endDate = parseDate(line);
+                }catch(DateTimeParseException dtpe){
+                    dtpe.printStackTrace();
+                    System.out.println("Invalid date format. Please enter in yyyy-mm-dd format.");
+                }
+            }
+
+            if(endDate.isBefore(startDate)){
+                System.out.println("Data fine deve essere dopo data inizio");
+                visualizzaParametriClimatici();
+            }
 
             //dbRef.getParameters(nomeCentroMonitoraggio, nomeAreaInteresse, dataInizio, dataFine)...
+            //display parameters
         }catch(IOException ioe){ioe.printStackTrace();}
     }
 
