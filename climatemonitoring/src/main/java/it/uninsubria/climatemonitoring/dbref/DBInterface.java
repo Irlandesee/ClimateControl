@@ -9,8 +9,10 @@ import it.uninsubria.climatemonitoring.operatore.opeatoreAutorizzato.OperatoreAu
 import it.uninsubria.climatemonitoring.operatore.opeatoreRegistrato.OperatoreRegistrato;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 import org.javatuples.Pair;
 public class DBInterface {
@@ -254,6 +256,36 @@ public class DBInterface {
 
     private boolean containsOpRegistrato(Operatore o){
         return operatoreRegistratoCache.containsKey(o.getEmail()); //email? codFisc?
+    }
+    public List<ClimateParameter> getClimateParameters(String nomeCentroMonitoraggio,
+                                                String nomeAreaInteresse,
+                                                LocalDate dataInizio,
+                                                LocalDate dataFine){
+
+
+        List<ClimateParameter> res = new LinkedList<ClimateParameter>();
+        String centroID = "", areaID = "";
+        for(Map.Entry<String, CentroMonitoraggio> entry: centroMonitoraggioCache.entrySet())
+            if(entry.getValue().getNomeCentro().equalsIgnoreCase(nomeCentroMonitoraggio))
+                centroID = entry.getKey();
+        for(Map.Entry<String, AreaInteresse> entry: areeInteresseCache.entrySet())
+            if(entry.getValue().getDenominazione().equalsIgnoreCase(nomeAreaInteresse))
+                areaID = entry.getKey();
+
+        Iterator<ClimateParameter> it = climateParameterCache.values().iterator();
+        String finalCentroID = centroID;
+        String finalAreaID = areaID;
+        it.forEachRemaining(
+                parameter -> {
+                    if(parameter.getIdCentro().equalsIgnoreCase(finalCentroID) &&
+                        parameter.getAreaInteresse().equalsIgnoreCase(finalAreaID))
+                        res.add(parameter);
+                }
+        );
+
+        return res.stream()
+                .filter(parameter -> parameter.getPubDate().isAfter(dataInizio) && parameter.getPubDate().isBefore(dataFine))
+                .collect(Collectors.toList());
     }
 
     public HashMap<String, ?> readCache(String objClass){

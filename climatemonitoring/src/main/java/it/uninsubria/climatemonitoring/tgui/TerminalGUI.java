@@ -36,10 +36,12 @@ public class TerminalGUI {
             "                        Digitare 'login' per effettuare il login (solo operatori registrati).\n" +
             "                        Digitare 'registrazione' per effettuare la registrazione all'applicazione\\s\n" +
             "                        (solo operatori autorizzati).\n" +
+            "                        Digitare 'visualizza' per visualizzare parametri climatici\n"  +
             "                        Digitare 'uscita' per terminare il programma.";
     private static final String areaRiservataWelcomeText = "Area Riservata\n" +
             "                        \n" +
             "                        Digitare 'aggiungi' per aggiungere un aree di interesse al centro di monitoraggio.\n" +
+            "                        Digitare 'visualizza' per visualizzare parametri climatici\n"  +
             "                        Digitare 'cerca' per visualizzare le aree di interesse disponibili.\n" +
             "                        Digitare 'logout' per effettuare il logout e tornare al menu' principale.\n" +
             "                        Digitare 'inserisci' per inserire i dati relativi ad una delle aree di interesse.\n" +
@@ -88,6 +90,7 @@ public class TerminalGUI {
                     switch (readInput()) {
                         case "cerca", "c" -> cercaAreaInteresse();
                         case "login", "l" -> login();
+                        case "visualizza", "v" -> visualizzaParametriClimatici();
                         case "registrazione", "r" -> registrazione();
                         case "uscita", "u" -> {
                             System.out.println("Arrivederci");
@@ -102,7 +105,8 @@ public class TerminalGUI {
 
                     switch (readInput()) {
                         case "aggiungi", "a" -> aggiungiAreaInteresse();
-                        //case "inserisci", "i" -> inserisciDatiParametri();
+                        case "inserisci", "i" -> inserisciDatiParametroClimatico();
+                        case "visualizza", "v" -> visualizzaParametriClimatici();
                         case "cerca", "c" -> cercaAreaInteresse();
                         case "logout", "l" -> loggedOperatore = null;
                         case "uscita", "u" -> {
@@ -304,6 +308,13 @@ public class TerminalGUI {
         String nomeAreaInteresse = "";
         LocalDate startDate = null, endDate = null;
         try {
+
+            //TODO:
+            System.out.println("Visualizza parametri climatici per data");
+            System.out.println("Visualizza parametri climatici relativi a un centro monitoraggio");
+            System.out.println("Visualizza parametri climatici relativi a un'area d'interesse");
+            System.out.println("Visualizza parametri climatici relativi con data e area interesse");
+
             System.out.println("Inserisci nome centro monitoraggio");
             while(dbInterface.checkCentroMonitoraggio(nomeCentroMonitoraggio).equals(DBInterface.object_not_found)){
                 nomeCentroMonitoraggio = readInput();
@@ -339,8 +350,12 @@ public class TerminalGUI {
                 visualizzaParametriClimatici();
             }
 
-            //dbRef.getParameters(nomeCentroMonitoraggio, nomeAreaInteresse, dataInizio, dataFine)...
-            //display parameters
+            List<ClimateParameter> params = dbInterface.getClimateParameters(
+                    nomeCentroMonitoraggio, nomeAreaInteresse, startDate, endDate);
+            System.out.printf("Parametri per area: %s, registrati a %s, dal %s al %s\n",
+                    nomeAreaInteresse, nomeCentroMonitoraggio, startDate, endDate);
+            params.forEach(System.out::println);
+            System.out.println("--------------------");
         }catch(IOException ioe){ioe.printStackTrace();}
     }
 
