@@ -303,29 +303,11 @@ public class TerminalGUI {
         }catch(IOException ioe){ioe.printStackTrace();}
     }
 
-    private void visualizzaParametriClimatici(){
-        String nomeCentroMonitoraggio = "";
-        String nomeAreaInteresse = "";
+    private Pair<LocalDate, LocalDate> inputDates(){
         LocalDate startDate = null, endDate = null;
-        try {
-
-            //TODO:
-            System.out.println("Visualizza parametri climatici per data");
-            System.out.println("Visualizza parametri climatici relativi a un centro monitoraggio");
-            System.out.println("Visualizza parametri climatici relativi a un'area d'interesse");
-            System.out.println("Visualizza parametri climatici relativi con data e area interesse");
-
-            System.out.println("Inserisci nome centro monitoraggio");
-            while(dbInterface.checkCentroMonitoraggio(nomeCentroMonitoraggio).equals(DBInterface.object_not_found)){
-                nomeCentroMonitoraggio = readInput();
-            }
-            System.out.println("Inserisci nome area interesse");
-            while(!dbInterface.checkAreaInteresse(nomeAreaInteresse)){
-                nomeAreaInteresse = readInput();
-            }
-
-            while(startDate == null){
-                System.out.println("Inserisci data inizio: ");
+        while(startDate == null){
+            System.out.println("Inserisci data inizio: ");
+            try{
                 String line = readInput();
                 try {
                     startDate = parseDate(line);
@@ -333,9 +315,11 @@ public class TerminalGUI {
                     dtpe.printStackTrace();
                     System.out.println("Invalid date format. Please enter in yyyy-mm-dd format.");
                 }
-            }
-            while(endDate == null){
-                System.out.println("Inserisci data fine: ");
+            }catch(IOException ioe){ioe.printStackTrace();}
+        }
+        while(endDate == null){
+            System.out.println("Inserisci data fine: ");
+            try{
                 String line = readInput();
                 try{
                     endDate = parseDate(line);
@@ -343,12 +327,70 @@ public class TerminalGUI {
                     dtpe.printStackTrace();
                     System.out.println("Invalid date format. Please enter in yyyy-mm-dd format.");
                 }
+            }catch(IOException ioe){ioe.printStackTrace();}
+        }
+
+        if(endDate.isBefore(startDate)){
+            System.out.println("Data fine deve essere dopo data inizio");
+            inputDates();
+        }
+        return new Pair<LocalDate, LocalDate>(startDate, endDate);
+    }
+
+    private CentroMonitoraggio inputCentroMonitoraggio(){
+        String nomeCentroMonitoraggio = "";
+        while(nomeCentroMonitoraggio.isBlank() ||
+                nomeCentroMonitoraggio.isEmpty() ||
+                dbInterface.checkCentroMonitoraggio(nomeCentroMonitoraggio).equalsIgnoreCase(DBInterface.object_not_found)){
+            System.out.println("Inserisci il nome del centro di monitoraggio");
+            try {
+                nomeCentroMonitoraggio = readInput();
+            }catch(IOException ioe){ioe.printStackTrace();}
+        }
+        return dbInterface.getCentroMonitoraggioWithName(nomeCentroMonitoraggio);
+    }
+
+    private AreaInteresse inputAreaInteresse(){
+        String nomeAreaInteresse = "";
+        while(nomeAreaInteresse.isBlank() ||
+            nomeAreaInteresse.isEmpty() ||
+                dbInterface.getAreaInteresse(nomeAreaInteresse) == null){
+            System.out.println("Inserisci nome dell'area interesse");
+            try{
+               nomeAreaInteresse = readInput();
+            }catch(IOException ioe){ioe.printStackTrace();}
+        }
+        return dbInterface.getAreaInteresse(nomeAreaInteresse);
+    }
+
+    private void visualizzaParametriClimatici(){
+        String nomeCentroMonitoraggio = "";
+        String nomeAreaInteresse = "";
+        try {
+
+            //TODO:
+            System.out.println("Visualizza parametri climatici per data");
+            //Pair<LocalDate, LocalDate> dates = parseDates();
+            //dbInterface.getParamPerData(dates);
+            System.out.println("Visualizza parametri climatici relativi a un centro monitoraggio");
+            //CentroMonitoraggio cm = parseCentroMonitoraggio();
+            //dbInterface.getParamPerCentro();
+            System.out.println("Visualizza parametri climatici relativi a un'area d'interesse");
+            //AreaInteresse ai = parseAreaInteresse();
+            //dbInterface.getParamPerArea();
+            System.out.println("Visualizza parametri climatici relativi con data e area interesse");
+            //Pair<LocalDate, LocalDate> dates = parseDates();
+            //dbInterface.getParamPerDataEPerArea();
+
+            while(dbInterface.checkCentroMonitoraggio(nomeCentroMonitoraggio).equals(DBInterface.object_not_found)){
+                System.out.println("Inserisci nome centro monitoraggio");
+                nomeCentroMonitoraggio = readInput();
+            }
+            while(!dbInterface.checkAreaInteresse(nomeAreaInteresse)){
+                System.out.println("Inserisci nome area interesse");
+                nomeAreaInteresse = readInput();
             }
 
-            if(endDate.isBefore(startDate)){
-                System.out.println("Data fine deve essere dopo data inizio");
-                visualizzaParametriClimatici();
-            }
 
             List<ClimateParameter> params = dbInterface.getClimateParameters(
                     nomeCentroMonitoraggio, nomeAreaInteresse, startDate, endDate);

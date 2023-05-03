@@ -362,6 +362,13 @@ public class DBInterface {
         return null;
     }
 
+    public CentroMonitoraggio getCentroMonitoraggioWithName(String nomeCentroMonitoraggio){
+        return (CentroMonitoraggio) centroMonitoraggioCache
+                .values()
+                .stream()
+                .filter(cm -> cm.getNomeCentro().equals(nomeCentroMonitoraggio));
+    }
+
     public AreaInteresse getAreaInteresseWithCoordinates(double latitude, double longitude){
         LinkedList<AreaInteresse> map = (LinkedList<AreaInteresse>) areeInteresseCache.values();
         double minDistance = Math.hypot(
