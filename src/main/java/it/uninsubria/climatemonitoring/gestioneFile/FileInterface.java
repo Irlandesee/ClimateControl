@@ -76,20 +76,20 @@ public class FileInterface {
     }
 
     private void creaFile() throws IOException {
-        File directory = new File("data");
+        File directory = new File("../data");
 
         if (!directory.exists())
             if(directory.mkdir())
                 System.out.println("Nuova cartella creata in: " + directory.getPath());
 
-        cacheFile = new File("data/Cache.dati");
-        geonamesCoordinatesFile = new File("data/geonames-and-coordinates.csv");
-        operatoriAutorizzatiFile = new File("data/OperatoriAutorizzati.dati");
+        cacheFile = new File("../data/Cache.dati");
+        geonamesCoordinatesFile = new File("../data/geonames-and-coordinates.csv");
+        operatoriAutorizzatiFile = new File("../data/OperatoriAutorizzati.dati");
 
-        coordinateMonitoraggioFile = new File("data/CoordinateMonitoraggio.dati");
-        parametriClimaticiFile = new File("data/ParametriClimatici.dati");
-        centriMonitoraggioFile = new File("data/CentriMonitoraggio.dati");
-        operatoriRegistratiFile = new File("data/OperatoriRegistrati.dati");
+        coordinateMonitoraggioFile = new File("../data/CoordinateMonitoraggio.dati");
+        parametriClimaticiFile = new File("../data/ParametriClimatici.dati");
+        centriMonitoraggioFile = new File("../data/CentriMonitoraggio.dati");
+        operatoriRegistratiFile = new File("../data/OperatoriRegistrati.dati");
 
         checkFileExistence(cacheFile);
         checkFileExistence(geonamesCoordinatesFile);
