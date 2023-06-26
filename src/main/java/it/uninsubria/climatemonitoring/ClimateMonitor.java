@@ -10,7 +10,7 @@ import java.io.IOException;
  */
 public class ClimateMonitor {
     public static void main(String[] args) throws IOException, ClassNotFoundException {
-        Applicazione climateMonitor = new Applicazione(new FileInterface());
+        CLI climateMonitor = new CLI(new FileInterface());
         climateMonitor.run();
     }
 }

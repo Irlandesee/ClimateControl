@@ -28,7 +28,7 @@ import java.util.Locale;
  * @author Mattia Mauro Lunardi 736898 mmlunardi@studenti.uninsubria.it VA
  * @author Andrea Quaglia 753166 aquaglia2@studenti.uninsubria.it VA
  */
-public class Applicazione {
+public class CLI {
     /**
      * Contiene l'{@link Operatore} che ha effettuato il login.
      */
@@ -44,7 +44,7 @@ public class Applicazione {
 
     BufferedReader reader;
 
-    public Applicazione(FileInterface fileInterface) {
+    public CLI(FileInterface fileInterface) {
         this.fileInterface = fileInterface;
 
         parametriClimaticiCache = FileInterface.getParametriClimaticiCache();
@@ -88,7 +88,7 @@ public class Applicazione {
                 System.out.println("\nArea riservata - Centro di monitoraggio " +
                         centroAfferenza.getNomeCentro() + "\n");
                 System.out.println("""
-                        Digitare 'aggiungi' per aggiungere un aree di interesse al centro di monitoraggio.
+                        Digitare 'aggiungi' per aggiungere un'area di interesse al centro di monitoraggio.
                         Digitare 'cerca' per visualizzare le aree di interesse disponibili.
                         Digitare 'logout' per effettuare il logout e tornare al menu' principale.
                         Digitare 'uscita' per terminare il programma.
