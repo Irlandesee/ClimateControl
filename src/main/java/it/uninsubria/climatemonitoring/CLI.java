@@ -252,13 +252,108 @@ public class CLI {
         System.out.println("Digitare il nome:");
         nome = reader.readLine();
 
+        codiceFiscale = validateCF(codiceFiscale);
+        if (codiceFiscale == null) return null;
+
+        boolean isEmailValid = false;
+        System.out.println("Digitare l'email aziendale:");
+        email = reader.readLine();
+        for (Operatore operatore : operatoriRegistratiCache) {
+            if (operatore.getEmail().equals(email)) {
+                System.out.println("Utente gia' registrato!");
+                return null;
+            }
+        }
+        for (String tmp : operatoriAutorizzatiCache) {
+            if (tmp.equals(email)) {
+                isEmailValid = true;
+                break;
+            }
+        }
+        if(!isEmailValid) {
+            System.out.println("Email non valida!");
+            return null;
+        }
+
+        System.out.println("Digitare l'userID:");
+        userID = reader.readLine();
+        for (Operatore operatore : operatoriRegistratiCache) {
+            if (operatore.getUserID().equals(userID)) {
+                System.out.println("Utente gia' registrato!");
+                return null;
+            }
+        }
+
+        System.out.println("Digitare la password:");
+        password = reader.readLine();
+
+        System.out.println("Digitare il nome del centro di afferenza:");
+        nomeCentroAfferenza = reader.readLine();
+
+        CentroMonitoraggio centroAfferenza = null;
+        boolean centroTrovato = false;
+        if(centriMonitoraggioCache.isEmpty()) {
+            centroAfferenza = registraCentroAree(nomeCentroAfferenza);
+            centroTrovato = true;
+        }
+        if(!centroTrovato)
+            for (CentroMonitoraggio centroMonitoraggio : centriMonitoraggioCache)
+                if (centroMonitoraggio.getNomeCentro().equals(nomeCentroAfferenza)) {
+                    centroAfferenza = centroMonitoraggio;
+                    centroTrovato = true;
+                }
+        if(!centroTrovato)
+            centroAfferenza = registraCentroAree(nomeCentroAfferenza);
+        Operatore operatore = new Operatore(cognome, nome, codiceFiscale, email, userID,
+                password, centroAfferenza);
+        operatoriRegistratiCache.add(operatore);
+        fileInterface.writeCacheFile();
+        System.out.println("Accesso effettuato!\nBenvenuto " + cognome + " " + nome + "\n");
+        return operatore;
+    }
+
+    private CentroMonitoraggio registraCentroAree(String nomeCentroAfferenza) throws IOException {
+        String via, comune, provincia, numeroCivico, cap = null;
+        int numeroCivicoNumerico, capNumerico;
+
+        System.out.println("Digitare la via del centro di afferenza:");
+        via = reader.readLine();
+
+        System.out.println("Digitare il comune del centro di afferenza:");
+        comune = reader.readLine();
+
+        System.out.println("Digitare la provincia del centro di afferenza:");
+        provincia = reader.readLine();
+
+        System.out.println("Digitare il numero civico del centro di afferenza:");
+        numeroCivico = reader.readLine();
+        while (isNotNumeric(numeroCivico) || isNotaInt(numeroCivico) || Integer.parseInt(numeroCivico) < 1) {
+            System.out.println("Il numero civico deve essere un numero maggiore di 0!");
+            System.out.println("Digitare il numero civico del centro di afferenza:");
+            numeroCivico = reader.readLine();
+        }
+        numeroCivicoNumerico = Integer.parseInt(numeroCivico);
+
+        cap = validateCAP(cap);
+
+        capNumerico = Integer.parseInt(cap);
+
+        CentroMonitoraggio centroMonitoraggio = new CentroMonitoraggio(nomeCentroAfferenza,
+                new Indirizzo(via, comune, provincia, numeroCivicoNumerico, capNumerico));
+        centriMonitoraggioCache.add(centroMonitoraggio);
+        fileInterface.writeCacheFile();
+        System.out.println("Centro registrato con successo!");
+        return centroMonitoraggio;
+    }
+
+    private String validateCF(String codiceFiscale) throws IOException {
         boolean isCFValid = false;
         while (!isCFValid) {
             System.out.println("Digitare il codice fiscale:");
             codiceFiscale = reader.readLine();
-            
+
             while (codiceFiscale.length() != 16) {
-                System.out.println("Codice fiscale errato! Riprovare:");
+                System.out.println("Codice fiscale errato!\nDigitare il codice fiscale:");
                 codiceFiscale = reader.readLine();
                 if(codiceFiscale.equals(""))
                     break;
@@ -344,101 +439,31 @@ public class CLI {
         }
         if (codiceFiscale.equals(""))
             return null;
-
-        boolean isEmailValid = false;
-        System.out.println("Digitare l'email aziendale:");
-        email = reader.readLine();
-        for (Operatore operatore : operatoriRegistratiCache) {
-            if (operatore.getEmail().equals(email)) {
-                System.out.println("Utente gia' registrato!");
-                return null;
-            }
-        }
-        for (String tmp : operatoriAutorizzatiCache) {
-            if (tmp.equals(email)) {
-                isEmailValid = true;
-                break;
-            }
-        }
-        if(!isEmailValid) {
-            System.out.println("Email non valida!");
-            return null;
-        }
-
-        System.out.println("Digitare l'userID:");
-        userID = reader.readLine();
-        for (Operatore operatore : operatoriRegistratiCache) {
-            if (operatore.getUserID().equals(userID)) {
-                System.out.println("Utente gia' registrato!");
-                return null;
-            }
-        }
-
-        System.out.println("Digitare la password:");
-        password = reader.readLine();
-
-        System.out.println("Digitare il nome del centro di afferenza:");
-        nomeCentroAfferenza = reader.readLine();
-
-        CentroMonitoraggio centroAfferenza = null;
-        boolean centroTrovato = false;
-        if(centriMonitoraggioCache.isEmpty()) {
-            centroAfferenza = registraCentroAree(nomeCentroAfferenza);
-            centroTrovato = true;
-        }
-        if(!centroTrovato)
-            for (CentroMonitoraggio centroMonitoraggio : centriMonitoraggioCache)
-                if (centroMonitoraggio.getNomeCentro().equals(nomeCentroAfferenza)) {
-                    centroAfferenza = centroMonitoraggio;
-                    centroTrovato = true;
-                }
-        if(!centroTrovato)
-            centroAfferenza = registraCentroAree(nomeCentroAfferenza);
-        Operatore operatore = new Operatore(cognome, nome, codiceFiscale, email, userID,
-                password, centroAfferenza);
-        operatoriRegistratiCache.add(operatore);
-        fileInterface.writeCacheFile();
-        System.out.println("Accesso effettuato!\nBenvenuto " + cognome + " " + nome + "\n");
-        return operatore;
+        return codiceFiscale;
     }
 
-    private CentroMonitoraggio registraCentroAree(String nomeCentroAfferenza) throws IOException {
-        String via, comune, provincia, numeroCivico, cap;
-        int numeroCivicoNumerico, capNumerico;
-
-        System.out.println("Digitare la via del centro di afferenza:");
-        via = reader.readLine();
-
-        System.out.println("Digitare il comune del centro di afferenza:");
-        comune = reader.readLine();
-
-        System.out.println("Digitare la provincia del centro di afferenza:");
-        provincia = reader.readLine();
-
-        System.out.println("Digitare il numero civico del centro di afferenza:");
-        numeroCivico = reader.readLine();
-        while (isNotNumeric(numeroCivico) || isNotaInt(numeroCivico) || Integer.parseInt(numeroCivico) < 1) {
-            System.out.println("Il numero civico deve essere un numero maggiore di 0!");
-            System.out.println("Digitare il numero civico del centro di afferenza:");
-            numeroCivico = reader.readLine();
-        }
-        numeroCivicoNumerico = Integer.parseInt(numeroCivico);
-
-        System.out.println("Digitare il CAP del centro di afferenza:");
-        cap = reader.readLine();
-        while (isNotNumeric(cap) ||isNotaInt(cap) || Integer.parseInt(cap) < 1) {
-            System.out.println("Il CAP deve essere un numero maggiore di 0!");
+    private String validateCAP(String cap) throws IOException {
+        boolean isCAPValid = false;
+        while (!isCAPValid) {
             System.out.println("Digitare il CAP del centro di afferenza:");
             cap = reader.readLine();
-        }
-        capNumerico = Integer.parseInt(cap);
 
-        CentroMonitoraggio centroMonitoraggio = new CentroMonitoraggio(nomeCentroAfferenza,
-                new Indirizzo(via, comune, provincia, numeroCivicoNumerico, capNumerico));
-        centriMonitoraggioCache.add(centroMonitoraggio);
-        fileInterface.writeCacheFile();
-        System.out.println("Centro registrato con successo!");
-        return centroMonitoraggio;
+            while (cap.length() != 5) {
+                System.out.println("CAP errato!\nDigitare il CAP del centro di afferenza:");
+                cap = reader.readLine();
+            }
+
+            for (int i = 0; i < 5; i++) {
+                if (cap.charAt(i) < '0' || cap.charAt(i) > '9') {
+                    isCAPValid = false;
+                    System.out.println("CAP errato!");
+                    break;
+                } else {
+                    isCAPValid = true;
+                }
+            }
+        }
+        return cap;
     }
 
     private Operatore login() throws IOException {
