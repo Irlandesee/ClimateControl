@@ -244,7 +244,7 @@ public class CLI {
     }
 
     private Operatore registrazione() throws IOException {
-        String cognome, nome, codiceFiscale, email, userID, password, nomeCentroAfferenza;
+        String cognome, nome, codiceFiscale = null, email, userID, password, nomeCentroAfferenza;
 
         System.out.println("Digitare il cognome:");
         cognome = reader.readLine();
@@ -252,8 +252,98 @@ public class CLI {
         System.out.println("Digitare il nome:");
         nome = reader.readLine();
 
-        System.out.println("Digitare il codice fiscale:");
-        codiceFiscale = reader.readLine();
+        boolean isCFValid = false;
+        while (!isCFValid) {
+            System.out.println("Digitare il codice fiscale:");
+            codiceFiscale = reader.readLine();
+            
+            while (codiceFiscale.length() != 16) {
+                System.out.println("Codice fiscale errato! Riprovare:");
+                codiceFiscale = reader.readLine();
+                if(codiceFiscale.equals(""))
+                    break;
+            }
+
+            if (codiceFiscale.equals(""))
+                break;
+
+            for (int i = 0; i < 6; i++) {
+                if (codiceFiscale.charAt(i) < 'A' || codiceFiscale.charAt(i) > 'Z') {
+                    isCFValid = false;
+                    break;
+                } else {
+                    isCFValid = true;
+                }
+            }
+
+            if (!isCFValid) {
+                System.out.println("Codice fiscale errato!");
+                continue;
+            }
+
+            for (int i = 6; i < 8; i++) {
+                if (codiceFiscale.charAt(i) < '0' || codiceFiscale.charAt(i) > '9') {
+                    isCFValid = false;
+                    break;
+                }
+            }
+
+            if (!isCFValid) {
+                System.out.println("Codice fiscale errato!");
+                continue;
+            }
+
+            if (codiceFiscale.charAt(8) < 'A' || codiceFiscale.charAt(8) > 'Z') {
+                isCFValid = false;
+            }
+
+            if (!isCFValid) {
+                System.out.println("Codice fiscale errato!");
+                continue;
+            }
+
+            for (int i = 9; i < 11; i++) {
+                if (codiceFiscale.charAt(i) < '0' || codiceFiscale.charAt(i) > '9') {
+                    isCFValid = false;
+                    break;
+                }
+            }
+
+            if (!isCFValid) {
+                System.out.println("Codice fiscale errato!");
+                continue;
+            }
+
+            if (codiceFiscale.charAt(11) < 'A' || codiceFiscale.charAt(11) > 'Z') {
+                isCFValid = false;
+            }
+
+            if (!isCFValid) {
+                System.out.println("Codice fiscale errato!");
+                continue;
+            }
+
+            for (int i = 12; i < 15; i++) {
+                if (codiceFiscale.charAt(i) < '0' || codiceFiscale.charAt(i) > '9') {
+                    isCFValid = false;
+                    break;
+                }
+            }
+
+            if (!isCFValid) {
+                System.out.println("Codice fiscale errato!");
+                continue;
+            }
+
+            if (codiceFiscale.charAt(15) < 'A' || codiceFiscale.charAt(15) > 'Z') {
+                isCFValid = false;
+            }
+
+            if (!isCFValid)
+                System.out.println("Codice fiscale errato!");
+        }
+        if (codiceFiscale.equals(""))
+            return null;
 
         boolean isEmailValid = false;
         System.out.println("Digitare l'email aziendale:");
