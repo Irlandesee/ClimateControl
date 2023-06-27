@@ -244,7 +244,7 @@ public class CLI {
     }
 
     private Operatore registrazione() throws IOException {
-        String cognome, nome, codiceFiscale = null, email, userID, password, nomeCentroAfferenza;
+        String cognome, nome, codiceFiscale, email, userID, password, nomeCentroAfferenza;
 
         System.out.println("Digitare il cognome:");
         cognome = reader.readLine();
@@ -252,7 +252,7 @@ public class CLI {
         System.out.println("Digitare il nome:");
         nome = reader.readLine();
 
-        codiceFiscale = validateCF(codiceFiscale);
+        codiceFiscale = validateCF();
         if (codiceFiscale == null) return null;
 
         boolean isEmailValid = false;
@@ -346,11 +346,15 @@ public class CLI {
         return centroMonitoraggio;
     }
 
-    private String validateCF(String codiceFiscale) throws IOException {
+    private String validateCF() throws IOException {
         boolean isCFValid = false;
+        String codiceFiscale = null;
         while (!isCFValid) {
             System.out.println("Digitare il codice fiscale:");
             codiceFiscale = reader.readLine();
+
+            if (codiceFiscale.equals(""))
+                break;
 
             while (codiceFiscale.length() != 16) {
                 System.out.println("Codice fiscale errato!\nDigitare il codice fiscale:");
