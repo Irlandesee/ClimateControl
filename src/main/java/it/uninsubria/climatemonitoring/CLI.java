@@ -132,7 +132,7 @@ public class CLI {
         LinkedList<ParametroClimatico> parametriClimatici = new LinkedList<>();
         LinkedList<Integer> punteggi = new LinkedList<>();
         LinkedList<String> note = new LinkedList<>();
-        ArrayList<String> nomiParametri = new ArrayList<>(Arrays.asList("al Vento", "all'Umidita", "alla Pressione",
+        ArrayList<String> nomiParametri = new ArrayList<>(Arrays.asList("al Vento", "all'Umidita'", "alla Pressione",
                 "alla Temperatura", "alle Precipitazioni", "all'Altitudine dei ghiacciai", "alla Massa dei ghiacciai"));
 
         for(int i = 0; i < 7; i++) {
@@ -244,7 +244,7 @@ public class CLI {
     }
 
     private Operatore registrazione() throws IOException {
-        String cognome, nome, codiceFiscale, email, userID, password, nomeCentroAfferenza;
+        String cognome, nome, codiceFiscale, email = "", userID, password, nomeCentroAfferenza;
 
         System.out.println("Digitare il cognome:");
         cognome = reader.readLine();
@@ -256,24 +256,41 @@ public class CLI {
         if (codiceFiscale == null) return null;
 
         boolean isEmailValid = false;
-        System.out.println("Digitare l'email aziendale:");
-        email = reader.readLine();
-        for (Operatore operatore : operatoriRegistratiCache) {
-            if (operatore.getEmail().equals(email)) {
-                System.out.println("Utente gia' registrato!");
-                return null;
-            }
-        }
-        for (String tmp : operatoriAutorizzatiCache) {
-            if (tmp.equals(email)) {
-                isEmailValid = true;
+        boolean isEmailUsed = false;
+
+        while (!isEmailValid) {
+            System.out.println("Digitare l'email aziendale:");
+            email = reader.readLine();
+            
+            if (email.equals(""))
                 break;
+
+            for (Operatore operatore : operatoriRegistratiCache) {
+                if (operatore.getEmail().equals(email)) {
+                    System.out.println("Utente gia' registrato!");
+                    isEmailUsed = true;
+                    break;
+                }
             }
+
+            if (isEmailUsed) {
+                isEmailUsed = false;
+                continue;
+            }
+
+            for (String tmp : operatoriAutorizzatiCache) {
+                if (tmp.equals(email)) {
+                    isEmailValid = true;
+                    break;
+                }
+            }
+
+            if (!isEmailValid)
+                System.out.println("Email non valida!");
         }
-        if(!isEmailValid) {
-            System.out.println("Email non valida!");
+
+        if (email.equals(""))
             return null;
-        }
 
         System.out.println("Digitare l'userID:");
         userID = reader.readLine();
